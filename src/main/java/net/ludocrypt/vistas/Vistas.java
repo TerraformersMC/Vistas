@@ -28,7 +28,7 @@ public class Vistas implements ClientModInitializer {
 		PanoramaConfig.init();
 
 		// Adding the default Panorama
-		Panorama.addPanorama(new Identifier("nether").toString(), new Identifier("vistas", "textures/gui/title/background/minecraft_panorama"), new SoundEvent(new Identifier("music.menu")));
+		Panorama.addPanorama(new Identifier("nether").toString(), new Identifier("textures/gui/title/background/panorama"), new SoundEvent(new Identifier("music.menu")));
 
 		// Chose random panorama
 		if (!PanoramaConfig.INSTANCE().forcePanorama) {
