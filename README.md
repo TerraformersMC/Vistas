@@ -27,8 +27,8 @@ replace a.b.c with the latest version. For example, 1.0.0.
 ## Use in code
 
 ```java
-Panorama.addPanorama(new Identifier("minecraft"), new Identifier("textures/gui/title/background/panorama"), new SoundEvent(new Identifier("music.menu")));
+Vistas.Panorama.addPanorama(new Identifier("minecraft"), new Identifier("textures/gui/title/background/panorama"), new SoundEvent(new Identifier("music.menu")));
 // Or
-Panorama.addPanorama(new Identifier("minecraft"), new Identifier("textures/gui/title/background/panorama"), new MusicSound(new SoundEvent(new Identifier("music.menu")), 20, 600, true));
+Vistas.Panorama.addPanorama(new Identifier("minecraft"), new Identifier("textures/gui/title/background/panorama"), new MusicSound(new SoundEvent(new Identifier("music.menu")), 20, 600, true));
 ```
 The first identifier being the name in which config uses, the second identifier being which panorama to choose, and the third being what music to play.
