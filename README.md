@@ -1,29 +1,6 @@
 # Vistas
  A library and tool for creating and customizing main menu panoramas and music for mods and modpacks on the fabric platform
 
-## As a library
-build.gradle
-```groovy
-repositories {
- maven {
-  url 'https://jitpack.io'
- }
-}
-```
-
-```groovy
-dependencies {
- modImplementation "com.github.LudoCrypt:Vistas:${project.vistas_version}"
- include "com.github.LudoCrypt:Vistas:${project.vistas_version}"
-}
-```
-
-gradle.properties
-```groovy
-vistas_version=a.b.c
-```
-replace a.b.c with the latest version. For example, 1.0.0.
-
 ## Use in code
 
 ```java
