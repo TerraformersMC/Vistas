@@ -15,7 +15,7 @@ import net.minecraft.sound.MusicSound;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin {
+public class TitleScreenMusicMixin {
 
 	@Shadow
 	public ClientPlayerEntity player;

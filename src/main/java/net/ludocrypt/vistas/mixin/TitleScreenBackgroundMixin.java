@@ -19,7 +19,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 
 @Environment(EnvType.CLIENT)
 @Mixin(TitleScreen.class)
-public abstract class TitleScreenMixin {
+public abstract class TitleScreenBackgroundMixin {
 
 	@Shadow
 	private RotatingCubeMapRenderer backgroundRenderer;

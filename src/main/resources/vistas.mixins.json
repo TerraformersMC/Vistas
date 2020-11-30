@@ -6,8 +6,8 @@
 	"mixins": [
 	],
 	"client": [
-		"TitleScreenMixin",
-		"MinecraftClientMixin"
+		"TitleScreenBackgroundMixin",
+		"TitleScreenMusicMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

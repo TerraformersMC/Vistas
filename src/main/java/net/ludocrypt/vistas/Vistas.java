@@ -23,11 +23,12 @@ public class Vistas implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+
 		// Config Registry
 		PanoramaConfig.init();
 
 		// Adding the default Panorama
-		Panorama.addPanorama(new Identifier("minecraft"), new Identifier("textures/gui/title/background/panorama"), new SoundEvent(new Identifier("music.menu")));
+		Panorama.addPanorama(new Identifier("nether"), new Identifier("vistas", "textures/gui/title/background/minecraft_panorama"), new SoundEvent(new Identifier("music.menu")));
 
 		// Chose random panorama
 		if (!PanoramaConfig.INSTANCE().forcePanorama) {
@@ -76,13 +77,27 @@ public class Vistas implements ClientModInitializer {
 			panoramas.put(name, pan);
 		}
 
+		public static void addPanoramaWithWeight(Identifier name, Identifier id, SoundEvent music, int weight) {
+			Panorama pan = new Panorama(name, id, music);
+			for (int i = 0; i < weight; i++) {
+				panoramas.put(name, pan);
+			}
+		}
+
+		public static void addPanoramaWithWeight(Identifier name, Identifier id, MusicSound music, int weight) {
+			Panorama pan = new Panorama(name, id, music);
+			for (int i = 0; i < weight; i++) {
+				panoramas.put(name, pan);
+			}
+		}
+
 		public static Panorama getPanorama() {
 			Vistas.Panorama pickedPanorama = Vistas.panoramas.get(new Identifier(PanoramaConfig.INSTANCE().panorama));
 
 			if (pickedPanorama == null) {
 				LOGGER.warn("No Panorama Registered! Throwing to default");
-				pickedPanorama = Vistas.panoramas.get(new Identifier("minecraft"));
-				PanoramaConfig.INSTANCE().panorama = new Identifier("minecraft").toString();
+				pickedPanorama = Vistas.panoramas.get(new Identifier("nether"));
+				PanoramaConfig.INSTANCE().panorama = new Identifier("nether").toString();
 			}
 
 			return pickedPanorama;
