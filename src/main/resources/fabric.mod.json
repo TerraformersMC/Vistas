@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "vistas",
+	"version": "${version}",
+	"name": "Vistas",
+	"description": "A library and tool for creating and customizing main menu panoramas and music for mods and modpacks on the fabric platform",
+	"authors": [
+		"LudoCrypt"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "LGPLv3",
+	"icon": "assets/vistas/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"net.ludocrypt.vistas.Vistas"
+		],
+		"modmenu": [
+			"net.ludocrypt.vistas.config.ModMenuConfig"
+		]
+	},
+	"mixins": [
+		"vistas.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.7.4",
+		"fabric": "*",
+		"minecraft": "1.16.x"
+	},
+	"suggests": {
+		"flamingo": "*"
+	}
+}
