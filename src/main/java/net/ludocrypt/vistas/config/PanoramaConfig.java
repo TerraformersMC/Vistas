@@ -8,7 +8,7 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 @Config(name = "vistas")
 public class PanoramaConfig implements ConfigData {
 
-	public String panorama = "minecraft:nether";
+	public String panorama = "minecraft:minecraft";
 	public boolean forcePanorama = false;
 	public boolean randomPerScreen = false;
 
@@ -18,6 +18,10 @@ public class PanoramaConfig implements ConfigData {
 
 	public static PanoramaConfig INSTANCE() {
 		return AutoConfig.getConfigHolder(PanoramaConfig.class).getConfig();
+	}
+
+	public static boolean checkConfig() {
+		return AutoConfig.getConfigHolder(PanoramaConfig.class) != null;
 	}
 
 }

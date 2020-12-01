@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,8 +15,9 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class Vistas implements ClientModInitializer {
 
+	public static Map<String, Panorama> builtinPanoramas = new HashMap<String, Panorama>();
+	public static Map<String, Panorama> resourcePanoramas = new HashMap<String, Panorama>();
 	public static Map<String, Panorama> panoramas = new HashMap<String, Panorama>();
-	private static Logger LOGGER = LogManager.getLogger();
 
 	@Override
 	public void onInitializeClient() {
@@ -28,13 +26,14 @@ public class Vistas implements ClientModInitializer {
 		PanoramaConfig.init();
 
 		// Adding the default Panorama
-		Panorama.addPanorama(new Identifier("nether").toString(), new Identifier("textures/gui/title/background/panorama"), new SoundEvent(new Identifier("music.menu")));
+		Panorama.addBuiltInPanorama(new Panorama(new Identifier("minecraft").toString(), new Identifier("textures/gui/title/background/panorama"), new Identifier("music.menu")));
 
 		// Chose random panorama
 		if (!PanoramaConfig.INSTANCE().forcePanorama) {
-			PanoramaConfig.INSTANCE().panorama = panoramas.values().toArray(new Panorama[0])[new Random().nextInt(Vistas.panoramas.size())].getName();
+			if (Vistas.panoramas.size() >= 1) {
+				PanoramaConfig.INSTANCE().panorama = Vistas.panoramas.values().toArray(new Panorama[0])[new Random().nextInt(Vistas.panoramas.size())].getName();
+			}
 		}
-
 	}
 
 	public static class Panorama {
@@ -42,17 +41,30 @@ public class Vistas implements ClientModInitializer {
 		private String name;
 		private Identifier id;
 		private MusicSound music;
+		private int weight = 1;
 
-		public Panorama(String name, Identifier id, SoundEvent music) {
+		public Panorama(String name, Identifier id, Identifier music) {
 			this.name = name;
 			this.id = id;
-			this.music = createMenuSound(music);
+			this.music = createMenuSound(new SoundEvent(music));
+			this.weight = 1;
 		}
 
 		public Panorama(String name, Identifier id, MusicSound music) {
 			this.name = name;
 			this.id = id;
 			this.music = music;
+			this.weight = 1;
+		}
+
+		public Panorama(String name, Identifier id, Identifier music, int weight) {
+			this(name, id, music);
+			this.weight = weight;
+		}
+
+		public Panorama(String name, Identifier id, MusicSound music, int weight) {
+			this(name, id, music);
+			this.weight = weight;
 		}
 
 		public String getName() {
@@ -67,40 +79,44 @@ public class Vistas implements ClientModInitializer {
 			return music;
 		}
 
-		public static void addPanorama(String name, Identifier id, SoundEvent music) {
-			Panorama pan = new Panorama(name, id, music);
-			panoramas.put(name, pan);
+		public int getWeight() {
+			return weight;
 		}
 
-		public static void addPanorama(String name, Identifier id, MusicSound music) {
-			Panorama pan = new Panorama(name, id, music);
-			panoramas.put(name, pan);
-		}
-
-		public static void addPanoramaWithWeight(String name, Identifier id, SoundEvent music, int weight) {
-			Panorama pan = new Panorama(name, id, music);
-			for (int i = 0; i < weight; i++) {
-				panoramas.put(name + "_" + i, pan);
+		public static void addBuiltInPanorama(Panorama pan) {
+			for (int i = 0; i < pan.getWeight(); i++) {
+				builtinPanoramas.put(i > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
 			}
 		}
 
-		public static void addPanoramaWithWeight(String name, Identifier id, MusicSound music, int weight) {
-			Panorama pan = new Panorama(name, id, music);
-			for (int i = 0; i < weight; i++) {
-				panoramas.put(name + "_" + i, pan);
+		public static void addResourcePanorama(Panorama pan) {
+			for (int i = 0; i < pan.getWeight(); i++) {
+				resourcePanoramas.put(i > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
+			}
+		}
+
+		public static void addPanorama(Panorama pan) {
+			for (int i = 0; i < pan.getWeight(); i++) {
+				panoramas.put(i > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
 			}
 		}
 
 		public static Panorama getPanorama() {
-			Vistas.Panorama pickedPanorama = Vistas.panoramas.get(new Identifier(PanoramaConfig.INSTANCE().panorama).toString());
+
+			Panorama pickedPanorama = Vistas.panoramas.get(new Identifier(PanoramaConfig.INSTANCE().panorama).toString());
 
 			if (pickedPanorama == null) {
-				LOGGER.warn("No Panorama Registered! Throwing to default");
-				pickedPanorama = Vistas.panoramas.get(new Identifier("nether").toString());
-				PanoramaConfig.INSTANCE().panorama = new Identifier("nether").toString();
+				pickedPanorama = new Panorama(new Identifier("minecraft").toString(), new Identifier("textures/gui/title/background/panorama"), new Identifier("music.menu"));
+				PanoramaConfig.INSTANCE().panorama = new Identifier("minecraft").toString();
 			}
 
 			return pickedPanorama;
+		}
+
+		public static void relaodPanoramas() {
+			panoramas.clear();
+			panoramas.putAll(builtinPanoramas);
+			panoramas.putAll(resourcePanoramas);
 		}
 
 	}

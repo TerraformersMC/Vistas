@@ -26,9 +26,7 @@ public abstract class TitleScreenBackgroundMixin {
 
 	@Inject(method = "<init>*", at = @At("TAIL"))
 	private void VISTAS_PanoramaChanger(CallbackInfo ci) {
-
 		this.backgroundRenderer = new RotatingCubeMapRenderer(new CubeMapRenderer(Panorama.getPanorama().getId()));
-
 	}
 
 	@Inject(method = "initWidgetsNormal", at = @At(value = "RETURN"))
@@ -36,12 +34,13 @@ public abstract class TitleScreenBackgroundMixin {
 
 		if (PanoramaConfig.INSTANCE().randomPerScreen) {
 			if (!PanoramaConfig.INSTANCE().forcePanorama) {
-				PanoramaConfig.INSTANCE().panorama = Vistas.panoramas.values().toArray(new Panorama[0])[new Random().nextInt(Vistas.panoramas.size())].getName();
+				if (Vistas.panoramas.size() >= 1) {
+					PanoramaConfig.INSTANCE().panorama = Vistas.panoramas.values().toArray(new Panorama[0])[new Random().nextInt(Vistas.panoramas.size())].getName();
+				}
 			}
 		}
 
 		this.backgroundRenderer = new RotatingCubeMapRenderer(new CubeMapRenderer(Panorama.getPanorama().getId()));
-
 	}
 
 }
