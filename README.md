@@ -1,8 +1,8 @@
 ![Vistas](https://i.imgur.com/ifllw9I.png)
 
 Randomly picks a background panorama and music to go along with it, all through a resource pack!
-* You can add your own panoramas!
-* You can add your own music!
+* You can add your own menu panoramas!
+* You can add your own menu music!
 * No programming or mod required!
 
 <h4 align="center">
