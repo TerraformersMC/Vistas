@@ -25,9 +25,6 @@ public class Vistas implements ClientModInitializer {
 		// Config Registry
 		PanoramaConfig.init();
 
-		// Adding the default Panorama
-		Panorama.addBuiltInPanorama(new Panorama(new Identifier("minecraft").toString(), new Identifier("textures/gui/title/background/panorama"), new Identifier("music.menu")));
-
 		// Chose random panorama
 		if (!PanoramaConfig.INSTANCE().forcePanorama) {
 			if (Vistas.panoramas.size() >= 1) {
@@ -106,7 +103,6 @@ public class Vistas implements ClientModInitializer {
 			Panorama pickedPanorama = Vistas.panoramas.get(new Identifier(PanoramaConfig.INSTANCE().panorama).toString());
 
 			if (pickedPanorama == null) {
-				pickedPanorama = new Panorama(new Identifier("minecraft").toString(), new Identifier("textures/gui/title/background/panorama"), new Identifier("music.menu"));
 				PanoramaConfig.INSTANCE().panorama = new Identifier("minecraft").toString();
 			}
 

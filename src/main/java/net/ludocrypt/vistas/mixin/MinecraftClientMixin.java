@@ -36,7 +36,9 @@ public class MinecraftClientMixin implements PanoramaManagerAccess {
 	@Inject(method = "getMusicType", at = @At("HEAD"), cancellable = true)
 	private void VISTAS_getMusicType(CallbackInfoReturnable<MusicSound> ci) {
 		if (this.player == null) {
-			ci.setReturnValue(Panorama.getPanorama().getMusic());
+			if (Panorama.getPanorama() != null) {
+				ci.setReturnValue(Panorama.getPanorama().getMusic());
+			}
 		}
 	}
 
