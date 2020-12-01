@@ -47,6 +47,13 @@ public class Vistas implements ClientModInitializer {
 			this.weight = 1;
 		}
 
+		public Panorama(String name, Identifier id, SoundEvent music) {
+			this.name = name;
+			this.id = id;
+			this.music = createMenuSound(music);
+			this.weight = 1;
+		}
+
 		public Panorama(String name, Identifier id, MusicSound music) {
 			this.name = name;
 			this.id = id;
@@ -55,6 +62,11 @@ public class Vistas implements ClientModInitializer {
 		}
 
 		public Panorama(String name, Identifier id, Identifier music, int weight) {
+			this(name, id, music);
+			this.weight = weight;
+		}
+
+		public Panorama(String name, Identifier id, SoundEvent music, int weight) {
 			this(name, id, music);
 			this.weight = weight;
 		}
@@ -113,6 +125,7 @@ public class Vistas implements ClientModInitializer {
 			panoramas.clear();
 			panoramas.putAll(builtinPanoramas);
 			panoramas.putAll(resourcePanoramas);
+			getPanorama();
 		}
 
 	}

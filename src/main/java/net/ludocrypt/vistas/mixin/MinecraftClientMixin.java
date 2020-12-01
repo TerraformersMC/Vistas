@@ -42,7 +42,7 @@ public class MinecraftClientMixin implements PanoramaManagerAccess {
 		}
 	}
 
-	@Inject(method = "<init>*", at = @At(value = "NEW", target = "Lnet/minecraft/client/sound/SoundManager;"))
+	@Inject(method = "<init>*", at = @At(value = "NEW", target = "Lnet/minecraft/client/texture/TextureManager;"))
 	private void VISTAS_PanoramaManagerMixin(CallbackInfo ci) {
 		this.panoramaManager = new PanoramaManager();
 		this.resourceManager.registerListener(panoramaManager);

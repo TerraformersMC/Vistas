@@ -8,8 +8,9 @@
 		"LudoCrypt"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/vistas",
+		"sources": "https://github.com/LudoCrypt/Vistas",
+		"issues": "https://github.com/LudoCrypt/Vistas/issues"
 	},
 	"license": "LGPLv3",
 	"icon": "assets/vistas/icon.png",
