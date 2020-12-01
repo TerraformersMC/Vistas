@@ -9,7 +9,7 @@ Randomly picks a background panorama and music to go along with it, all through 
 Vistas requires <a href="https://fabricmc.net/use/">Fabric Loader</a> and <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api">Fabric API</a>
 </h4>
 <h4 align="center">
-Check out the <a href="https://discord.gg/jEGF5fb">Terraformers Discord Server</a> to chat about Something else because this is not a yet a confirmed Terraformers mod! and other Fabric mods!
+Check out the <a href="https://discord.gg/jEGF5fb">Terraformers Discord Server</a> to chat about Something else because this is not yet a confirmed Terraformers mod! and other Fabric mods!
 </h4>
 <h4 align="center">
 Visit the <a href="https://github.com/LudoCrypt/Vistas/wiki/Documentation">Vistas Documentation Wiki</a> to learn how to use the tool
