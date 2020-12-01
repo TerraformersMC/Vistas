@@ -24,4 +24,4 @@ You can view how to use this on the [Vistas Documentation wiki](https://github.c
 ### Developers/Resourcepack Creators
 If you want to learn how to make a new panorama with a resourcepack or code, visit the [Vistas Documentation wiki](https://github.com/LudoCrypt/Vistas/wiki/Documentation) to learn what to do.
 
-### Vistas is a mod for Fabric, and there are no plans to port this mod to Forge.
+### Vistas is a mod for Fabric, and there are no plans to port this mod to Forge
