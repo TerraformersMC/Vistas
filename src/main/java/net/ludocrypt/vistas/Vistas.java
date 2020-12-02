@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,18 +23,11 @@ public class Vistas implements ClientModInitializer {
 	public static Map<String, Panorama> resourcePanoramas = new HashMap<String, Panorama>();
 	public static Map<String, Panorama> panoramas = new HashMap<String, Panorama>();
 
+	public static Logger LOGGER = LogManager.getLogger();
+
 	@Override
 	public void onInitializeClient() {
-
-		// Config Registry
 		PanoramaConfig.init();
-
-		// Chose random panorama
-		if (!PanoramaConfig.INSTANCE().forcePanorama) {
-			if (Vistas.panoramas.size() >= 1) {
-				PanoramaConfig.INSTANCE().panorama = Vistas.panoramas.values().toArray(new Panorama[0])[new Random().nextInt(Vistas.panoramas.size())].getName();
-			}
-		}
 	}
 
 	public static class Panorama {
@@ -112,20 +109,33 @@ public class Vistas implements ClientModInitializer {
 
 		public static Panorama getPanorama() {
 
-			Panorama pickedPanorama = Vistas.panoramas.get(new Identifier(PanoramaConfig.INSTANCE().panorama).toString());
+			Panorama pickedPanorama = null;
 
-			if (pickedPanorama == null) {
-				PanoramaConfig.INSTANCE().panorama = new Identifier("minecraft").toString();
+			if (AutoConfig.getConfigHolder(PanoramaConfig.class) != null) {
+				pickedPanorama = Vistas.panoramas.get(PanoramaConfig.INSTANCE().panorama);
 			}
 
 			return pickedPanorama;
+		}
+
+		public static Panorama getRandomPanorama() {
+			return Vistas.panoramas.values().toArray(new Panorama[0])[new Random().nextInt(Vistas.panoramas.size())];
+		}
+
+		public static void setRandomPanorama() {
+			if (!PanoramaConfig.INSTANCE().forcePanorama) {
+				if (Vistas.panoramas.size() >= 1) {
+					Panorama pan = Panorama.getRandomPanorama();
+					PanoramaConfig.INSTANCE().panorama = pan.getName();
+				}
+			}
 		}
 
 		public static void relaodPanoramas() {
 			panoramas.clear();
 			panoramas.putAll(builtinPanoramas);
 			panoramas.putAll(resourcePanoramas);
-			getPanorama();
+			setRandomPanorama();
 		}
 
 	}

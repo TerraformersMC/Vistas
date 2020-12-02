@@ -1,7 +1,5 @@
 package net.ludocrypt.vistas.mixin;
 
-import java.util.Random;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -10,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.ludocrypt.vistas.Vistas;
 import net.ludocrypt.vistas.Vistas.Panorama;
 import net.ludocrypt.vistas.config.PanoramaConfig;
 import net.minecraft.client.gui.CubeMapRenderer;
@@ -24,26 +21,25 @@ public abstract class TitleScreenBackgroundMixin {
 	@Shadow
 	private RotatingCubeMapRenderer backgroundRenderer;
 
-	@Inject(method = "<init>*", at = @At("TAIL"))
-	private void VISTAS_PanoramaChanger(CallbackInfo ci) {
-		if (Panorama.getPanorama() != null) {
-			this.backgroundRenderer = new RotatingCubeMapRenderer(new CubeMapRenderer(Panorama.getPanorama().getId()));
-		} else {
-			this.backgroundRenderer = new RotatingCubeMapRenderer(TitleScreen.PANORAMA_CUBE_MAP);
+	@Inject(method = "init", at = @At("TAIL"))
+	private void VISTAS_initPanoramaChange(CallbackInfo ci) {
+		if (PanoramaConfig.INSTANCE().randomPerScreen) {
+			Panorama.setRandomPanorama();
+		}
+		updateScreen();
+	}
+
+	@Inject(method = "tick", at = @At("TAIL"))
+	private void VISTAS_tickPanoramaChange(CallbackInfo ci) {
+
+		if (PanoramaConfig.INSTANCE().hectic) {
+			Panorama.setRandomPanorama();
+
+			updateScreen();
 		}
 	}
 
-	@Inject(method = "initWidgetsNormal", at = @At(value = "RETURN"))
-	private void VISTAS_initPanoramaChange(int y, int spacingY, CallbackInfo ci) {
-
-		if (PanoramaConfig.INSTANCE().randomPerScreen) {
-			if (!PanoramaConfig.INSTANCE().forcePanorama) {
-				if (Vistas.panoramas.size() >= 1) {
-					PanoramaConfig.INSTANCE().panorama = Vistas.panoramas.values().toArray(new Panorama[0])[new Random().nextInt(Vistas.panoramas.size())].getName();
-				}
-			}
-		}
-
+	private void updateScreen() {
 		if (Panorama.getPanorama() != null) {
 			this.backgroundRenderer = new RotatingCubeMapRenderer(new CubeMapRenderer(Panorama.getPanorama().getId()));
 		} else {

@@ -3,7 +3,7 @@
 	"id": "vistas",
 	"version": "${version}",
 	"name": "Vistas",
-	"description": "A library and tool for creating and customizing main menu panoramas and music for mods and modpacks on the fabric platform",
+	"description": "A library and tool for creating and customizing main menu panoramas and music for mods and modpacks on the fabric platform.",
 	"authors": [
 		"LudoCrypt"
 	],

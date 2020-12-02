@@ -125,9 +125,9 @@ public class PanoramaManager extends SinglePreparationResourceReloadListener<Pan
 		if (loader != null) {
 			Vistas.resourcePanoramas.clear();
 			loader.loadedPanoramas.forEach((string, pan) -> {
-				Vistas.Panorama.addResourcePanorama(pan);
+				Panorama.addResourcePanorama(pan);
 			});
-			Vistas.Panorama.relaodPanoramas();
+			Panorama.relaodPanoramas();
 		} else {
 			LOGGER.warn("Panorama list null, sort this out!");
 		}

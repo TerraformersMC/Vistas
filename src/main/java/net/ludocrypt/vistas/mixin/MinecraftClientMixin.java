@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.ludocrypt.vistas.Vistas.Panorama;
-import net.ludocrypt.vistas.access.PanoramaManagerAccess;
+import net.ludocrypt.vistas.access.MinecraftClientAccess;
 import net.ludocrypt.vistas.resource.PanoramaManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -21,7 +21,7 @@ import net.minecraft.sound.MusicSound;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin implements PanoramaManagerAccess {
+public class MinecraftClientMixin implements MinecraftClientAccess {
 
 	@Shadow
 	public ClientPlayerEntity player;
@@ -42,7 +42,7 @@ public class MinecraftClientMixin implements PanoramaManagerAccess {
 		}
 	}
 
-	@Inject(method = "<init>*", at = @At(value = "NEW", target = "Lnet/minecraft/client/texture/TextureManager;"))
+	@Inject(method = "<init>", at = @At(value = "NEW", target = "Lnet/minecraft/client/texture/TextureManager;"))
 	private void VISTAS_PanoramaManagerMixin(CallbackInfo ci) {
 		this.panoramaManager = new PanoramaManager();
 		this.resourceManager.registerListener(panoramaManager);

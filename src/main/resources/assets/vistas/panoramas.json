@@ -1,6 +1,6 @@
 {
-	"minecraft:minecraft": {
-		"name": "minecraft:minecraft",
+	"default": {
+		"name": "minecraft",
 		"panoramaId": "textures/gui/title/background/panorama",
 		"musicId": "music.menu",
 		"weight": 1
