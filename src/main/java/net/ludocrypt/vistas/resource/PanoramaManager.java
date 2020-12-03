@@ -48,26 +48,20 @@ public class PanoramaManager extends SinglePreparationResourceReloadListener<Pan
 		for (Iterator<String> var4 = resourceManager.getAllNamespaces().iterator(); var4.hasNext(); profiler.pop()) {
 			String string = (String) var4.next();
 			profiler.push(string);
-
 			try {
 				List<Resource> list = resourceManager.getAllResources(new Identifier(string, "panoramas.json"));
-
 				for (Iterator<Resource> var7 = list.iterator(); var7.hasNext(); profiler.pop()) {
 					Resource resource = (Resource) var7.next();
 					profiler.push(resource.getResourcePackName());
-
 					try {
 						InputStream inputStream = resource.getInputStream();
 						Throwable var10 = null;
-
 						try {
 							Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 							Throwable var12 = null;
-
 							try {
 								profiler.push("parse");
-								@SuppressWarnings({ "unchecked", "rawtypes" })
-								Map<String, Panorama> map = (Map<String, Panorama>) JsonHelper.deserialize(GSON, (Reader) reader, (TypeToken) TYPE);
+								Map<String, Panorama> map = (Map<String, Panorama>) JsonHelper.deserialize(GSON, (Reader) reader, (TypeToken<Map<String, Panorama>>) TYPE);
 								profiler.swap("register");
 								Iterator<Entry<String, Panorama>> var14 = map.entrySet().iterator();
 
@@ -122,15 +116,11 @@ public class PanoramaManager extends SinglePreparationResourceReloadListener<Pan
 
 	@Override
 	protected void apply(PanoramaManager.PanoramaList loader, ResourceManager manager, Profiler profiler) {
-		if (loader != null) {
-			Vistas.resourcePanoramas.clear();
-			loader.loadedPanoramas.forEach((string, pan) -> {
-				Panorama.addResourcePanorama(pan);
-			});
-			Panorama.relaodPanoramas();
-		} else {
-			LOGGER.warn("Panorama list null, sort this out!");
-		}
+		Vistas.resourcePanoramas.clear();
+		loader.loadedPanoramas.forEach((string, pan) -> {
+			Panorama.addResourcePanorama(pan);
+		});
+		Panorama.relaodPanoramas();
 	}
 
 	@Environment(EnvType.CLIENT)

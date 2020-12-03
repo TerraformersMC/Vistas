@@ -33,10 +33,13 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 	@Unique
 	private PanoramaManager panoramaManager;
 
+	@Unique
+	private Panorama clientPanorama;
+
 	@Inject(method = "getMusicType", at = @At("HEAD"), cancellable = true)
 	private void VISTAS_getMusicType(CallbackInfoReturnable<MusicSound> ci) {
 		if (this.player == null) {
-			if (Panorama.getPanorama() != null) {
+			if (clientPanorama != null) {
 				ci.setReturnValue(Panorama.getPanorama().getMusic());
 			}
 		}
@@ -46,10 +49,21 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 	private void VISTAS_PanoramaManagerMixin(CallbackInfo ci) {
 		this.panoramaManager = new PanoramaManager();
 		this.resourceManager.registerListener(panoramaManager);
+		clientPanorama = null;
 	}
 
 	@Override
 	public PanoramaManager getPanoramaManager() {
 		return panoramaManager;
+	}
+
+	@Override
+	public Panorama getClientPanorama() {
+		return clientPanorama;
+	}
+
+	@Override
+	public void setClientPanorama(Panorama pan) {
+		clientPanorama = pan;
 	}
 }

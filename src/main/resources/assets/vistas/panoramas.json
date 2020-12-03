@@ -3,6 +3,13 @@
 		"name": "minecraft",
 		"panoramaId": "textures/gui/title/background/panorama",
 		"musicId": "music.menu",
+		"movementSettings": {
+			"frozen": false,
+			"addedX": 0.0,
+			"addedY": 0.0,
+			"speedMultiplier": 1.0,
+			"woozy": false
+		},
 		"weight": 1
 	}
 }

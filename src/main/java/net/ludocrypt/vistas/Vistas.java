@@ -11,7 +11,9 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.ludocrypt.vistas.access.MinecraftClientAccess;
 import net.ludocrypt.vistas.config.PanoramaConfig;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -36,41 +38,18 @@ public class Vistas implements ClientModInitializer {
 		private Identifier id;
 		private MusicSound music;
 		private int weight = 1;
+		private MovementSettings movementSettings;
 
-		public Panorama(String name, Identifier id, Identifier music) {
-			this.name = name;
-			this.id = id;
-			this.music = createMenuSound(new SoundEvent(music));
-			this.weight = 1;
-		}
-
-		public Panorama(String name, Identifier id, SoundEvent music) {
-			this.name = name;
-			this.id = id;
-			this.music = createMenuSound(music);
-			this.weight = 1;
-		}
-
-		public Panorama(String name, Identifier id, MusicSound music) {
+		public Panorama(String name, Identifier id, MusicSound music, MovementSettings movementSettings, int weight) {
 			this.name = name;
 			this.id = id;
 			this.music = music;
-			this.weight = 1;
-		}
-
-		public Panorama(String name, Identifier id, Identifier music, int weight) {
-			this(name, id, music);
+			this.movementSettings = movementSettings;
 			this.weight = weight;
 		}
 
-		public Panorama(String name, Identifier id, SoundEvent music, int weight) {
-			this(name, id, music);
-			this.weight = weight;
-		}
-
-		public Panorama(String name, Identifier id, MusicSound music, int weight) {
-			this(name, id, music);
-			this.weight = weight;
+		public Panorama(String name, Identifier id, SoundEvent music, MovementSettings movementSettings, int weight) {
+			this(name, id, createMenuSound(music), movementSettings, weight);
 		}
 
 		public String getName() {
@@ -83,6 +62,10 @@ public class Vistas implements ClientModInitializer {
 
 		public MusicSound getMusic() {
 			return music;
+		}
+
+		public MovementSettings getMovementSettings() {
+			return movementSettings;
 		}
 
 		public int getWeight() {
@@ -101,18 +84,18 @@ public class Vistas implements ClientModInitializer {
 			}
 		}
 
-		public static void addPanorama(Panorama pan) {
-			for (int i = 0; i < pan.getWeight(); i++) {
-				panoramas.put(i > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
-			}
-		}
-
 		public static Panorama getPanorama() {
 
 			Panorama pickedPanorama = null;
 
 			if (AutoConfig.getConfigHolder(PanoramaConfig.class) != null) {
 				pickedPanorama = Vistas.panoramas.get(PanoramaConfig.INSTANCE().panorama);
+			} else {
+				LOGGER.warn("Config not registered while trying for panorama");
+			}
+
+			if (pickedPanorama == null) {
+				LOGGER.warn("Config panorama null");
 			}
 
 			return pickedPanorama;
@@ -127,6 +110,7 @@ public class Vistas implements ClientModInitializer {
 				if (Vistas.panoramas.size() >= 1) {
 					Panorama pan = Panorama.getRandomPanorama();
 					PanoramaConfig.INSTANCE().panorama = pan.getName();
+					((MinecraftClientAccess) MinecraftClient.getInstance()).setClientPanorama(pan);
 				}
 			}
 		}
@@ -138,9 +122,47 @@ public class Vistas implements ClientModInitializer {
 			setRandomPanorama();
 		}
 
+		public static class MovementSettings {
+
+			private boolean frozen;
+			private float addedX;
+			private float addedY;
+			private float speedMultiplier;
+			private boolean woozy;
+
+			public MovementSettings(boolean frozen, float addedX, float addedY, float speedMultiplier, boolean woozy) {
+				this.frozen = frozen;
+				this.addedX = addedX;
+				this.addedY = addedY;
+				this.speedMultiplier = speedMultiplier;
+				this.woozy = woozy;
+			}
+
+			public boolean isFrozen() {
+				return frozen;
+			}
+
+			public float getAddedX() {
+				return addedX;
+			}
+
+			public float getAddedY() {
+				return addedY;
+			}
+
+			public float getSpeedMultiplier() {
+				return speedMultiplier;
+			}
+
+			public boolean isWoozy() {
+				return woozy;
+			}
+
+		}
+
 	}
 
-	private static MusicSound createMenuSound(SoundEvent event) {
+	public static MusicSound createMenuSound(SoundEvent event) {
 		return new MusicSound(event, 20, 600, true);
 	}
 }
