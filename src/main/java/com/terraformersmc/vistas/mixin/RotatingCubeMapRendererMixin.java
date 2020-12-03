@@ -1,6 +1,6 @@
 package com.terraformersmc.vistas.mixin;
 
-import com.terraformersmc.vistas.Vistas.Panorama;
+import com.terraformersmc.vistas.Panorama;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;

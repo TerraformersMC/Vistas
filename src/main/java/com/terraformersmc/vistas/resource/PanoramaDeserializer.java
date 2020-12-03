@@ -1,6 +1,7 @@
 package com.terraformersmc.vistas.resource;
 
 import com.google.gson.*;
+import com.terraformersmc.vistas.Panorama;
 import com.terraformersmc.vistas.Vistas;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,9 +13,9 @@ import net.minecraft.util.JsonHelper;
 import java.lang.reflect.Type;
 
 @Environment(EnvType.CLIENT)
-public class PanoramaDeserializer implements JsonDeserializer<Vistas.Panorama> {
+public class PanoramaDeserializer implements JsonDeserializer<Panorama> {
 
-    public Vistas.Panorama deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Panorama deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
         JsonObject jsonObject = JsonHelper.asObject(jsonElement, "entry");
         String name = JsonHelper.getString(jsonObject, "name");
@@ -27,13 +28,13 @@ public class PanoramaDeserializer implements JsonDeserializer<Vistas.Panorama> {
             music = Vistas.createMenuSound(new SoundEvent(new Identifier(musicId)));
         }
 
-        Vistas.Panorama.MovementSettings movementSettings = deserializeMovementSettings(jsonObject);
+        Panorama.MovementSettings movementSettings = deserializeMovementSettings(jsonObject);
         int weight = JsonHelper.getInt(jsonObject, "weight", 1);
 
-        return new Vistas.Panorama(name, new Identifier(panoramaId), music, movementSettings, weight);
+        return new Panorama(name, new Identifier(panoramaId), music, movementSettings, weight);
     }
 
-    public Vistas.Panorama.MovementSettings deserializeMovementSettings(JsonObject json) {
+    public Panorama.MovementSettings deserializeMovementSettings(JsonObject json) {
 
         if (json.has("movementSettings")) {
 
@@ -45,10 +46,10 @@ public class PanoramaDeserializer implements JsonDeserializer<Vistas.Panorama> {
             float speedMultiplier = JsonHelper.getFloat(movementJson, "speedMultiplier", 1.0F);
             boolean woozy = JsonHelper.getBoolean(movementJson, "woozy", false);
 
-            return new Vistas.Panorama.MovementSettings(frozen, addedX, addedY, speedMultiplier, woozy);
+            return new Panorama.MovementSettings(frozen, addedX, addedY, speedMultiplier, woozy);
         }
 
-        return new Vistas.Panorama.MovementSettings(false, 0.0F, 0.0F, 1.0F, false);
+        return new Panorama.MovementSettings(false, 0.0F, 0.0F, 1.0F, false);
     }
 
     public MusicSound deserializeMusicSound(JsonObject json) {

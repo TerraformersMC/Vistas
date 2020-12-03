@@ -1,7 +1,7 @@
 package com.terraformersmc.vistas.access;
 
-import com.terraformersmc.vistas.Vistas;
+import com.terraformersmc.vistas.Panorama;
 
 public interface MinecraftClientAccess {
-    void setClientPanorama(Vistas.Panorama pan);
+    void setClientPanorama(Panorama pan);
 }
