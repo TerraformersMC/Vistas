@@ -1,16 +1,15 @@
 {
-	"required": true,
-	"minVersion": "0.8",
-	"package": "net.ludocrypt.vistas.mixin",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [
-	],
-	"client": [
-		"TitleScreenBackgroundMixin",
-		"MinecraftClientMixin",
-		"RotatingCubeMapRendererMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.terraformersmc.vistas.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "GameRendererMixin",
+    "MinecraftClientMixin",
+    "RotatingCubeMapRendererMixin",
+    "TitleScreenBackgroundMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

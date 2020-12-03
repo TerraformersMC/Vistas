@@ -1,7 +1,9 @@
 {
-	"text.autoconfig.vistas.title": "Vistas Config",
-	"text.autoconfig.vistas.option.panorama": "Panorama",
-	"text.autoconfig.vistas.option.forcePanorama": "Force Panorama",
-	"text.autoconfig.vistas.option.randomPerScreen": "Random Per Screen",
-	"text.autoconfig.vistas.option.hectic": "Hectic (Warning, Flashing Colors)"
+  "text.autoconfig.vistas.title": "Vistas Config",
+  "text.autoconfig.vistas.option.panorama": "Panorama",
+  "text.autoconfig.vistas.option.forcePanorama": "Force Panorama",
+  "text.autoconfig.vistas.option.randomPerScreen": "Random Per Screen",
+  "text.autoconfig.vistas.option.hectic": "Hectic (Warning, Flashing Colors)",
+  "vistas.panoramic_screenshot.saved": "Panorama taken and saved at %s directory",
+  "key.vistas.panoramic_screenshot": "Take Panoramic Screenshot"
 }

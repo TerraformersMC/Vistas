@@ -1,0 +1,4 @@
+This project includes two files that are available under the terms of the Mozilla Public License:
+
+- https://github.com/TerraformersMC/Vistas/blob/main/src/main/java/net/ludocrypt/vistas/mixin/GameRendererMixin.java
+- https://github.com/TerraformersMC/Vistas/blob/main/src/main/java/net/ludocrypt/vistas/screenshot/PanoramicScreenshots.java
