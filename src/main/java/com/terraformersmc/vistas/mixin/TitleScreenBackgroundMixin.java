@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.terraformersmc.vistas.Panorama;
 import com.terraformersmc.vistas.config.PanoramaConfig;
+import com.terraformersmc.vistas.panorama.Panorama;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

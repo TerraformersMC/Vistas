@@ -5,7 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.terraformersmc.vistas.Vistas;
-import com.terraformersmc.vistas.Panorama;
+import com.terraformersmc.vistas.panorama.Panorama;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resource.Resource;

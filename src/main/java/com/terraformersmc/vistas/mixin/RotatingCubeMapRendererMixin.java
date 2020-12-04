@@ -1,6 +1,5 @@
 package com.terraformersmc.vistas.mixin;
 
-import com.terraformersmc.vistas.Panorama;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
@@ -9,6 +8,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+
+import com.terraformersmc.vistas.panorama.Panorama;
 
 @Environment(EnvType.CLIENT)
 @Mixin(RotatingCubeMapRenderer.class)
