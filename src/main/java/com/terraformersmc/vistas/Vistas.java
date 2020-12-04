@@ -42,13 +42,13 @@ public class Vistas implements ClientModInitializer {
 
 	public static void addBuiltInPanorama(Panorama pan) {
 		for (int i = 0; i < pan.getWeight(); i++) {
-			builtinPanoramas.put(i > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
+			builtinPanoramas.put(pan.getWeight() > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
 		}
 	}
 
 	public static void addResourcePanorama(Panorama pan) {
 		for (int i = 0; i < pan.getWeight(); i++) {
-			resourcePanoramas.put(i > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
+			resourcePanoramas.put(pan.getWeight() > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
 		}
 	}
 }
