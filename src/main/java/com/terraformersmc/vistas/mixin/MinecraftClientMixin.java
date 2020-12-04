@@ -1,7 +1,8 @@
 package com.terraformersmc.vistas.mixin;
 
 import com.terraformersmc.vistas.access.MinecraftClientAccess;
-import com.terraformersmc.vistas.panorama.Panorama;
+import com.terraformersmc.vistas.api.panorama.Panorama;
+import com.terraformersmc.vistas.api.panorama.Panoramas;
 import com.terraformersmc.vistas.resource.PanoramaManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,7 +40,7 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
     private void VISTAS_getMusicType(CallbackInfoReturnable<MusicSound> ci) {
         if (this.player == null) {
             if (clientPanorama != null) {
-                ci.setReturnValue(Panorama.getPanorama().getMusic());
+                ci.setReturnValue(Panoramas.getCurrent().getMusic());
             }
         }
     }

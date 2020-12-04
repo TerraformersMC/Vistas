@@ -5,8 +5,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.terraformersmc.vistas.Vistas;
-import com.terraformersmc.vistas.panorama.Panorama;
+import com.terraformersmc.vistas.api.panorama.Panorama;
 
+import com.terraformersmc.vistas.api.panorama.Panoramas;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resource.Resource;
@@ -119,7 +120,7 @@ public class PanoramaManager extends SinglePreparationResourceReloadListener<Pan
         loader.loadedPanoramas.forEach((string, pan) -> {
             Vistas.addResourcePanorama(pan);
         });
-        Panorama.relaodPanoramas();
+        Panoramas.reload();
     }
 
     @Environment(EnvType.CLIENT)

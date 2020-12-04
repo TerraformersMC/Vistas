@@ -17,7 +17,7 @@ public class PanoramaConfig implements ConfigData {
         AutoConfig.register(PanoramaConfig.class, GsonConfigSerializer::new);
     }
 
-    public static PanoramaConfig INSTANCE() {
+    public static PanoramaConfig getInstance() {
         return AutoConfig.getConfigHolder(PanoramaConfig.class).getConfig();
     }
 

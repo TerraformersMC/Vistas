@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.terraformersmc.vistas.api.VistasApi;
 import com.terraformersmc.vistas.config.PanoramaConfig;
-import com.terraformersmc.vistas.panorama.Panorama;
+import com.terraformersmc.vistas.api.panorama.Panorama;
 import com.terraformersmc.vistas.screenshot.PanoramicScreenshots;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -40,7 +40,7 @@ public class Vistas implements ClientModInitializer {
 		});
 	}
 
-	private static void addBuiltInPanorama(Panorama pan) {
+	public static void addBuiltInPanorama(Panorama pan) {
 		for (int i = 0; i < pan.getWeight(); i++) {
 			builtinPanoramas.put(i > 1 ? pan.getName() + "_" + i : pan.getName(), pan);
 		}

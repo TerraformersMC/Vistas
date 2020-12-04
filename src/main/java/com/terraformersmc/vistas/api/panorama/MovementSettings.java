@@ -1,4 +1,4 @@
-package com.terraformersmc.vistas.panorama;
+package com.terraformersmc.vistas.api.panorama;
 
 public class MovementSettings {
 

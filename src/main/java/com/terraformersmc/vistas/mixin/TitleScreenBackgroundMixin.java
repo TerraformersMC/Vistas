@@ -1,5 +1,6 @@
 package com.terraformersmc.vistas.mixin;
 
+import com.terraformersmc.vistas.api.panorama.Panoramas;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.terraformersmc.vistas.config.PanoramaConfig;
-import com.terraformersmc.vistas.panorama.Panorama;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,8 +32,8 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 
 	@Inject(method = "init", at = @At("TAIL"))
 	private void VISTAS_initPanoramaChange(CallbackInfo ci) {
-		if (PanoramaConfig.INSTANCE().randomPerScreen) {
-			Panorama.setRandomPanorama();
+		if (PanoramaConfig.getInstance().randomPerScreen) {
+			Panoramas.setRandom();
 		}
 		updateScreen();
 	}
@@ -41,8 +41,8 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void VISTAS_tickPanoramaChange(CallbackInfo ci) {
 
-		if (PanoramaConfig.INSTANCE().hectic) {
-			Panorama.setRandomPanorama();
+		if (PanoramaConfig.getInstance().hectic) {
+			Panoramas.setRandom();
 
 			updateScreen();
 		}
@@ -50,8 +50,8 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 
 	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(Lnet/minecraft/util/Identifier;)V", ordinal = 0), index = 0)
 	private Identifier VISTAS_overlayMixin(Identifier defaultOverlay) {
-		if (Panorama.getPanorama() != null) {
-			Identifier overlayId = new Identifier(Panorama.getPanorama().getId().toString() + "_overlay.png");
+		if (Panoramas.getCurrent() != null) {
+			Identifier overlayId = new Identifier(Panoramas.getCurrent().getId().toString() + "_overlay.png");
 			if (this.client.getResourceManager().containsResource(overlayId)) {
 				return overlayId;
 			}
@@ -60,8 +60,8 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 	}
 
 	private void updateScreen() {
-		if (Panorama.getPanorama() != null) {
-			this.backgroundRenderer = new RotatingCubeMapRenderer(new CubeMapRenderer(Panorama.getPanorama().getId()));
+		if (Panoramas.getCurrent() != null) {
+			this.backgroundRenderer = new RotatingCubeMapRenderer(new CubeMapRenderer(Panoramas.getCurrent().getId()));
 		} else {
 			this.backgroundRenderer = new RotatingCubeMapRenderer(TitleScreen.PANORAMA_CUBE_MAP);
 		}

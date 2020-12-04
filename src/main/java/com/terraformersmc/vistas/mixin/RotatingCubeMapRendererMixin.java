@@ -1,5 +1,6 @@
 package com.terraformersmc.vistas.mixin;
 
+import com.terraformersmc.vistas.api.panorama.Panoramas;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
@@ -9,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import com.terraformersmc.vistas.panorama.Panorama;
+import com.terraformersmc.vistas.api.panorama.Panorama;
 
 @Environment(EnvType.CLIENT)
 @Mixin(RotatingCubeMapRenderer.class)
@@ -20,7 +21,7 @@ public abstract class RotatingCubeMapRendererMixin {
 
     @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/CubeMapRenderer;draw(Lnet/minecraft/client/MinecraftClient;FFF)V"))
     public void VISTAS_changeSpeed(Args args, float delta, float alpha) {
-        Panorama pan = Panorama.getPanorama();
+        Panorama pan = Panoramas.getCurrent();
         boolean frozen = pan.getMovementSettings().isFrozen();
         float addedX = pan.getMovementSettings().getAddedX();
         float addedY = pan.getMovementSettings().getAddedY();
