@@ -51,7 +51,7 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(Lnet/minecraft/util/Identifier;)V", ordinal = 0), index = 0)
 	private Identifier VISTAS_overlayMixin(Identifier defaultOverlay) {
 		if (Panoramas.getCurrent() != null) {
-			Identifier overlayId = new Identifier(Panoramas.getCurrent().getId().toString() + "_overlay.png");
+			Identifier overlayId = new Identifier(Panoramas.getCurrent().getBackgroundId().toString() + "_overlay.png");
 			if (this.client.getResourceManager().containsResource(overlayId)) {
 				return overlayId;
 			}
@@ -61,7 +61,7 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 
 	private void updateScreen() {
 		if (Panoramas.getCurrent() != null) {
-			this.backgroundRenderer = new RotatingCubeMapRenderer(new CubeMapRenderer(Panoramas.getCurrent().getId()));
+			this.backgroundRenderer = new RotatingCubeMapRenderer(new CubeMapRenderer(Panoramas.getCurrent().getBackgroundId()));
 		} else {
 			this.backgroundRenderer = new RotatingCubeMapRenderer(TitleScreen.PANORAMA_CUBE_MAP);
 		}

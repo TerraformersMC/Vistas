@@ -38,7 +38,7 @@ public class PanoramaDeserializer implements JsonDeserializer<Panorama> {
 		int weight = JsonHelper.getInt(jsonObject, "weight", 1);
 
 		return new Panorama.Builder(name)
-				.setId(new Identifier(panoramaId))
+				.setBackgroundId(new Identifier(panoramaId))
 				.setMusic(music)
 				.setFrozen(movementSettings.isFrozen())
 				.setAddedX(movementSettings.getAddedX())
