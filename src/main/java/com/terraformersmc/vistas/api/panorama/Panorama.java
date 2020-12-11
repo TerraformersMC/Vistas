@@ -1,5 +1,7 @@
 package com.terraformersmc.vistas.api.panorama;
 
+import com.google.common.base.Function;
+
 import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -54,6 +56,15 @@ public class Panorama {
 		private float speedMultiplier = 1.0F;
 		private boolean woozy = false;
 
+		private boolean useXEquation = false;
+		private Function<Float, Float> XEquation = (time) -> {
+			return 0.0F;
+		};
+		private boolean useYEquation = false;
+		private Function<Float, Float> YEquation = (time) -> {
+			return 0.0F;
+		};
+
 		public Builder(String name) {
 			this.name = name;
 		}
@@ -98,8 +109,30 @@ public class Panorama {
 			return this;
 		}
 
+		public Builder setUseXEquation(boolean useXEquation) {
+			this.useXEquation = useXEquation;
+			return this;
+		}
+
+		public Builder setUseYEquation(boolean useYEquation) {
+			this.useYEquation = useYEquation;
+			return this;
+		}
+
+		public Builder setXEquation(Function<Float, Float> xEquation) {
+			XEquation = xEquation;
+			useXEquation = true;
+			return this;
+		}
+
+		public Builder setYEquation(Function<Float, Float> yEquation) {
+			YEquation = yEquation;
+			useYEquation = true;
+			return this;
+		}
+
 		public Panorama build() {
-			return new Panorama(name, backgroundId, music, new MovementSettings(frozen, addedX, addedY, speedMultiplier, woozy), weight);
+			return new Panorama(name, backgroundId, music, new MovementSettings(frozen, addedX, addedY, speedMultiplier, woozy, useXEquation, useYEquation, XEquation, YEquation), weight);
 		}
 
 		public static MusicSound createMenuSound(SoundEvent event) {

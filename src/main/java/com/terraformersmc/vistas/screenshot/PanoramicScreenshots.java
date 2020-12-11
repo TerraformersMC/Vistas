@@ -31,7 +31,7 @@ import java.util.List;
 public final class PanoramicScreenshots {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-    public static final Logger LOGGER = LogManager.getLogger(Vistas.MOD_ID + "|PanoramicScreenshots");
+    public static final Logger LOGGER = LogManager.getLogger(Vistas.MOD_NAME + "|PanoramicScreenshots");
     /**
      * The rotations for the 6 sides of the rendered panorama.
      */

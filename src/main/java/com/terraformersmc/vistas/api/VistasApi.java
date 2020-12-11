@@ -5,5 +5,5 @@ import java.util.Set;
 import com.terraformersmc.vistas.api.panorama.Panorama;
 
 public interface VistasApi {
-    void appendPanoramas(Set<Panorama> panoramas);
+	void appendPanoramas(Set<Panorama> panoramas);
 }

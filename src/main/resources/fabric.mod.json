@@ -1,36 +1,36 @@
 {
-  "schemaVersion": 1,
-  "id": "vistas",
-  "version": "${version}",
-  "name": "Vistas",
-  "description": "A library and tool for creating and customizing main menu panoramas and music for mods and modpacks on the fabric platform.",
-  "authors": [
-    "LudoCrypt",
-    "Prospector",
-    "TerraformersMC"
-  ],
-  "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/vistas",
-    "sources": "https://github.com/TerraformersMC/Vistas",
-    "issues": "https://github.com/TerraformersMC/Vistas/issues"
-  },
-  "license": "LGPLv3",
-  "icon": "assets/vistas/icon.png",
-  "environment": "client",
-  "entrypoints": {
-    "client": [
-      "com.terraformersmc.vistas.Vistas"
-    ],
-    "modmenu": [
-      "com.terraformersmc.vistas.config.VistasModMenuCompat"
-    ]
-  },
-  "mixins": [
-    "vistas.mixins.json"
-  ],
-  "depends": {
-    "fabricloader": ">=0.7.4",
-    "fabric": "*",
-    "minecraft": ">=1.16.4"
-  }
+	"schemaVersion": 1,
+	"id": "vistas",
+	"version": "${version}",
+	"name": "Vistas",
+	"description": "A library and tool for creating and customizing main menu panoramas and music for mods and modpacks on the fabric platform.",
+	"authors": [
+		"LudoCrypt",
+		"Prospector",
+		"TerraformersMC"
+	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/vistas",
+		"sources": "https://github.com/TerraformersMC/Vistas",
+		"issues": "https://github.com/TerraformersMC/Vistas/issues"
+	},
+	"license": "LGPLv3",
+	"icon": "assets/vistas/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.terraformersmc.vistas.Vistas"
+		],
+		"modmenu": [
+			"com.terraformersmc.vistas.config.VistasModMenuCompat"
+		]
+	},
+	"mixins": [
+		"vistas.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.7.4",
+		"fabric": "*",
+		"minecraft": ">=1.16.4"
+	}
 }

@@ -10,7 +10,7 @@ dependencies {
 
 	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
 	mod "modmenu", "io.github.prospector:modmenu:$project.modmenu_version"
-	includeMod "fabric-api", fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
+	includeMod "fabric-api", "net.fabricmc.fabric-api:fabric-api:$project.fabric_version"
 	includeMod "cloth-config-2", "me.shedaniel.cloth:config-2:$project.clothconfig_version"
 	includeMod "autoconfig", "me.sargunvohra.mcmods:autoconfig1u:$project.autoconfig_version"
 }
