@@ -12,6 +12,7 @@ public class PanoramaConfig implements ConfigData {
     public boolean forcePanorama = false;
     public boolean randomPerScreen = false;
     public boolean hectic = false;
+    public boolean lockPanoramicScreenshotRotation = true;
 
     public static void init() {
         AutoConfig.register(PanoramaConfig.class, GsonConfigSerializer::new);

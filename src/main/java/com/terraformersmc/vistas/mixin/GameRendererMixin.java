@@ -7,6 +7,7 @@
  */
 package com.terraformersmc.vistas.mixin;
 
+import com.terraformersmc.vistas.config.PanoramaConfig;
 import com.terraformersmc.vistas.screenshot.PanoramicScreenshots;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
@@ -59,6 +60,12 @@ public abstract class GameRendererMixin {
 
             // setup
             boolean oldFov90 = renderingPanorama;
+            float oldPitch = client.player.pitch;
+            float oldYaw = client.player.yaw;
+            if (PanoramaConfig.getInstance().lockPanoramicScreenshotRotation) {
+                client.player.pitch = 0;
+                client.player.yaw = 0;
+            }
             boolean oldCulling = client.chunkCullingEnabled;
             client.chunkCullingEnabled = false;
             renderingPanorama = true;
@@ -73,6 +80,8 @@ public abstract class GameRendererMixin {
             // restore
             renderingPanorama = oldFov90;
             client.chunkCullingEnabled = oldCulling;
+            client.player.pitch = oldPitch;
+            client.player.yaw = oldYaw;
             if (client.player != null) {
                 client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.saved", new LiteralText(root.toAbsolutePath().toString()).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, root.toAbsolutePath().toString())).withUnderline(true))), false);
             }
