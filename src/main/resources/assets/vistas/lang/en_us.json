@@ -3,8 +3,8 @@
   "text.autoconfig.vistas.option.panorama": "Panorama",
   "text.autoconfig.vistas.option.forcePanorama": "Force Panorama",
   "text.autoconfig.vistas.option.randomPerScreen": "Random Per Screen",
-  "text.autoconfig.vistas.option.hectic": "Hectic (Warning, Flashing Colors)",
-  "text.autoconfig.vistas.option.lockPanoramicScreenshotRotation": "Lock Panoramic Screenshot Rotation to (0 / 0)",
+  "text.autoconfig.vistas.option.lockScreenshotPitch": "Lock Panoramic Screenshot Pitch (U,D) to 0",
+  "text.autoconfig.vistas.option.lockScreenshotYaw": "Lock Panoramic Screenshot Yaw (L,R) to 0",
   "vistas.panoramic_screenshot.saved": "Panorama taken and saved at %s directory",
   "key.vistas.panoramic_screenshot": "Take Panoramic Screenshot"
 }

@@ -62,8 +62,10 @@ public abstract class GameRendererMixin {
             boolean oldFov90 = renderingPanorama;
             float oldPitch = client.player.pitch;
             float oldYaw = client.player.yaw;
-            if (PanoramaConfig.getInstance().lockPanoramicScreenshotRotation) {
+            if (PanoramaConfig.getInstance().lockScreenshotPitch) {
                 client.player.pitch = 0;
+            }
+            if (PanoramaConfig.getInstance().lockScreenshotYaw) {
                 client.player.yaw = 0;
             }
             boolean oldCulling = client.chunkCullingEnabled;

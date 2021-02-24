@@ -1,25 +1,25 @@
 package com.terraformersmc.vistas.config;
 
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
 @Config(name = "vistas")
 public class PanoramaConfig implements ConfigData {
 
-    public String panorama = "minecraft";
-    public boolean forcePanorama = false;
-    public boolean randomPerScreen = false;
-    public boolean hectic = false;
-    public boolean lockPanoramicScreenshotRotation = true;
+	public String panorama = "minecraft";
+	public boolean forcePanorama = false;
+	public boolean randomPerScreen = false;
+	public boolean lockScreenshotPitch = true;
+	public boolean lockScreenshotYaw = false;
 
-    public static void init() {
-        AutoConfig.register(PanoramaConfig.class, GsonConfigSerializer::new);
-    }
+	public static void init() {
+		AutoConfig.register(PanoramaConfig.class, GsonConfigSerializer::new);
+	}
 
-    public static PanoramaConfig getInstance() {
-        return AutoConfig.getConfigHolder(PanoramaConfig.class).getConfig();
-    }
+	public static PanoramaConfig getInstance() {
+		return AutoConfig.getConfigHolder(PanoramaConfig.class).getConfig();
+	}
 
 }

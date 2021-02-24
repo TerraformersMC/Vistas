@@ -38,16 +38,6 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 		updateScreen();
 	}
 
-	@Inject(method = "tick", at = @At("TAIL"))
-	private void VISTAS_tickPanoramaChange(CallbackInfo ci) {
-
-		if (PanoramaConfig.getInstance().hectic) {
-			Panoramas.setRandom();
-
-			updateScreen();
-		}
-	}
-
 	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(Lnet/minecraft/util/Identifier;)V", ordinal = 0), index = 0)
 	private Identifier VISTAS_overlayMixin(Identifier defaultOverlay) {
 		if (Panoramas.getCurrent() != null) {
