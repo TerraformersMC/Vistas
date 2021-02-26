@@ -4,6 +4,7 @@ Randomly picks a background panorama and music to go along with it, all through 
 * You can add your own menu panoramas!
 * You can add your own menu music!
 * No programming or mod required!
+* Easily take panoramic screenshots ingame! (Check controls for the keybinding)
 
 <h4 align="center">
 Vistas requires <a href="https://fabricmc.net/use/">Fabric Loader</a> and <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api">Fabric API</a>
