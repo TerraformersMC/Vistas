@@ -5,12 +5,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.terraformersmc.vistas.access.MinecraftClientAccess;
-import com.terraformersmc.vistas.api.panorama.Panorama;
+import com.terraformersmc.vistas.api.panorama.Panoramas;
 import com.terraformersmc.vistas.resource.PanoramaManager;
 
 import net.fabricmc.api.EnvType;
@@ -22,7 +22,7 @@ import net.minecraft.sound.MusicSound;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin implements MinecraftClientAccess {
+public class MinecraftClientMixin {
 
 	@Shadow
 	public ClientPlayerEntity player;
@@ -34,32 +34,17 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 	@Unique
 	private PanoramaManager panoramaManager;
 
-	@Unique
-	private Panorama clientPanorama;
-
 	@Inject(method = "getMusicType", at = @At("HEAD"), cancellable = true)
-	private void VISTAS_getMusicType(CallbackInfoReturnable<MusicSound> ci) {
+	private void VISTAS_modifyMusic(CallbackInfoReturnable<MusicSound> ci) {
 		if (this.player == null) {
-			if (clientPanorama != null) {
-				ci.setReturnValue(clientPanorama.getMusic());
-			}
+			ci.setReturnValue(Panoramas.getCurrent().getMusic());
 		}
 	}
 
-	@Inject(method = "<init>", at = @At(value = "NEW", target = "Lnet/minecraft/client/texture/TextureManager;"))
-	private void VISTAS_PanoramaManagerMixin(CallbackInfo ci) {
+	@Inject(method = "<init>", at = @At(value = "NEW", target = "Lnet/minecraft/client/texture/PlayerSkinProvider;", shift = Shift.BEFORE))
+	private void VISTAS_appendPanoramaManager(CallbackInfo ci) {
 		this.panoramaManager = new PanoramaManager();
 		this.resourceManager.registerListener(panoramaManager);
-		clientPanorama = null;
 	}
 
-	@Override
-	public void setClientPanorama(Panorama pan) {
-		clientPanorama = pan;
-	}
-
-	@Override
-	public Panorama getClientPanorama() {
-		return clientPanorama;
-	}
 }

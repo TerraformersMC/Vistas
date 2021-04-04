@@ -9,6 +9,8 @@ import net.minecraft.util.Identifier;
 
 public class Panorama {
 
+	public static final Panorama DEFAULT = new Panorama.Builder("minecraft").build();
+
 	private String name;
 	private Identifier backgroundId;
 	private MusicSound music;
