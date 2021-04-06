@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.terraformersmc.vistas.access.TimeAccess;
 import com.terraformersmc.vistas.api.panorama.Panoramas;
+import com.terraformersmc.vistas.api.panorama.Panoramas.PanoramasInternals;
 import com.terraformersmc.vistas.config.PanoramaConfig;
 
 import net.fabricmc.api.EnvType;
@@ -17,6 +18,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -27,6 +29,9 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 	@Shadow
 	private RotatingCubeMapRenderer backgroundRenderer;
 
+	@Shadow
+	private String splashText;
+
 	protected TitleScreenBackgroundMixin(Text title) {
 		super(title);
 	}
@@ -35,6 +40,7 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 	private void VISTAS_updateScreen(CallbackInfo ci) {
 		if (PanoramaConfig.getInstance().randomPerScreen) {
 			Panoramas.setRandom();
+			PanoramasInternals.shouldRedoSplash = true;
 		}
 		updateScreen();
 	}
@@ -48,6 +54,14 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 			}
 		}
 		return defaultOverlay;
+	}
+
+	@Inject(method = "render", at = @At("HEAD"))
+	private void VISTAS_modifySplashOnRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+		if (PanoramasInternals.shouldRedoSplash) {
+			this.splashText = this.client.getSplashTextLoader().get();
+			PanoramasInternals.shouldRedoSplash = false;
+		}
 	}
 
 	@Unique

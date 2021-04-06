@@ -41,7 +41,7 @@ public class MinecraftClientMixin {
 		}
 	}
 
-	@Inject(method = "<init>", at = @At(value = "NEW", target = "Lnet/minecraft/client/texture/PlayerSkinProvider;", shift = Shift.BEFORE))
+	@Inject(method = "<init>", at = @At(value = "NEW", target = "Lnet/minecraft/client/sound/MusicTracker;", shift = Shift.BEFORE))
 	private void VISTAS_appendPanoramaManager(CallbackInfo ci) {
 		this.panoramaManager = new PanoramaManager();
 		this.resourceManager.registerListener(panoramaManager);

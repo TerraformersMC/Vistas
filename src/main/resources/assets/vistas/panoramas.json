@@ -3,6 +3,7 @@
 		"name": "minecraft",
 		"panoramaId": "textures/gui/title/background/panorama",
 		"musicId": "music.menu",
+		"splashTexts": "texts/splashes.txt",
 		"movementSettings": {
 			"frozen": false,
 			"addedX": 0.0,

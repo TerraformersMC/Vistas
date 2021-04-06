@@ -16,13 +16,19 @@ public class Panorama {
 	private MusicSound music;
 	private int weight = 1;
 	private MovementSettings movementSettings;
+	private Identifier splashTexts;
 
-	private Panorama(String name, Identifier id, MusicSound music, MovementSettings movementSettings, int weight) {
+	private Panorama(String name, Identifier id, MusicSound music, MovementSettings movementSettings, int weight, Identifier splashTexts) {
 		this.name = name;
 		this.backgroundId = id;
 		this.music = music;
 		this.movementSettings = movementSettings;
 		this.weight = weight;
+		this.splashTexts = splashTexts;
+	}
+
+	private Panorama(String name, Identifier id, MusicSound music, MovementSettings movementSettings, int weight) {
+		this(name, id, music, movementSettings, weight, new Identifier("texts/splashes.txt"));
 	}
 
 	public String getName() {
@@ -45,12 +51,17 @@ public class Panorama {
 		return weight;
 	}
 
+	public Identifier getSplashTexts() {
+		return splashTexts;
+	}
+
 	public static class Builder {
 
 		private String name;
 		private Identifier backgroundId = new Identifier("textures/gui/title/background/panorama");
 		private MusicSound music = createMenuSound(SoundEvents.MUSIC_MENU);
 		private int weight = 1;
+		private Identifier splashTexts = new Identifier("texts/splashes.txt");
 
 		private boolean frozen = false;
 		private float addedX = 0.0F;
@@ -133,8 +144,13 @@ public class Panorama {
 			return this;
 		}
 
+		public Builder setSplashTexts(Identifier splashTexts) {
+			this.splashTexts = splashTexts;
+			return this;
+		}
+
 		public Panorama build() {
-			return new Panorama(name, backgroundId, music, new MovementSettings(frozen, addedX, addedY, speedMultiplier, woozy, useXEquation, useYEquation, XEquation, YEquation), weight);
+			return new Panorama(name, backgroundId, music, new MovementSettings(frozen, addedX, addedY, speedMultiplier, woozy, useXEquation, useYEquation, XEquation, YEquation), weight, splashTexts);
 		}
 
 		public static MusicSound createMenuSound(SoundEvent event) {

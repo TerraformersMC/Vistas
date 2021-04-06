@@ -37,16 +37,9 @@ public class PanoramaDeserializer implements JsonDeserializer<Panorama> {
 		MovementSettings movementSettings = deserializeMovementSettings(jsonObject);
 		int weight = JsonHelper.getInt(jsonObject, "weight", 1);
 
-		return new Panorama.Builder(name)
-				.setBackgroundId(new Identifier(panoramaId))
-				.setMusic(music)
-				.setFrozen(movementSettings.isFrozen())
-				.setAddedX(movementSettings.getAddedX())
-				.setAddedY(movementSettings.getAddedY())
-				.setSpeedMultiplier(movementSettings.getSpeedMultiplier())
-				.setWoozy(movementSettings.isWoozy())
-				.setWeight(weight)
-				.build();
+		String splashTexts = JsonHelper.getString(jsonObject, "splashTexts", "texts/splashes.txt");
+
+		return new Panorama.Builder(name).setBackgroundId(new Identifier(panoramaId)).setMusic(music).setFrozen(movementSettings.isFrozen()).setAddedX(movementSettings.getAddedX()).setAddedY(movementSettings.getAddedY()).setSpeedMultiplier(movementSettings.getSpeedMultiplier()).setWoozy(movementSettings.isWoozy()).setWeight(weight).setSplashTexts(new Identifier(splashTexts)).build();
 	}
 
 	public MovementSettings deserializeMovementSettings(JsonObject json) {
