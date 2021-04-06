@@ -1,8 +1,9 @@
 ![Vistas](https://i.imgur.com/ifllw9I.png)
 
 Randomly picks a background panorama and music to go along with it, all through a resource pack!
-* You can add your own menu panoramas!
-* You can add your own menu music!
+* Add your own menu panoramas!
+* Add your own menu music!
+* Add your own Splash Text!
 * No programming or mod required!
 * Easily take panoramic screenshots ingame! (Check controls for the keybinding)
 
