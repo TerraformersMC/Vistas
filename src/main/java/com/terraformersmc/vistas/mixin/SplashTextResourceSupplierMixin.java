@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.google.common.collect.Lists;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.api.panorama.Panorama;
 import com.terraformersmc.vistas.api.panorama.Panoramas;
@@ -43,13 +42,13 @@ public abstract class SplashTextResourceSupplierMixin {
 	private Session field_18934;
 
 	@Unique
-	private List<String> storedSplashList = Lists.newArrayList();
+	private ArrayList<String> storedSplashList = new ArrayList<String>();
 
 	@Unique
-	private ArrayList<Panorama> THIS_PANORAMA = Lists.newArrayList();
+	private ArrayList<Panorama> THIS_PANORAMA = new ArrayList<Panorama>();
 
 	@Unique
-	private ArrayList<Panorama> READ_SPLASHES = Lists.newArrayList();
+	private ArrayList<Panorama> READ_SPLASHES = new ArrayList<Panorama>();
 
 	@Unique
 	private boolean isUpFirst = true;
@@ -71,7 +70,7 @@ public abstract class SplashTextResourceSupplierMixin {
 
 	@ModifyVariable(method = "Lnet/minecraft/client/resource/SplashTextResourceSupplier;prepare(Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)Ljava/util/List;", at = @At(value = "RETURN", ordinal = 0, shift = Shift.BEFORE), name = "var7")
 	private List<String> VISTAS_setList(List<String> in) {
-		this.storedSplashList = Lists.newArrayList((List<String>) in);
+		this.storedSplashList = new ArrayList<String>(in);
 		return in;
 	}
 
@@ -88,9 +87,9 @@ public abstract class SplashTextResourceSupplierMixin {
 	private void VISTAS_addOtherSplash(ResourceManager resourceManager, Profiler profiler, CallbackInfoReturnable<List<String>> ci, Panorama thisPanorama) {
 		if (!READ_SPLASHES.contains(thisPanorama)) {
 			READ_SPLASHES.add(thisPanorama);
-			ArrayList<String> splashTexts = Lists.newArrayList(storedSplashList);
-			ArrayList<String> newSplashTexts = Lists.newArrayList();
-			ArrayList<Panorama> needToAdd = Lists.newArrayList();
+			ArrayList<String> splashTexts = new ArrayList<String>(storedSplashList);
+			ArrayList<String> newSplashTexts = new ArrayList<String>();
+			ArrayList<Panorama> needToAdd = new ArrayList<Panorama>();
 			Pattern pattern = Pattern.compile(panoramaRegex);
 			for (String splash : splashTexts) {
 				Matcher matcher = pattern.matcher(splash);
