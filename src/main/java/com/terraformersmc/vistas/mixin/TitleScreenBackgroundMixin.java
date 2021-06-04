@@ -1,8 +1,9 @@
 package com.terraformersmc.vistas.mixin;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -27,6 +28,8 @@ import net.minecraft.util.Identifier;
 public abstract class TitleScreenBackgroundMixin extends Screen {
 
 	@Shadow
+	@Final
+	@Mutable
 	private RotatingCubeMapRenderer backgroundRenderer;
 
 	@Shadow
@@ -42,10 +45,14 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 			Panoramas.setRandom();
 			PanoramasInternals.shouldRedoSplash = true;
 		}
-		updateScreen();
+		if (Panoramas.getCurrent() != null) {
+			this.backgroundRenderer = TimeAccess.newWithTime(Panoramas.getCurrent().getBackgroundId(), TimeAccess.getTime(backgroundRenderer));
+		} else {
+			this.backgroundRenderer = TimeAccess.newWithTime(TitleScreen.PANORAMA_CUBE_MAP, TimeAccess.getTime(backgroundRenderer));
+		}
 	}
 
-	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(Lnet/minecraft/util/Identifier;)V", ordinal = 0), index = 0)
+	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/util/Identifier;)V", ordinal = 0), index = 1)
 	private Identifier VISTAS_modifyOverlay(Identifier defaultOverlay) {
 		if (Panoramas.getCurrent() != null) {
 			Identifier overlayId = new Identifier(Panoramas.getCurrent().getBackgroundId().toString() + "_overlay.png");
@@ -61,15 +68,6 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 		if (PanoramasInternals.shouldRedoSplash) {
 			this.splashText = this.client.getSplashTextLoader().get();
 			PanoramasInternals.shouldRedoSplash = false;
-		}
-	}
-
-	@Unique
-	private void updateScreen() {
-		if (Panoramas.getCurrent() != null) {
-			this.backgroundRenderer = TimeAccess.newWithTime(Panoramas.getCurrent().getBackgroundId(), TimeAccess.getTime(backgroundRenderer));
-		} else {
-			this.backgroundRenderer = TimeAccess.newWithTime(TitleScreen.PANORAMA_CUBE_MAP, TimeAccess.getTime(backgroundRenderer));
 		}
 	}
 

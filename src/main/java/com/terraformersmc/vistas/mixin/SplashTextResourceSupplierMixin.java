@@ -68,7 +68,7 @@ public abstract class SplashTextResourceSupplierMixin {
 		}
 	}
 
-	@ModifyVariable(method = "Lnet/minecraft/client/resource/SplashTextResourceSupplier;prepare(Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)Ljava/util/List;", at = @At(value = "RETURN", ordinal = 0, shift = Shift.BEFORE), name = "var7")
+	@ModifyVariable(method = "Lnet/minecraft/client/resource/SplashTextResourceSupplier;prepare(Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)Ljava/util/List;", at = @At(value = "RETURN", ordinal = 0, shift = Shift.BEFORE), name = "var5")
 	private List<String> VISTAS_setList(List<String> in) {
 		this.storedSplashList = new ArrayList<String>(in);
 		return in;

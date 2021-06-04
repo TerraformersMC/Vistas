@@ -29,8 +29,9 @@
 		"vistas.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.7.4",
+		"fabricloader": ">=0.11.3",
 		"fabric": "*",
-		"minecraft": ">=1.16.4"
+		"minecraft": ">=1.16.5",
+		"java": ">=16"
 	}
 }

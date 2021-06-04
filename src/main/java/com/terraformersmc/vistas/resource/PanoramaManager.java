@@ -23,13 +23,13 @@ import com.terraformersmc.vistas.api.panorama.Panoramas;
 
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.SinglePreparationResourceReloadListener;
+import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.profiler.Profiler;
 
-public class PanoramaManager extends SinglePreparationResourceReloadListener<HashMap<String, Panorama>> {
+public class PanoramaManager extends SinglePreparationResourceReloader<HashMap<String, Panorama>> {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Gson PANORAMA_GSON = new GsonBuilder().registerTypeHierarchyAdapter(Text.class, new Text.Serializer()).registerTypeAdapter(Panorama.class, new PanoramaDeserializer()).create();

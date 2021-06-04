@@ -12,7 +12,7 @@ import com.terraformersmc.vistas.screenshot.PanoramicScreenshots;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.util.ScreenshotUtils;
+import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
@@ -60,13 +60,13 @@ public abstract class GameRendererMixin {
 
             // setup
             boolean oldFov90 = renderingPanorama;
-            float oldPitch = client.player.pitch;
-            float oldYaw = client.player.yaw;
+            float oldPitch = client.player.getPitch();
+            float oldYaw = client.player.getYaw();
             if (PanoramaConfig.getInstance().lockScreenshotPitch) {
-                client.player.pitch = 0;
+                client.player.setPitch(0);
             }
             if (PanoramaConfig.getInstance().lockScreenshotYaw) {
-                client.player.yaw = 0;
+                client.player.setYaw(0);
             }
             boolean oldCulling = client.chunkCullingEnabled;
             client.chunkCullingEnabled = false;
@@ -82,8 +82,8 @@ public abstract class GameRendererMixin {
             // restore
             renderingPanorama = oldFov90;
             client.chunkCullingEnabled = oldCulling;
-            client.player.pitch = oldPitch;
-            client.player.yaw = oldYaw;
+            client.player.setPitch(oldPitch);
+            client.player.setYaw(oldYaw);
             if (client.player != null) {
                 client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.saved", new LiteralText(root.toAbsolutePath().toString()).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, root.toAbsolutePath().toString())).withUnderline(true))), false);
             }
@@ -97,7 +97,7 @@ public abstract class GameRendererMixin {
 
     @Unique
     private void takeScreenshot(Path folder, int id) {
-        NativeImage shot = ScreenshotUtils.takeScreenshot(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight(),
+        NativeImage shot = ScreenshotRecorder.takeScreenshot(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight(),
                 client.getFramebuffer());
         PanoramicScreenshots.saveScreenshot(shot, folder, id);
     }
