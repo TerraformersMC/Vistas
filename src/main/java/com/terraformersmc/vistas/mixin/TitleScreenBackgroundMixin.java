@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Group;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -52,8 +53,9 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 		}
 	}
 
-	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/util/Identifier;)V", ordinal = 0), index = 1)
-	private Identifier VISTAS_modifyOverlay(Identifier defaultOverlay) {
+	@Group(name = "vistas$modifyOverlay", min = 1, max = 1)
+	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/util/Identifier;)V", ordinal = 0, remap = false), index = 1)
+	private Identifier VISTAS_modifyOverlayDev(Identifier defaultOverlay) {
 		if (Panoramas.getCurrent() != null) {
 			Identifier overlayId = new Identifier(Panoramas.getCurrent().getBackgroundId().toString() + "_overlay.png");
 			if (this.client.getResourceManager().containsResource(overlayId)) {
@@ -61,6 +63,12 @@ public abstract class TitleScreenBackgroundMixin extends Screen {
 			}
 		}
 		return defaultOverlay;
+	}
+
+	@Group(name = "vistas$modifyOverlay", min = 1, max = 1)
+	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/class_2960;)V", ordinal = 0, remap = false), index = 1)
+	private Identifier VISTAS_modifyOverlayProd(Identifier defaultOverlay) {
+		return VISTAS_modifyOverlayDev(defaultOverlay);
 	}
 
 	@Inject(method = "render", at = @At("HEAD"))

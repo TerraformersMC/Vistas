@@ -39,7 +39,7 @@ public abstract class SplashTextResourceSupplierMixin {
 
 	@Shadow
 	@Final
-	private Session field_18934;
+	private Session session;
 
 	@Unique
 	private ArrayList<String> storedSplashList = new ArrayList<String>();
@@ -100,7 +100,7 @@ public abstract class SplashTextResourceSupplierMixin {
 						Vistas.LOGGER.warn("\"" + thisPanorama.getSplashTexts().toString() + "\" calls \"" + splash + "\" which leads to no registered Panorama!");
 					}
 				} else {
-					newSplashTexts.add(splash.replace("$P$Splash", field_18934.getUsername().toUpperCase(Locale.ROOT)).replace("$p$Splash", field_18934.getUsername()));
+					newSplashTexts.add(splash.replace("$P$Splash", session.getUsername().toUpperCase(Locale.ROOT)).replace("$p$Splash", session.getUsername()));
 				}
 			}
 

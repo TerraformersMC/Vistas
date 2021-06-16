@@ -12,7 +12,10 @@ jobs:
       matrix:
         # Use these Java versions
         java: [
-          16
+            1.8,
+            11,
+            15,
+            16
         ]
         os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
