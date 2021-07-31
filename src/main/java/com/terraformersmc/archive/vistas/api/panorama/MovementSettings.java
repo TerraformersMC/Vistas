@@ -1,7 +1,7 @@
-package com.terraformersmc.vistas.api.panorama;
+package com.terraformersmc.archive.vistas.api.panorama;
 
 import com.google.common.base.Function;
-
+@Deprecated
 public class MovementSettings {
 
 	public static final MovementSettings DEFAULT = new MovementSettings(false, 0.0F, 0.0F, 1.0F, false);

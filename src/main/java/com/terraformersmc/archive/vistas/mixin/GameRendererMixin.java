@@ -5,10 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package com.terraformersmc.vistas.mixin;
+package com.terraformersmc.archive.vistas.mixin;
 
-import com.terraformersmc.vistas.config.PanoramaConfig;
-import com.terraformersmc.vistas.screenshot.PanoramicScreenshots;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.texture.NativeImage;
@@ -28,10 +26,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.terraformersmc.archive.vistas.config.PanoramaConfig;
+import com.terraformersmc.archive.vistas.screenshot.PanoramicScreenshots;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-
+@Deprecated
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
 
@@ -97,8 +98,7 @@ public abstract class GameRendererMixin {
 
     @Unique
     private void takeScreenshot(Path folder, int id) {
-        NativeImage shot = ScreenshotRecorder.takeScreenshot(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight(),
-                client.getFramebuffer());
+        NativeImage shot = ScreenshotRecorder.takeScreenshot(client.getFramebuffer());
         PanoramicScreenshots.saveScreenshot(shot, folder, id);
     }
 }

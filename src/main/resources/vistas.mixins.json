@@ -4,11 +4,17 @@
 	"package": "com.terraformersmc.vistas.mixin",
 	"compatibilityLevel": "JAVA_16",
 	"client": [
-		"GameRendererMixin",
+		//		"GameRendererMixin",
+		//		"MinecraftClientMixin",
+		//		"RotatingCubeMapRendererMixin",
+		//		"TitleScreenBackgroundMixin",
+		//		"SplashTextResourceSupplierMixin"
 		"MinecraftClientMixin",
+		"SimpleRegistryMixin",
+		"TitleScreenMixin",
 		"RotatingCubeMapRendererMixin",
-		"TitleScreenBackgroundMixin",
-		"SplashTextResourceSupplierMixin"
+		"CubeMapRendererMixin",
+		"cloth.StringListEntryMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

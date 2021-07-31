@@ -1,5 +1,5 @@
-package com.terraformersmc.vistas.resource;
-
+package com.terraformersmc.archive.vistas.resource;
+@Deprecated
 @SuppressWarnings("serial")
 public class InvalidPanoramaException extends RuntimeException {
 

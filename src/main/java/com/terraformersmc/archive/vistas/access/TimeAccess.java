@@ -1,9 +1,9 @@
-package com.terraformersmc.vistas.access;
+package com.terraformersmc.archive.vistas.access;
 
 import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.util.Identifier;
-
+@Deprecated
 public interface TimeAccess {
 	public float getTime();
 

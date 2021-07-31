@@ -1,4 +1,4 @@
-package com.terraformersmc.vistas.resource;
+package com.terraformersmc.archive.vistas.resource;
 
 import java.lang.reflect.Type;
 
@@ -7,8 +7,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.terraformersmc.vistas.api.panorama.MovementSettings;
-import com.terraformersmc.vistas.api.panorama.Panorama;
+import com.terraformersmc.archive.vistas.api.panorama.MovementSettings;
+import com.terraformersmc.archive.vistas.api.panorama.Panorama;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,7 +17,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-
+@Deprecated
 @Environment(EnvType.CLIENT)
 public class PanoramaDeserializer implements JsonDeserializer<Panorama> {
 

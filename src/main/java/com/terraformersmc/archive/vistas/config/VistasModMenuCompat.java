@@ -1,0 +1,16 @@
+package com.terraformersmc.archive.vistas.config;
+
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+
+import me.shedaniel.autoconfig.AutoConfig;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+@Deprecated
+@Environment(EnvType.CLIENT)
+public class VistasModMenuCompat implements ModMenuApi {
+	@Override
+	public ConfigScreenFactory<?> getModConfigScreenFactory() {
+		return parent -> AutoConfig.getConfigScreen(PanoramaConfig.class, parent).get();
+	}
+}

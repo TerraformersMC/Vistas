@@ -1,4 +1,4 @@
-package com.terraformersmc.vistas.api.panorama;
+package com.terraformersmc.archive.vistas.api.panorama;
 
 import com.google.common.base.Function;
 
@@ -6,7 +6,7 @@ import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
-
+@Deprecated
 public class Panorama {
 
 	public static final Panorama DEFAULT = new Panorama.Builder("minecraft").build();

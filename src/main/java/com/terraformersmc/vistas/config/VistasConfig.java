@@ -6,20 +6,20 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
 @Config(name = "vistas")
-public class PanoramaConfig implements ConfigData {
+public class VistasConfig implements ConfigData {
 
-	public String panorama = "minecraft";
+	public String panorama = "vistas:default";
 	public boolean forcePanorama = false;
 	public boolean randomPerScreen = false;
 	public boolean lockScreenshotPitch = true;
 	public boolean lockScreenshotYaw = false;
 
 	public static void init() {
-		AutoConfig.register(PanoramaConfig.class, GsonConfigSerializer::new);
+		AutoConfig.register(VistasConfig.class, GsonConfigSerializer::new);
 	}
 
-	public static PanoramaConfig getInstance() {
-		return AutoConfig.getConfigHolder(PanoramaConfig.class).getConfig();
+	public static VistasConfig getInstance() {
+		return AutoConfig.getConfigHolder(VistasConfig.class).getConfig();
 	}
 
 }

@@ -1,11 +1,11 @@
-package com.terraformersmc.vistas.api.panorama;
+package com.terraformersmc.archive.vistas.api.panorama;
 
 import java.util.Random;
 
-import com.terraformersmc.vistas.Vistas;
-import com.terraformersmc.vistas.config.PanoramaConfig;
-import com.terraformersmc.vistas.resource.InvalidPanoramaException;
-
+import com.terraformersmc.archive.vistas.Vistas;
+import com.terraformersmc.archive.vistas.config.PanoramaConfig;
+import com.terraformersmc.archive.vistas.resource.InvalidPanoramaException;
+@Deprecated
 public class Panoramas {
 
 	public static Panorama getCurrent() {

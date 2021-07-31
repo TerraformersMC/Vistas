@@ -1,4 +1,4 @@
-package com.terraformersmc.vistas.mixin;
+package com.terraformersmc.archive.vistas.mixin;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.terraformersmc.vistas.Vistas;
-import com.terraformersmc.vistas.api.panorama.Panorama;
-import com.terraformersmc.vistas.api.panorama.Panoramas;
-import com.terraformersmc.vistas.resource.InvalidPanoramaException;
+import com.terraformersmc.archive.vistas.Vistas;
+import com.terraformersmc.archive.vistas.api.panorama.Panorama;
+import com.terraformersmc.archive.vistas.api.panorama.Panoramas;
+import com.terraformersmc.archive.vistas.resource.InvalidPanoramaException;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.SplashTextResourceSupplier;
@@ -29,7 +29,7 @@ import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
-
+@Deprecated
 @Mixin(SplashTextResourceSupplier.class)
 public abstract class SplashTextResourceSupplierMixin {
 

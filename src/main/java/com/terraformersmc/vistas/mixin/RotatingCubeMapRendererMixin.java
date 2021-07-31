@@ -6,54 +6,52 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import com.terraformersmc.vistas.access.TimeAccess;
-import com.terraformersmc.vistas.api.panorama.MovementSettings;
-import com.terraformersmc.vistas.api.panorama.Panorama;
-import com.terraformersmc.vistas.api.panorama.Panoramas;
+import com.terraformersmc.vistas.access.RotatingCubeMapRendererAccess;
+import com.terraformersmc.vistas.registry.panorama.MovementSettings;
+import com.terraformersmc.vistas.registry.panorama.SinglePanorama;
+import com.terraformersmc.vistas.util.RotatingPanoramicRenderer;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 
-@Environment(EnvType.CLIENT)
-@Mixin(value = RotatingCubeMapRenderer.class, priority = 69)
-public abstract class RotatingCubeMapRendererMixin implements TimeAccess {
+@Mixin(RotatingCubeMapRenderer.class)
+public class RotatingCubeMapRendererMixin implements RotatingCubeMapRendererAccess {
 
 	@Shadow
 	private float time;
 
 	@ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/CubeMapRenderer;draw(Lnet/minecraft/client/MinecraftClient;FFF)V"))
-	public void VISTAS_modifyMovement(Args args, float delta, float alpha) {
-		Panorama pan = Panoramas.getCurrent();
-		MovementSettings settings = pan.getMovementSettings();
+	private void vistas$render(Args args, float delta, float alpha) {
+		if (((RotatingCubeMapRenderer) (Object) this)instanceof RotatingPanoramicRenderer panoramicRenderer) {
+			SinglePanorama panorama = panoramicRenderer.panorama;
+			MovementSettings movementSettings = panorama.movementSettings;
 
-		float newX = -settings.getAddedX();
-		float newY = -settings.getAddedY();
+			float newX = -movementSettings.addedX;
+			float newY = -movementSettings.addedY;
 
-		if (!settings.isFrozen()) {
-
-			if (!settings.isUsingYEquation()) {
-				if (settings.isWoozy()) {
-					newY += this.time * 0.1F;
+			if (!movementSettings.frozen) {
+				if (!movementSettings.isUsingYEquation()) {
+					if (movementSettings.woozy) {
+						newY += this.time * 0.1F;
+					} else {
+						newY += (float) args.get(1);
+					}
 				} else {
-					newY += (float) args.get(1);
+					newY = movementSettings.yEquation.apply(time);
 				}
-			} else {
-				newY = settings.getYEquation().apply(time);
+
+				if (!movementSettings.isUsingXEquation()) {
+					newX += (float) args.get(2);
+				} else {
+					newX = movementSettings.yEquation.apply(time);
+				}
+
+				newX *= movementSettings.speedMultiplier;
+				newY *= movementSettings.speedMultiplier;
 			}
 
-			if (!settings.isUsingXEquation()) {
-				newX += (float) args.get(2);
-			} else {
-				newX = settings.getYEquation().apply(time);
-			}
-
-			newX *= settings.getSpeedMultiplier();
-			newY *= settings.getSpeedMultiplier();
+			args.set(1, newY);
+			args.set(2, newX);
 		}
-
-		args.set(2, newX);
-		args.set(1, newY);
 	}
 
 	@Override

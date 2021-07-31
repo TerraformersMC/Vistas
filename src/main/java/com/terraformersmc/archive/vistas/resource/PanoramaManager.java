@@ -1,4 +1,4 @@
-package com.terraformersmc.vistas.resource;
+package com.terraformersmc.archive.vistas.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,9 +17,9 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.terraformersmc.vistas.Vistas;
-import com.terraformersmc.vistas.api.panorama.Panorama;
-import com.terraformersmc.vistas.api.panorama.Panoramas;
+import com.terraformersmc.archive.vistas.Vistas;
+import com.terraformersmc.archive.vistas.api.panorama.Panorama;
+import com.terraformersmc.archive.vistas.api.panorama.Panoramas;
 
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
@@ -28,7 +28,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.profiler.Profiler;
-
+@Deprecated
 public class PanoramaManager extends SinglePreparationResourceReloader<HashMap<String, Panorama>> {
 
 	private static final Logger LOGGER = LogManager.getLogger();

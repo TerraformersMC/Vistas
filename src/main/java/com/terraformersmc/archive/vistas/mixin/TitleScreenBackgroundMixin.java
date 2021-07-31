@@ -1,4 +1,4 @@
-package com.terraformersmc.vistas.mixin;
+package com.terraformersmc.archive.vistas.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.terraformersmc.vistas.access.TimeAccess;
-import com.terraformersmc.vistas.api.panorama.Panoramas;
-import com.terraformersmc.vistas.api.panorama.Panoramas.PanoramasInternals;
-import com.terraformersmc.vistas.config.PanoramaConfig;
+import com.terraformersmc.archive.vistas.access.TimeAccess;
+import com.terraformersmc.archive.vistas.api.panorama.Panoramas;
+import com.terraformersmc.archive.vistas.api.panorama.Panoramas.PanoramasInternals;
+import com.terraformersmc.archive.vistas.config.PanoramaConfig;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,7 +23,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
+@Deprecated
 @Environment(EnvType.CLIENT)
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenBackgroundMixin extends Screen {

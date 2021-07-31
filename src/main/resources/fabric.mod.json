@@ -3,7 +3,7 @@
 	"id": "vistas",
 	"version": "${version}",
 	"name": "Vistas",
-	"description": "A library and tool for creating and customizing main menu panoramas and music for mods and modpacks on the fabric platform.",
+	"description": "A library for customizing the main menu panorama in all sorts of ways!",
 	"authors": [
 		"LudoCrypt",
 		"Prospector",
@@ -22,7 +22,7 @@
 			"com.terraformersmc.vistas.Vistas"
 		],
 		"modmenu": [
-			"com.terraformersmc.vistas.config.VistasModMenuCompat"
+			"com.terraformersmc.vistas.config.VistasModMenuConfig"
 		]
 	},
 	"mixins": [
@@ -30,8 +30,6 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.11.3",
-		"fabric": "*",
-		"minecraft": ">=1.16.5",
-		"java": ">=16"
+		"fabric": "*"
 	}
 }
