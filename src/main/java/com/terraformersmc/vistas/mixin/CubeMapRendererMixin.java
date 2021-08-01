@@ -39,7 +39,7 @@ public class CubeMapRendererMixin {
 	@ModifyArg(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Matrix4f;viewboxMatrix(DFFF)Lnet/minecraft/util/math/Matrix4f;"), index = 2)
 	private float vistas$draw$viewDepth(float in) {
 		if (settings != null) {
-			return (float) ((Math.max(Math.max(settings.xLength / 2.0D, settings.yLength / 2.0D), settings.zLength / 2.0D) * in) + Math.max(Math.max(settings.addedX / 2.0D, settings.addedY / 2.0D), settings.addedZ / 2.0D));
+			return (float) ((Math.max(Math.max(Math.abs(settings.xLength) / 2.0D, Math.abs(settings.yLength) / 2.0D), Math.abs(settings.zLength) / 2.0D) * in) + Math.max(Math.max(Math.abs(settings.addedX) / 2.0D, Math.abs(settings.addedY) / 2.0D), Math.abs(settings.addedZ) / 2.0D));
 		}
 		return in;
 	}
@@ -47,7 +47,7 @@ public class CubeMapRendererMixin {
 	@ModifyArg(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Matrix4f;viewboxMatrix(DFFF)Lnet/minecraft/util/math/Matrix4f;"), index = 3)
 	private float vistas$draw$viewLength(float in) {
 		if (settings != null) {
-			return (float) ((Math.max(Math.max(settings.xLength, settings.yLength), settings.zLength) * in) + Math.max(Math.max(settings.addedX, settings.addedY), settings.addedZ));
+			return (float) ((Math.max(Math.max(Math.abs(settings.xLength), Math.abs(settings.yLength)), Math.abs(settings.zLength)) * in) + Math.max(Math.max(Math.abs(settings.addedX), Math.abs(settings.addedY)), Math.abs(settings.addedZ)));
 		}
 		return in;
 	}
