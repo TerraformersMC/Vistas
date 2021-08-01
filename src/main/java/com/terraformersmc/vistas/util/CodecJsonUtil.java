@@ -18,17 +18,25 @@ public class CodecJsonUtil {
 		}));
 	}
 
-	public static <R> R getFromJsonCodecOrNull(Decoder<R> decoder, JsonElement jsonElement) {
+	public static <R> R getFromJsonCodecOrNull(Decoder<R> decoder, JsonElement jsonElement, boolean log) {
 		Optional<DataResult<R>> optional = getOptionalFromJsonCodec(decoder, jsonElement);
 		if (optional.isPresent()) {
 			R result = optional.get().result().orElse(null);
 			if (result == null) {
-				Vistas.LOGGER.warn("Codec {} return {} from {}", decoder, result, jsonElement);
+				if (log) {
+					Vistas.LOGGER.warn("Codec {} return {} from {}", decoder, result, jsonElement);
+				}
 			}
 			return result;
 		}
-		Vistas.LOGGER.warn("Codec {} return {} from {}", decoder, null, jsonElement);
+		if (log) {
+			Vistas.LOGGER.warn("Codec {} return {} from {}", decoder, null, jsonElement);
+		}
 		return null;
+	}
+
+	public static <R> R getFromJsonCodecOrNull(Decoder<R> decoder, JsonElement jsonElement) {
+		return getFromJsonCodecOrNull(decoder, jsonElement, false);
 	}
 
 	public static <R> R getFromCodecOrNull(Decoder<R> decoder, String jsonFlat) {

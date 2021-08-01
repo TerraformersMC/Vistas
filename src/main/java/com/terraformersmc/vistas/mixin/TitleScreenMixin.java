@@ -2,7 +2,9 @@ package com.terraformersmc.vistas.mixin;
 
 import java.util.ArrayList;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -21,12 +23,18 @@ import com.terraformersmc.vistas.util.RotatingPanoramicRenderer;
 import com.terraformersmc.vistas.util.RotatingPanoramicRenderer.PanoramicRenderer;
 
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 @Mixin(TitleScreen.class)
-public class TitleScreenMixin {
+public abstract class TitleScreenMixin extends Screen {
+
+	protected TitleScreenMixin(Text title) {
+		super(title);
+	}
 
 	@Unique
 	private ArrayList<RotatingPanoramicRenderer> backgroundRenderers = Lists.newArrayList();
@@ -37,10 +45,14 @@ public class TitleScreenMixin {
 	@Unique
 	private int initCount = 0;
 
+	@Shadow
+	@Nullable
+	private String splashText;
+
+	@SuppressWarnings("unchecked")
 	@Inject(method = "Lnet/minecraft/client/gui/screen/TitleScreen;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V", shift = Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void vistas$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, float f) {
 		if (panorama != VistasRegistry.getCurrentPanorama()) {
-			@SuppressWarnings("unchecked")
 			ArrayList<RotatingPanoramicRenderer> before = (ArrayList<RotatingPanoramicRenderer>) this.backgroundRenderers.clone();
 			this.panorama = VistasRegistry.getCurrentPanorama();
 			backgroundRenderers.clear();
@@ -60,6 +72,7 @@ public class TitleScreenMixin {
 	private void vistas$init(CallbackInfo ci) {
 		if (VistasConfig.getInstance().randomPerScreen && initCount > 1) {
 			VistasRegistry.setCurrentPanorama(VistasRegistry.getChosenPanorama());
+			this.splashText = this.client.getSplashTextLoader().get();
 		}
 		initCount++;
 	}

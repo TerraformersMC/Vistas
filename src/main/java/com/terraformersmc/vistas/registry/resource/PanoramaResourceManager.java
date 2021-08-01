@@ -27,7 +27,7 @@ import net.minecraft.util.registry.Registry;
 public class PanoramaResourceManager extends SinglePreparationResourceReloader<HashMap<Identifier, PanoramaGroup>> {
 	public final HashMap<Identifier, PanoramaGroup> panoramas = Maps.newHashMap();
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	protected HashMap<Identifier, PanoramaGroup> prepare(ResourceManager manager, Profiler profiler) {
 		profiler.startTick();
@@ -51,11 +51,12 @@ public class PanoramaResourceManager extends SinglePreparationResourceReloader<H
 								jsonElement.getAsJsonObject().entrySet().forEach((pair) -> {
 									Identifier id = new Identifier(string, pair.getKey());
 									PanoramaGroup panGroup = CodecJsonUtil.getFromJsonCodecOrNull(PanoramaGroup.CODEC, pair.getValue());
-									if (!panoramas.containsKey(id)) {
-										panoramas.put(id, panGroup);
+									if (panGroup != null) {
+										add(id, panGroup);
 									} else {
-										panoramas.remove(id);
-										panoramas.put(id, panGroup);
+										Vistas.LOGGER.warn("ResourcePack {} is using outdated panoramas.json at {}, this will be unsupported in later versions, updated quickly!", resource.getResourcePackName(), id);
+										PanoramaGroup deprecatedPanGroup = CodecJsonUtil.getFromJsonCodecOrNull(PanoramaGroup.OLD_CODEC, pair.getValue());
+										add(new Identifier(deprecatedPanGroup.name), deprecatedPanGroup);
 									}
 								});
 
@@ -101,6 +102,15 @@ public class PanoramaResourceManager extends SinglePreparationResourceReloader<H
 		this.panoramas.clear();
 		this.panoramas.putAll(prepared);
 		this.panoramas.forEach((id, group) -> Registry.register(VistasRegistry.PANORAMA_REGISTRY, id, group));
+	}
+
+	protected void add(Identifier id, PanoramaGroup panGroup) {
+		if (!panoramas.containsKey(id)) {
+			panoramas.put(id, panGroup);
+		} else {
+			panoramas.remove(id);
+			panoramas.put(id, panGroup);
+		}
 	}
 
 }

@@ -52,7 +52,7 @@ public class VistasRegistry {
 		try {
 			return Optional.ofNullable(PANORAMA_REGISTRY.get(new Identifier(panorama)));
 		} catch (InvalidIdentifierException e) {
-			return Optional.of(PanoramaGroup.DEFAULT);
+			return Optional.empty();
 		}
 	}
 
