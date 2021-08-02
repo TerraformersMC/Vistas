@@ -1,59 +1,33 @@
 package com.terraformersmc.vistas;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Sets;
 import com.terraformersmc.vistas.api.VistasApi;
-import com.terraformersmc.vistas.api.panorama.Panorama;
-import com.terraformersmc.vistas.api.panorama.Panoramas;
-import com.terraformersmc.vistas.config.PanoramaConfig;
-import com.terraformersmc.vistas.screenshot.PanoramicScreenshots;
+import com.terraformersmc.vistas.config.VistasConfig;
+import com.terraformersmc.vistas.registry.VistasRegistry;
+import com.terraformersmc.vistas.registry.panorama.PanoramaGroup;
+import com.terraformersmc.vistas.util.PanoramicScreenshots;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
-@Environment(EnvType.CLIENT)
 public class Vistas implements ClientModInitializer {
 
-	public static final String MOD_NAME = "Vistas";
-	public static final String MOD_ID = "vistas";
-
-	public static HashMap<String, Panorama> BUILTIN_PANORAMAS = new HashMap<String, Panorama>();
-	public static HashMap<String, Panorama> RESOURCE_PANORAMAS = new HashMap<String, Panorama>();
-	public static HashMap<String, Panorama> PANORAMAS = new HashMap<String, Panorama>();
-
-	public static Logger LOGGER = LogManager.getLogger(MOD_NAME);
+	public static final Logger LOGGER = LogManager.getLogger("Vistas");
 
 	@Override
 	public void onInitializeClient() {
-		PanoramaConfig.init();
+		VistasConfig.init();
 		PanoramicScreenshots.registerKeyBinding();
-		FabricLoader.getInstance().getEntrypointContainers(MOD_ID, VistasApi.class).forEach(container -> {
-			VistasApi impl = container.getEntrypoint();
-			HashSet<Panorama> builtInPanoramas = Sets.newHashSet();
-			impl.appendPanoramas(builtInPanoramas);
-			builtInPanoramas.forEach(Vistas::addBuiltInPanorama);
-		});
+		Registry.register(VistasRegistry.PANORAMA_REGISTRY, Vistas.id("default"), PanoramaGroup.DEFAULT);
+		FabricLoader.getInstance().getEntrypointContainers("vistas", VistasApi.class).forEach(container -> container.getEntrypoint().registerPanoramas());
 	}
 
-	public static void addBuiltInPanorama(Panorama pan) {
-		for (int i = 0; i < pan.getWeight(); i++) {
-			BUILTIN_PANORAMAS.put(pan.getName() + '_' + i, pan);
-		}
-		Panoramas.reload();
-	}
-
-	public static void addResourcePanorama(Panorama pan) {
-		for (int i = 0; i < pan.getWeight(); i++) {
-			RESOURCE_PANORAMAS.put(pan.getName() + '_' + i, pan);
-		}
-		Panoramas.reload();
+	public static Identifier id(String id) {
+		return new Identifier("vistas", id);
 	}
 
 }
