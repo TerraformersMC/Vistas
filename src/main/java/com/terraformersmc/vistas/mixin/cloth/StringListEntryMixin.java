@@ -26,7 +26,7 @@ public abstract class StringListEntryMixin extends TextFieldListEntry<String> {
 		super(fieldName, original, resetButtonKey, defaultValue);
 	}
 
-	@Inject(method = "save", at = @At("TAIL"))
+	@Inject(method = "Lme/shedaniel/clothconfig2/gui/entries/StringListEntry;save()V", at = @At("TAIL"), remap = false)
 	private void vistas$save(CallbackInfo ci) {
 		if (this.getFieldName()instanceof TranslatableText text && text.getKey().equals("text.autoconfig.vistas.option.panorama")) {
 			MinecraftClientAccess.get().setCurrentPanorama(VistasRegistry.getPanorama(this.getValue()).orElse(PanoramaGroup.DEFAULT));
