@@ -27,9 +27,9 @@ public class PanoramaGroup {
 			return Optional.of(panoramaGroup.splashTexts);
 		}), TitleSettings.CODEC.optionalFieldOf("titleSettings").forGetter((panoramaGroup) -> {
 			return Optional.ofNullable(panoramaGroup.titleSettings);
-		}), Codec.list(SinglePanorama.CODEC).fieldOf("panoramas").forGetter((panoramaGroup) -> {
-			return panoramaGroup.panoramas;
-		})).apply(instance, (weight, music, splashTexts, titleSettings, array) -> new PanoramaGroup(weight.orElse(1), music.isPresent() ? music.get().left().orElse(VistasRegistry.getMenuSound(music.get().right().orElse(SoundEvents.MUSIC_MENU))) : MusicType.MENU, splashTexts.orElse(new Identifier("texts/splashes.txt")), titleSettings.orElse(null), array.toArray(new SinglePanorama[0])));
+		}), Codec.list(SinglePanorama.CODEC).optionalFieldOf("panoramas").forGetter((panoramaGroup) -> {
+			return Optional.of(panoramaGroup.panoramas);
+		})).apply(instance, (weight, music, splashTexts, titleSettings, array) -> new PanoramaGroup(weight.orElse(1), music.isPresent() ? music.get().left().orElse(VistasRegistry.getMenuSound(music.get().right().orElse(SoundEvents.MUSIC_MENU))) : MusicType.MENU, splashTexts.orElse(new Identifier("texts/splashes.txt")), titleSettings.orElse(null), array.orElse(Lists.newArrayList(SinglePanorama.DEFAULT)).toArray(new SinglePanorama[0])));
 	});
 
 	@Deprecated
