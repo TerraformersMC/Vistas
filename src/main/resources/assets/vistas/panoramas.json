@@ -8,6 +8,15 @@
 			"replace_current_music": true
 		},
 		"splashTexts": "texts/splashes.txt",
+		"titleSettings": {
+			"titleId": "textures/gui/title/minecraft.png",
+			"showEdition": true,
+			"addedX": 0,
+			"addedY": 0,
+			"addedSplashX": 0,
+			"addedSplashY": 0,
+			"outlined": true
+		},
 		"panoramas": [
 			{
 				"backgroundId": "textures/gui/title/background/panorama",

@@ -10,16 +10,16 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class MovementSettings {
 	public static final Codec<MovementSettings> CODEC = RecordCodecBuilder.create((instance) -> {
-		return instance.group(Codec.BOOL.optionalFieldOf("frozen").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.frozen);
-		}), Codec.FLOAT.optionalFieldOf("addedX").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.addedX);
-		}), Codec.FLOAT.optionalFieldOf("addedY").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.addedY);
-		}), Codec.FLOAT.optionalFieldOf("speedMultiplier").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.speedMultiplier);
-		}), Codec.BOOL.optionalFieldOf("woozy").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.woozy);
+		return instance.group(Codec.BOOL.optionalFieldOf("frozen").forGetter((movementSettings) -> {
+			return Optional.of(movementSettings.frozen);
+		}), Codec.FLOAT.optionalFieldOf("addedX").forGetter((movementSettings) -> {
+			return Optional.of(movementSettings.addedX);
+		}), Codec.FLOAT.optionalFieldOf("addedY").forGetter((movementSettings) -> {
+			return Optional.of(movementSettings.addedY);
+		}), Codec.FLOAT.optionalFieldOf("speedMultiplier").forGetter((movementSettings) -> {
+			return Optional.of(movementSettings.speedMultiplier);
+		}), Codec.BOOL.optionalFieldOf("woozy").forGetter((movementSettings) -> {
+			return Optional.of(movementSettings.woozy);
 		})).apply(instance, (frozen, addedX, addedY, speedMultiplier, woozy) -> new MovementSettings(frozen.orElse(false), addedX.orElse(0.0F), addedY.orElse(0.0F), speedMultiplier.orElse(1.0F), woozy.orElse(false)));
 	});
 

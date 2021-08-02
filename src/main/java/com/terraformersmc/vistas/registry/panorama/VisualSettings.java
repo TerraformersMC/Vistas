@@ -7,28 +7,28 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class VisualSettings {
 	public static final Codec<VisualSettings> CODEC = RecordCodecBuilder.create((instance) -> {
-		return instance.group(Codec.DOUBLE.optionalFieldOf("fov").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.fov);
-		}), Codec.DOUBLE.optionalFieldOf("xLength").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.xLength);
-		}), Codec.DOUBLE.optionalFieldOf("yLength").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.yLength);
-		}), Codec.DOUBLE.optionalFieldOf("zLength").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.zLength);
-		}), Codec.DOUBLE.optionalFieldOf("addedX").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.addedX);
-		}), Codec.DOUBLE.optionalFieldOf("addedY").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.addedY);
-		}), Codec.DOUBLE.optionalFieldOf("addedZ").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.addedZ);
-		}), Codec.INT.optionalFieldOf("colorR").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.colorR);
-		}), Codec.INT.optionalFieldOf("colorG").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.colorG);
-		}), Codec.INT.optionalFieldOf("colorB").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.colorB);
-		}), Codec.INT.optionalFieldOf("alpha").forGetter((panoramaGroup) -> {
-			return Optional.of(panoramaGroup.alpha);
+		return instance.group(Codec.DOUBLE.optionalFieldOf("fov").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.fov);
+		}), Codec.DOUBLE.optionalFieldOf("xLength").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.xLength);
+		}), Codec.DOUBLE.optionalFieldOf("yLength").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.yLength);
+		}), Codec.DOUBLE.optionalFieldOf("zLength").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.zLength);
+		}), Codec.DOUBLE.optionalFieldOf("addedX").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.addedX);
+		}), Codec.DOUBLE.optionalFieldOf("addedY").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.addedY);
+		}), Codec.DOUBLE.optionalFieldOf("addedZ").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.addedZ);
+		}), Codec.INT.optionalFieldOf("colorR").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.colorR);
+		}), Codec.INT.optionalFieldOf("colorG").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.colorG);
+		}), Codec.INT.optionalFieldOf("colorB").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.colorB);
+		}), Codec.INT.optionalFieldOf("alpha").forGetter((visualSettings) -> {
+			return Optional.of(visualSettings.alpha);
 		})).apply(instance, (fov, xLength, yLength, zLength, addedX, addedY, addedZ, colorR, colorG, colorB, alpha) -> new VisualSettings(fov.orElse(85.0), xLength.orElse(2.0), yLength.orElse(2.0), zLength.orElse(2.0), addedX.orElse(0.0), addedY.orElse(0.0), addedZ.orElse(0.0), colorR.orElse(255), colorG.orElse(255), colorB.orElse(255), alpha.orElse(255)));
 	});
 

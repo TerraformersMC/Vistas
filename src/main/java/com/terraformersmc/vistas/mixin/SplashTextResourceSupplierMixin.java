@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.Lists;
-import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.registry.VistasRegistry;
 import com.terraformersmc.vistas.registry.panorama.PanoramaGroup;
 
@@ -66,15 +65,13 @@ public abstract class SplashTextResourceSupplierMixin {
 		for (int i = 0; i < list.size(); i++) {
 			String text = list.get(i);
 			if (text.startsWith("$vistas$other$")) {
-				PanoramaGroup panGroup = VistasRegistry.getPanorama(text.substring(14)).get();
+				PanoramaGroup panGroup = VistasRegistry.getPanorama(text.substring(14)).orElse(null);
 				if (panGroup != null) {
 					if (!dontDo.contains(panGroup)) {
 						ArrayList<PanoramaGroup> newDontDo = (ArrayList<PanoramaGroup>) dontDo.clone();
 						newDontDo.add(panGroup);
 						unquantized.addAll(getSplashs(panGroup.splashTexts, true, newDontDo));
 					}
-				} else {
-					Vistas.LOGGER.warn("Splash text {} tried to load {} but wasnt registered", VistasRegistry.getCurrentPanorama(), text.substring(14));
 				}
 			} else if (text.contains("$vistas$p$") || text.contains("$vistas$P$") || text.contains("$vistas$pP$")) {
 				unquantized.add(text.replace("$vistas$pP$", session.getUsername()).replace("$vistas$p$", session.getUsername().toLowerCase(Locale.ROOT)).replace("$vistas$P$", session.getUsername().toUpperCase(Locale.ROOT)));

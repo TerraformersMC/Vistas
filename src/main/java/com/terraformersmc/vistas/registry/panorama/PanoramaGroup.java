@@ -25,9 +25,11 @@ public class PanoramaGroup {
 			return Optional.of(Either.left(panoramaGroup.music));
 		}), Identifier.CODEC.optionalFieldOf("splashTexts").forGetter((panoramaGroup) -> {
 			return Optional.of(panoramaGroup.splashTexts);
+		}), TitleSettings.CODEC.optionalFieldOf("titleSettings").forGetter((panoramaGroup) -> {
+			return Optional.ofNullable(panoramaGroup.titleSettings);
 		}), Codec.list(SinglePanorama.CODEC).fieldOf("panoramas").forGetter((panoramaGroup) -> {
 			return panoramaGroup.panoramas;
-		})).apply(instance, (weight, music, splashTexts, array) -> new PanoramaGroup(weight.orElse(1), music.isPresent() ? music.get().left().orElse(VistasRegistry.getMenuSound(music.get().right().orElse(SoundEvents.MUSIC_MENU))) : MusicType.MENU, splashTexts.orElse(new Identifier("texts/splashes.txt")), array.toArray(new SinglePanorama[0])));
+		})).apply(instance, (weight, music, splashTexts, titleSettings, array) -> new PanoramaGroup(weight.orElse(1), music.isPresent() ? music.get().left().orElse(VistasRegistry.getMenuSound(music.get().right().orElse(SoundEvents.MUSIC_MENU))) : MusicType.MENU, splashTexts.orElse(new Identifier("texts/splashes.txt")), titleSettings.orElse(null), array.toArray(new SinglePanorama[0])));
 	});
 
 	@Deprecated
@@ -52,7 +54,7 @@ public class PanoramaGroup {
 				return new Identifier("textures/gui/title/background/panorama");
 			}
 			return panoramaGroup.panoramas.get(0).backgroundId;
-		})).apply(instance, (weight, splashTexts, musicId, music, movementSettings, name, panoramaId) -> new PanoramaGroup(weight.orElse(1), musicId.isPresent() ? VistasRegistry.getMenuSound(musicId.get()) : music.orElse(MusicType.MENU), splashTexts.orElse(new Identifier("texts/splashes.txt")), name, new SinglePanorama(panoramaId, movementSettings.orElse(MovementSettings.DEFAULT))));
+		})).apply(instance, (weight, splashTexts, musicId, music, movementSettings, name, panoramaId) -> new PanoramaGroup(weight.orElse(1), musicId.isPresent() ? VistasRegistry.getMenuSound(musicId.get()) : music.orElse(MusicType.MENU), splashTexts.orElse(new Identifier("texts/splashes.txt")), null, name, new SinglePanorama(panoramaId, movementSettings.orElse(MovementSettings.DEFAULT))));
 	});
 
 	public static final PanoramaGroup DEFAULT = new PanoramaGroup(SinglePanorama.DEFAULT);
@@ -60,6 +62,8 @@ public class PanoramaGroup {
 	public final ArrayList<SinglePanorama> panoramas;
 	public final MusicSound music;
 	public final Identifier splashTexts;
+	@Nullable
+	public final TitleSettings titleSettings;
 	public final int weight;
 	@Nullable
 	@Deprecated
@@ -78,21 +82,22 @@ public class PanoramaGroup {
 	}
 
 	public PanoramaGroup(int weight, MusicSound music, Identifier splashTexts, SinglePanorama... panoramas) {
-		this(weight, music, splashTexts, Lists.newArrayList(panoramas));
+		this(weight, music, splashTexts, null, panoramas);
 	}
 
-	public PanoramaGroup(int weight, MusicSound music, Identifier splashTexts, String name, SinglePanorama... panoramas) {
-		this(weight, music, splashTexts, Lists.newArrayList(panoramas), name);
+	public PanoramaGroup(int weight, MusicSound music, Identifier splashTexts, TitleSettings titleSettings, SinglePanorama... panoramas) {
+		this(weight, music, splashTexts, titleSettings, Lists.newArrayList(panoramas), null);
 	}
 
-	public PanoramaGroup(int weight, MusicSound music, Identifier splashTexts, ArrayList<SinglePanorama> panoramas) {
-		this(weight, music, splashTexts, panoramas, null);
+	public PanoramaGroup(int weight, MusicSound music, Identifier splashTexts, TitleSettings titleSettings, String name, SinglePanorama... panoramas) {
+		this(weight, music, splashTexts, titleSettings, Lists.newArrayList(panoramas), name);
 	}
 
-	public PanoramaGroup(int weight, MusicSound music, Identifier splashTexts, ArrayList<SinglePanorama> panoramas, String name) {
+	public PanoramaGroup(int weight, MusicSound music, Identifier splashTexts, TitleSettings titleSettings, ArrayList<SinglePanorama> panoramas, String name) {
 		this.panoramas = panoramas;
 		this.music = music;
 		this.splashTexts = splashTexts;
+		this.titleSettings = titleSettings;
 		this.weight = weight;
 		this.name = name;
 	}
