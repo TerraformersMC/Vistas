@@ -101,7 +101,14 @@ public class PanoramaResourceManager extends SinglePreparationResourceReloader<H
 		SimpleRegistryAccess.get(VistasRegistry.PANORAMA_REGISTRY).clearEntries();
 		this.panoramas.clear();
 		this.panoramas.putAll(prepared);
-		this.panoramas.forEach((id, group) -> Registry.register(VistasRegistry.PANORAMA_REGISTRY, id, group));
+		VistasRegistry.registerApiPanoramas();
+		this.panoramas.forEach((id, group) -> {
+			if (VistasRegistry.PANORAMA_REGISTRY.containsId(id)) {
+				Registry.register(VistasRegistry.PANORAMA_REGISTRY, VistasRegistry.PANORAMA_REGISTRY.getRawId(VistasRegistry.PANORAMA_REGISTRY.get(id)), id.toString(), group);
+			} else {
+				Registry.register(VistasRegistry.PANORAMA_REGISTRY, id, group);
+			}
+		});
 	}
 
 	protected void add(Identifier id, PanoramaGroup panGroup) {

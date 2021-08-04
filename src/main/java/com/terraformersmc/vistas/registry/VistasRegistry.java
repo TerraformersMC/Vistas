@@ -7,11 +7,13 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.access.MinecraftClientAccess;
+import com.terraformersmc.vistas.api.VistasApi;
 import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.registry.panorama.PanoramaGroup;
 
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -42,6 +44,7 @@ public class VistasRegistry {
 
 	public static void setCurrentPanorama(PanoramaGroup panGroup) {
 		MinecraftClientAccess.get().setCurrentPanorama(panGroup);
+		VistasConfig.getInstance().panorama = VistasRegistry.PANORAMA_REGISTRY.getId(getCurrentPanorama()).toString();
 	}
 
 	public static Optional<PanoramaGroup> getConfigPanorama() {
@@ -52,6 +55,7 @@ public class VistasRegistry {
 		try {
 			return Optional.ofNullable(PANORAMA_REGISTRY.get(new Identifier(panorama)));
 		} catch (InvalidIdentifierException e) {
+			VistasConfig.getInstance().panorama = "vistas:default";
 			return Optional.empty();
 		}
 	}
@@ -61,6 +65,10 @@ public class VistasRegistry {
 			return getConfigPanorama().orElse(PanoramaGroup.DEFAULT);
 		}
 		return getRandomPanorama();
+	}
+
+	public static void registerApiPanoramas() {
+		FabricLoader.getInstance().getEntrypointContainers("vistas", VistasApi.class).forEach(container -> container.getEntrypoint().registerPanoramas());
 	}
 
 	public static MusicSound getMenuSound(SoundEvent soundEvent) {

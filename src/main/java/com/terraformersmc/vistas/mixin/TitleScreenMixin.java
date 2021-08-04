@@ -57,7 +57,7 @@ public abstract class TitleScreenMixin extends Screen {
 	private boolean isVistas = false;
 
 	@Unique
-	private boolean isVistasReadyToChance = true;
+	private boolean isVistasReadyToChange = true;
 
 	@Shadow
 	@Nullable
@@ -78,8 +78,8 @@ public abstract class TitleScreenMixin extends Screen {
 				backgroundRenderers.add(new RotatingPanoramicRenderer(new PanoramicRenderer(panorama), before.isEmpty() ? 0.0F : RotatingCubeMapRendererAccess.get(before.get(0)).getTime()));
 			}
 
-			if (this.isVistasReadyToChance == true) {
-				this.isVistasReadyToChance = false;
+			if (this.isVistasReadyToChange == true) {
+				this.isVistasReadyToChange = false;
 				this.isVistas = VistasRegistry.PANORAMA_REGISTRY.getId(panorama).equals(Vistas.id("default")) && new Random().nextDouble() < 1.0E-4D;
 			}
 		}
@@ -135,7 +135,7 @@ public abstract class TitleScreenMixin extends Screen {
 		if (VistasConfig.getInstance().randomPerScreen && initCount > 1) {
 			VistasRegistry.setCurrentPanorama(VistasRegistry.getChosenPanorama());
 			this.splashText = this.client.getSplashTextLoader().get();
-			this.isVistasReadyToChance = true;
+			this.isVistasReadyToChange = true;
 		}
 		initCount++;
 	}

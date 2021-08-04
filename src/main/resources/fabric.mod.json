@@ -23,6 +23,9 @@
 		],
 		"modmenu": [
 			"com.terraformersmc.vistas.config.VistasModMenuConfig"
+		],
+		"vistas": [
+			"com.terraformersmc.vistas.impl.VistasImpl"
 		]
 	},
 	"mixins": [
