@@ -48,6 +48,9 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void vistas$tick(CallbackInfo ci) {
+		if (VistasRegistry.PANORAMA_REGISTRY.isEmpty()) {
+			VistasRegistry.registerApiPanoramas();
+		}
 		if (this.getCurrentPanorama() == null) {
 			this.setCurrentPanorama(VistasRegistry.getChosenPanorama());
 			VistasConfig.getInstance().panorama = VistasRegistry.PANORAMA_REGISTRY.getId(this.getCurrentPanorama()).toString();

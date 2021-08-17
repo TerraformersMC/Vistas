@@ -109,6 +109,7 @@ public class PanoramaResourceManager extends SinglePreparationResourceReloader<H
 				Registry.register(VistasRegistry.PANORAMA_REGISTRY, id, group);
 			}
 		});
+		VistasRegistry.setCurrentPanorama(VistasRegistry.getChosenPanorama());
 	}
 
 	protected void add(Identifier id, PanoramaGroup panGroup) {

@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.terraformersmc.vistas.config.VistasConfig;
-import com.terraformersmc.vistas.registry.VistasRegistry;
 import com.terraformersmc.vistas.util.PanoramicScreenshots;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -18,7 +17,6 @@ public class Vistas implements ClientModInitializer {
 	public void onInitializeClient() {
 		VistasConfig.init();
 		PanoramicScreenshots.registerKeyBinding();
-		VistasRegistry.registerApiPanoramas();
 	}
 
 	public static Identifier id(String id) {

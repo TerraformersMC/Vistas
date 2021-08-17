@@ -80,7 +80,11 @@ public abstract class TitleScreenMixin extends Screen {
 
 			if (this.isVistasReadyToChange == true) {
 				this.isVistasReadyToChange = false;
-				this.isVistas = VistasRegistry.PANORAMA_REGISTRY.getId(panorama).equals(Vistas.id("default")) && new Random().nextDouble() < 1.0E-4D;
+				if (VistasRegistry.PANORAMA_REGISTRY.getId(panorama) != null) {
+					this.isVistas = VistasRegistry.PANORAMA_REGISTRY.getId(panorama).equals(Vistas.id("default")) && new Random().nextDouble() < 1.0E-4D;
+				} else {
+					this.isVistas = false;
+				}
 			}
 		}
 		backgroundRenderers.forEach((rcmr) -> rcmr.render(delta, MathHelper.clamp(MathHelper.clamp(f, 0.0F, 1.0F) * ((float) rcmr.panorama.visualSettings.alpha / 255.0F), 0.0F, 1.0F)));
