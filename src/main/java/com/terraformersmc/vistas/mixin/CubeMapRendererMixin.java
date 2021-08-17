@@ -23,7 +23,7 @@ public class CubeMapRendererMixin {
 
 	@Inject(method = "draw", at = @At("HEAD"))
 	private void vistas$draw(MinecraftClient client, float x, float y, float alpha, CallbackInfo ci) {
-		if (((CubeMapRenderer) (Object) this)instanceof PanoramicRenderer panoramicRenderer) {
+		if (((CubeMapRenderer) (Object) this) instanceof PanoramicRenderer panoramicRenderer) {
 			this.settings = panoramicRenderer.panorama.visualSettings;
 		}
 	}
