@@ -55,9 +55,9 @@ public class PanoramaRenderer {
 
 		matrixStack.push();
 		matrixStack.translate(this.cubemap.getVisualControl().getAddedX(), this.cubemap.getVisualControl().getAddedY(), this.cubemap.getVisualControl().getAddedZ());
-		matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((float) this.cubemap.getRotationControl().getPitch(time)));
-		matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) this.cubemap.getRotationControl().getYaw(time)));
-		matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) this.cubemap.getRotationControl().getRoll(time)));
+		matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((float) this.cubemap.getRotationControl().getPitch(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
+		matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) this.cubemap.getRotationControl().getYaw(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
+		matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) this.cubemap.getRotationControl().getRoll(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
 		RenderSystem.applyModelViewMatrix();
 
 		for (int k = 0; k < 6; ++k) {
