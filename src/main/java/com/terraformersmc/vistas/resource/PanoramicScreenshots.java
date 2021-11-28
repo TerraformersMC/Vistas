@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package com.terraformersmc.vistas.util;
+package com.terraformersmc.vistas.resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,11 +14,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.datafixers.util.Pair;
+import com.terraformersmc.vistas.Vistas;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -29,55 +29,54 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
-public final class PanoramicScreenshots {
+//TODO: rewrite; i dont know what im doing!
+public class PanoramicScreenshots {
 
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-	public static final Logger LOGGER = LogManager.getLogger("Vistas|PanoramicScreenshots");
-	/**
-	 * The rotations for the 6 sides of the rendered panorama.
-	 */
+
 	public static final List<Quaternion> ROTATIONS = ImmutableList.of(Vec3f.POSITIVE_Y.getDegreesQuaternion(0), Vec3f.POSITIVE_Y.getDegreesQuaternion(90), Vec3f.POSITIVE_Y.getDegreesQuaternion(180), Vec3f.POSITIVE_Y.getDegreesQuaternion(270), Vec3f.POSITIVE_X.getDegreesQuaternion(-90), Vec3f.POSITIVE_X.getDegreesQuaternion(90));
-	/**
-	 * Whether to take a screenshot the next time a frame is rendered.
-	 */
+
+	public static final List<Float> PITCHES = ImmutableList.of(0.0F, 0.0F, 0.0F, 0.0F, 90.0F, -90.0F);
+	public static final List<Float> YAWS = ImmutableList.of(0.0F, 90.0F, 180.0F, -90.0F, 0.0F, 0.0F);
+
+	public static double time = 0.0D;
+	public static double timeSinceLastKeyPress = -1.0D;
 	public static boolean needsScreenshot = false;
+	public static int onShot = -1;
+	public static Optional<Pair<Float, Float>> startingRotation = Optional.empty();
+	public static Optional<Path> currentScreenshotPath = Optional.empty();
 
 	public static void registerKeyBinding() {
 		KeyBinding screenshotKey = new KeyBinding("key.vistas.panoramic_screenshot", 'H', "key.categories.misc");
 		KeyBindingHelper.registerKeyBinding(screenshotKey);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
-			if (client.currentScreen == null && screenshotKey.isPressed()) {
+			if (client.currentScreen == null && screenshotKey.isPressed() && timeSinceLastKeyPress <= 0.0D) {
 				needsScreenshot = true;
+				onShot++;
+				timeSinceLastKeyPress = 5.0D;
 			}
 		});
 	}
 
-	/**
-	 * Save a partial screenshot for a panorama.
-	 *
-	 * @param screenshot the image
-	 * @param folder     the panorama folder
-	 * @param i          the face index
-	 */
 	public static void saveScreenshot(NativeImage screenshot, Path folder, int i) {
 		Util.getIoWorkerExecutor().execute(() -> {
 			try {
 				int width = screenshot.getWidth();
 				int height = screenshot.getHeight();
-				int int_3 = 0;
-				int int_4 = 0;
+				int x = 0;
+				int y = 0;
 				if (width > height) {
-					int_3 = (width - height) / 2;
+					x = (width - height) / 2;
 					width = height;
 				} else {
-					int_4 = (height - width) / 2;
+					y = (height - width) / 2;
 					height = width;
 				}
 				NativeImage saved = new NativeImage(width, height, false);
-				screenshot.resizeSubRectTo(int_3, int_4, width, height, saved);
-				saved.writeFile(folder.resolve("panorama_" + i + ".png"));
-			} catch (IOException var27) {
-				PanoramicScreenshots.LOGGER.warn("Couldn't save screenshot", var27);
+				screenshot.resizeSubRectTo(x, y, width, height, saved);
+				saved.writeTo(folder.resolve("panorama_" + i + ".png"));
+			} catch (IOException exception) {
+				Vistas.LOGGER.warn("Couldn't save screenshot", exception);
 			} finally {
 				screenshot.close();
 			}
@@ -85,6 +84,9 @@ public final class PanoramicScreenshots {
 	}
 
 	public static Path getPanoramicScreenshotFolder() {
+		if (currentScreenshotPath.isPresent()) {
+			return currentScreenshotPath.get();
+		}
 		File rootFile = FabricLoader.getInstance().getGameDir().resolve("screenshots/panoramas/").toFile();
 		if (!rootFile.exists()) {
 			rootFile.mkdirs();

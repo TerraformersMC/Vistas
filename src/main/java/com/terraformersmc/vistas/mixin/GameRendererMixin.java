@@ -9,21 +9,26 @@ package com.terraformersmc.vistas.mixin;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.mojang.datafixers.util.Pair;
+import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.config.VistasConfig;
-import com.terraformersmc.vistas.util.PanoramicScreenshots;
+import com.terraformersmc.vistas.resource.PanoramicScreenshots;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.SimpleFramebuffer;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
@@ -31,61 +36,119 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Direction;
 
+// TODO: rewrite; i dont know what im doing!
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
 
 	@Shadow
 	@Final
 	private MinecraftClient client;
+
 	@Shadow
 	private boolean renderingPanorama;
 
 	@Shadow
-	public abstract void renderWorld(float float_1, long long_1, MatrixStack matrixStack_1);
+	@Final
+	private Camera camera;
 
-	@Inject(method = "render", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V"))
-	public void runorama$renderPanorama(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int i1, int i2) {
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", shift = Shift.BEFORE))
+	public void vistas$render(float delta, long startTime, boolean tick, CallbackInfo ci) {
+		if (PanoramicScreenshots.timeSinceLastKeyPress >= 0.0D) {
+			PanoramicScreenshots.timeSinceLastKeyPress -= delta;
+		}
+		if (PanoramicScreenshots.onShot != -1) {
+			PanoramicScreenshots.time += delta;
+		}
+		if (PanoramicScreenshots.time > 375.0D) {
+			if (!PanoramicScreenshots.startingRotation.isEmpty()) {
+				client.player.setPitch(PanoramicScreenshots.startingRotation.get().getFirst());
+				client.player.setYaw(PanoramicScreenshots.startingRotation.get().getSecond());
+			}
+			if (client.player != null) {
+				client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.broke"), false);
+			}
+			PanoramicScreenshots.onShot = -1;
+			PanoramicScreenshots.startingRotation = Optional.empty();
+			PanoramicScreenshots.currentScreenshotPath = Optional.empty();
+			PanoramicScreenshots.time = 0.0D;
+			PanoramicScreenshots.timeSinceLastKeyPress = 10.0D;
+			PanoramicScreenshots.needsScreenshot = false;
+		}
 		if (PanoramicScreenshots.needsScreenshot) {
-			PanoramicScreenshots.LOGGER.info("Taking screenshot");
+			Vistas.LOGGER.info("Taking screenshot");
 			PanoramicScreenshots.needsScreenshot = false;
 
 			Path root = PanoramicScreenshots.getPanoramicScreenshotFolder();
+			File file = root.resolve("panorama_" + PanoramicScreenshots.onShot + ".png").toFile();
+			if (PanoramicScreenshots.currentScreenshotPath.isEmpty()) {
+				PanoramicScreenshots.currentScreenshotPath = Optional.of(root);
+			}
 			File rootFile = root.toFile();
 			if (!rootFile.exists()) {
 				rootFile.mkdirs();
 			}
 
+			if (PanoramicScreenshots.startingRotation.isEmpty()) {
+				PanoramicScreenshots.startingRotation = Optional.of(Pair.of(VistasConfig.getInstance().lockScreenshotPitch ? 0.0F : client.player.getPitch(), VistasConfig.getInstance().lockScreenshotYaw ? client.player.getHorizontalFacing() == Direction.NORTH ? 180 : client.player.getHorizontalFacing() == Direction.EAST ? -90 : client.player.getHorizontalFacing() == Direction.SOUTH ? 0 : 90 : client.player.getYaw()));
+			}
+
 			// setup
-			boolean oldFov90 = renderingPanorama;
-			float oldPitch = client.player.getPitch();
-			float oldYaw = client.player.getYaw();
-			if (VistasConfig.getInstance().lockScreenshotPitch) {
-				client.player.setPitch(0);
-			}
-			if (VistasConfig.getInstance().lockScreenshotYaw) {
-				client.player.setYaw(0);
-			}
-			boolean oldCulling = client.chunkCullingEnabled;
+			boolean wasRenderingPanorama = renderingPanorama;
+			boolean culledBefore = client.chunkCullingEnabled;
 			client.chunkCullingEnabled = false;
 			renderingPanorama = true;
-			List<Quaternion> rotations = PanoramicScreenshots.ROTATIONS;
+			Framebuffer framebuffer = new SimpleFramebuffer(this.client.getWindow().getFramebufferWidth(), this.client.getWindow().getFramebufferHeight(), true, MinecraftClient.IS_SYSTEM_MAC);
+			client.worldRenderer.reloadTransparencyShader();
+			this.setBlockOutlineEnabled(false);
+			this.setRenderHand(false);
+
 			// take
-			for (int i = 0; i < rotations.size(); i++) {
-				MatrixStack stack = new MatrixStack(); // Adding a layer in the old one fails empty check
-				stack.multiply(rotations.get(i));
-				doRender(tickDelta, startTime, stack);
-				takeScreenshot(root, i);
-			}
+			client.player.setPitch(PanoramicScreenshots.startingRotation.get().getFirst());
+			client.player.setYaw(PanoramicScreenshots.startingRotation.get().getSecond());
+			framebuffer.beginWrite(true);
+			MatrixStack stack = new MatrixStack();
+			stack.multiply(PanoramicScreenshots.ROTATIONS.get(PanoramicScreenshots.onShot));
+			doRender(delta, startTime, stack);
+			takeScreenshot(root, PanoramicScreenshots.onShot, framebuffer);
+
 			// restore
-			renderingPanorama = oldFov90;
-			client.chunkCullingEnabled = oldCulling;
-			client.player.setPitch(oldPitch);
-			client.player.setYaw(oldYaw);
-			if (client.player != null) {
-				client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.saved", new LiteralText(root.toAbsolutePath().toString()).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, root.toAbsolutePath().toString())).withUnderline(true))), false);
+			client.player.setPitch(PanoramicScreenshots.startingRotation.get().getFirst() + PanoramicScreenshots.PITCHES.get(PanoramicScreenshots.onShot));
+			client.player.setYaw(PanoramicScreenshots.startingRotation.get().getSecond() + PanoramicScreenshots.YAWS.get(PanoramicScreenshots.onShot));
+			renderingPanorama = wasRenderingPanorama;
+			client.chunkCullingEnabled = culledBefore;
+			this.setBlockOutlineEnabled(true);
+			this.setRenderHand(true);
+			client.worldRenderer.reloadTransparencyShader();
+			framebuffer.delete();
+
+			if (client.player != null && VistasConfig.getInstance().screenshotIndividually) {
+				client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.taken", new LiteralText(String.valueOf(PanoramicScreenshots.onShot)), new LiteralText(file.getName()).formatted(Formatting.UNDERLINE).styled((style) -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())))), false);
+			}
+
+			if (PanoramicScreenshots.onShot == 5) {
+				PanoramicScreenshots.onShot = -1;
+				client.player.setPitch(PanoramicScreenshots.startingRotation.get().getFirst());
+				client.player.setYaw(PanoramicScreenshots.startingRotation.get().getSecond());
+				PanoramicScreenshots.startingRotation = Optional.empty();
+				PanoramicScreenshots.currentScreenshotPath = Optional.empty();
+				PanoramicScreenshots.time = 0.0D;
+				PanoramicScreenshots.timeSinceLastKeyPress = 10.0D;
+				if (client.player != null) {
+					client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.saved", new LiteralText(root.toAbsolutePath().toString()).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, root.toAbsolutePath().toString())).withUnderline(true))), false);
+				}
+			} else {
+				// push
+				client.player.setPitch(PanoramicScreenshots.startingRotation.get().getFirst() + PanoramicScreenshots.PITCHES.get(PanoramicScreenshots.onShot + 1));
+				client.player.setYaw(PanoramicScreenshots.startingRotation.get().getSecond() + PanoramicScreenshots.YAWS.get(PanoramicScreenshots.onShot + 1));
+				if (!VistasConfig.getInstance().screenshotIndividually) {
+					PanoramicScreenshots.needsScreenshot = true;
+					PanoramicScreenshots.onShot++;
+					vistas$render(delta, startTime, tick, ci);
+				}
 			}
 		}
 	}
@@ -96,8 +159,18 @@ public abstract class GameRendererMixin {
 	}
 
 	@Unique
-	private void takeScreenshot(Path folder, int id) {
-		NativeImage shot = ScreenshotRecorder.takeScreenshot(client.getFramebuffer());
+	private void takeScreenshot(Path folder, int id, Framebuffer buffer) {
+		NativeImage shot = ScreenshotRecorder.takeScreenshot(buffer);
 		PanoramicScreenshots.saveScreenshot(shot, folder, id);
 	}
+
+	@Shadow
+	public abstract void renderWorld(float delta, long startTime, MatrixStack matrices);
+
+	@Shadow
+	public abstract void setBlockOutlineEnabled(boolean blockOutlineEnabled);
+
+	@Shadow
+	public abstract void setRenderHand(boolean renderHand);
+
 }

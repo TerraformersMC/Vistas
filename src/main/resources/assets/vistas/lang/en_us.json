@@ -1,10 +1,13 @@
 {
-  "text.autoconfig.vistas.title": "Vistas Config",
-  "text.autoconfig.vistas.option.panorama": "Panorama",
-  "text.autoconfig.vistas.option.forcePanorama": "Force Panorama",
-  "text.autoconfig.vistas.option.randomPerScreen": "Random Per Screen",
-  "text.autoconfig.vistas.option.lockScreenshotPitch": "Lock Panoramic Screenshot Pitch (U,D) to 0",
-  "text.autoconfig.vistas.option.lockScreenshotYaw": "Lock Panoramic Screenshot Yaw (L,R) to 0",
-  "vistas.panoramic_screenshot.saved": "Panorama taken and saved at %s directory",
-  "key.vistas.panoramic_screenshot": "Take Panoramic Screenshot"
+	"text.autoconfig.vistas.title": "Vistas Config",
+	"text.autoconfig.vistas.option.panorama": "Panorama",
+	"text.autoconfig.vistas.option.forcePanorama": "Force Panorama",
+	"text.autoconfig.vistas.option.randomPerScreen": "Random Per Screen",
+	"text.autoconfig.vistas.option.lockScreenshotPitch": "Lock Panoramic Screenshot Pitch (U,D) to 0",
+	"text.autoconfig.vistas.option.lockScreenshotYaw": "Lock Panoramic Screenshot Yaw (L,R) to 0",
+	"text.autoconfig.vistas.option.screenshotIndividually": "Take Panoramic Screenshot Images Individually",
+	"vistas.panoramic_screenshot.saved": "Panorama taken and saved at %s directory",
+	"vistas.panoramic_screenshot.broke": "Panoramic Screenshot took too long and was stopped!",
+	"vistas.panoramic_screenshot.taken": "Panorama #%s taken at %s",
+	"key.vistas.panoramic_screenshot": "Take Panoramic Screenshot"
 }

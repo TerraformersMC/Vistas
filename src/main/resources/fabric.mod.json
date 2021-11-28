@@ -3,7 +3,7 @@
 	"id": "vistas",
 	"version": "${version}",
 	"name": "Vistas",
-	"description": "A library for customizing the main menu in all sorts of ways!",
+	"description": "A tool for customizing the Panorama!",
 	"authors": [
 		"LudoCrypt",
 		"Prospector",
@@ -23,9 +23,6 @@
 		],
 		"modmenu": [
 			"com.terraformersmc.vistas.config.VistasModMenuConfig"
-		],
-		"vistas": [
-			"com.terraformersmc.vistas.impl.VistasImpl"
 		]
 	},
 	"mixins": [

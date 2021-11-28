@@ -13,6 +13,7 @@ public class VistasConfig implements ConfigData {
 	public boolean randomPerScreen = false;
 	public boolean lockScreenshotPitch = true;
 	public boolean lockScreenshotYaw = false;
+	public boolean screenshotIndividually = true;
 
 	public static void init() {
 		AutoConfig.register(VistasConfig.class, GsonConfigSerializer::new);

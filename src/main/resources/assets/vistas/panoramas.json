@@ -1,44 +1,47 @@
 {
 	"default": {
 		"weight": 1,
-		"music": {
+		"musicSound": {
 			"sound": "music.menu",
 			"min_delay": 20,
 			"max_delay": 600,
 			"replace_current_music": true
 		},
-		"splashTexts": "texts/splashes.txt",
-		"titleSettings": {
-			"titleId": "textures/gui/title/minecraft.png",
-			"showEdition": true,
-			"addedX": 0,
-			"addedY": 0,
-			"addedSplashX": 0,
-			"addedSplashY": 0,
-			"outlined": true
+		"splashText": "minecraft:texts/splashes.txt",
+		"logoControl": {
+			"logoId": "textures/gui/title/minecraft.png",
+			"logoX": 0.0,
+			"logoY": 0.0,
+			"logoRot": 0.0,
+			"outlined": true,
+			"splashX": 0.0,
+			"splashY": 0.0,
+			"splashRot": -20.0,
+			"showEdition": true
 		},
-		"panoramas": [
+		"cubemaps": [
 			{
-				"backgroundId": "textures/gui/title/background/panorama",
-				"movementSettings": {
+				"cubemapId": "textures/gui/title/background/panorama",
+				"rotationControl": {
 					"frozen": false,
-					"addedX": 0.0,
-					"addedY": 0.0,
-					"speedMultiplier": 1.0,
-					"woozy": false
+					"woozy": false,
+					"addedPitch": 0.0,
+					"addedYaw": 0.0,
+					"addedRoll": 0.0,
+					"speedMultiplier": 1.0
 				},
-				"visualSettings": {
+				"visualControl": {
 					"fov": 85.0,
-					"xLength": 2.0,
-					"yLength": 2.0,
-					"zLength": 2.0,
+					"width": 2.0,
+					"height": 2.0,
+					"depth": 2.0,
 					"addedX": 0.0,
 					"addedY": 0.0,
 					"addedZ": 0.0,
-					"colorR": 255,
-					"colorG": 255,
-					"colorB": 255,
-					"alpha": 255
+					"colorR": 255.0,
+					"colorG": 255.0,
+					"colorB": 255.0,
+					"colorA": 255.0
 				}
 			}
 		]
