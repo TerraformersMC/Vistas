@@ -54,7 +54,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 							try {
 								profiler.push("parse");
 
-								JsonElement jsonElement = new JsonParser().parse(reader);
+								JsonElement jsonElement = JsonParser.parseReader(reader);
 								jsonElement.getAsJsonObject().entrySet().forEach((pair) -> {
 									Identifier panoramaId = new Identifier(namespace, pair.getKey());
 									Panorama panorama = get(Panorama.CODEC, pair.getValue());
