@@ -85,7 +85,7 @@ public abstract class TitleScreenMixin extends Screen {
 			PanoramaRenderer panoramaRenderer = new PanoramaRenderer(cubemap);
 			panoramaRenderer.render(delta, MathHelper.clamp(f, 0.0F, 1.0F));
 			Identifier overlayId = new Identifier(panoramaRenderer.getCubemap().getCubemapId() + "_overlay.png");
-			if (this.client.getResourceManager().containsResource(overlayId)) {
+			if (this.client.getResourceManager().getResource(overlayId).isPresent()) {
 				RenderSystem.setShader(GameRenderer::getPositionTexShader);
 				RenderSystem.setShaderTexture(0, overlayId);
 				RenderSystem.enableBlend();
