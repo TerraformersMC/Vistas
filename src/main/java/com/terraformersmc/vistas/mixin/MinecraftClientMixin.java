@@ -1,5 +1,6 @@
 package com.terraformersmc.vistas.mixin;
 
+import net.minecraft.resource.ReloadableResourceManagerImpl;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,40 +21,41 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.sound.MusicSound;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin implements MinecraftClientAccess {
 
-	@Unique
-	private PanoramaResourceReloader panoramaResourceReloader;
+    @Unique
+    private PanoramaResourceReloader panoramaResourceReloader;
 
-	@Shadow
-	@Final
-	private ReloadableResourceManager resourceManager;
+    @Shadow
+    @Final
+    private ReloadableResourceManagerImpl resourceManager;
 
-	@Nullable
-	@Shadow
-	public ClientPlayerEntity player;
+    @Nullable
+    @Shadow
+    public ClientPlayerEntity player;
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ReloadableResourceManager;registerReloader(Lnet/minecraft/resource/ResourceReloader;)V", ordinal = 2, shift = Shift.AFTER))
-	private void vistas$init$registerPanoramaReloader(RunArgs args, CallbackInfo ci) {
-		this.panoramaResourceReloader = new PanoramaResourceReloader();
-		this.resourceManager.registerReloader(panoramaResourceReloader);
-	}
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource" +
+            "/ReloadableResourceManagerImpl;registerReloader(Lnet/minecraft/resource/ResourceReloader;)V", ordinal =
+            2, shift = Shift.AFTER))
+    private void vistas$init$registerPanoramaReloader(RunArgs args, CallbackInfo ci) {
+        this.panoramaResourceReloader = new PanoramaResourceReloader();
+        this.resourceManager.registerReloader(panoramaResourceReloader);
+    }
 
-	@Inject(method = "getMusicType", at = @At("HEAD"), cancellable = true)
-	private void vistas$getMusicType(CallbackInfoReturnable<MusicSound> ci) {
-		if (this.player == null) {
-			ci.setReturnValue(VistasTitle.CURRENT.getValue().getMusicSound());
-		}
-	}
+    @Inject(method = "getMusicType", at = @At("HEAD"), cancellable = true)
+    private void vistas$getMusicType(CallbackInfoReturnable<MusicSound> ci) {
+        if (this.player == null) {
+            ci.setReturnValue(VistasTitle.CURRENT.getValue()
+                    .getMusicSound());
+        }
+    }
 
-	@Override
-	public PanoramaResourceReloader getPanoramaResourceReloader() {
-		return panoramaResourceReloader;
-	}
-
+    @Override
+    public PanoramaResourceReloader getPanoramaResourceReloader() {
+        return panoramaResourceReloader;
+    }
 }

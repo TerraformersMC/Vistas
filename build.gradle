@@ -1,5 +1,6 @@
+//file:noinspection GradlePackageVersionRange
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
 }
 
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.1/ferry.gradle'
@@ -8,27 +9,27 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
-	minecraft "com.mojang:minecraft:$project.minecraft_version"
-	mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
+    minecraft "com.mojang:minecraft:$project.minecraft_version"
+    mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
 
-	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
-	mod "modmenu", "com.terraformersmc:modmenu:$project.modmenu_version"
-	includeMod "fabric-api", "net.fabricmc.fabric-api:fabric-api:$project.fabric_version"
-	includeMod "cloth-config-2", "me.shedaniel.cloth:cloth-config-fabric:$project.clothconfig_version"
+    mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
+    mod "modmenu", "com.terraformersmc:modmenu:$project.modmenu_version"
+    includeMod "fabric-api", "net.fabricmc.fabric-api:fabric-api:$project.fabric_version"
+    includeMod "cloth-config-2", "me.shedaniel.cloth:cloth-config-fabric:$project.clothconfig_version"
 }
 
 repositories {
-	maven {
-		url = "https://jitpack.io"
-	}
-	maven {
-		url = 'https://maven.terraformersmc.com/'
-	}
-	maven {
-		url "https://maven.shedaniel.me/"
-	}
+    maven {
+        url = "https://jitpack.io"
+    }
+    maven {
+        url = 'https://maven.terraformersmc.com/'
+    }
+    maven {
+        url "https://maven.shedaniel.me/"
+    }
 }
 
 jar {
-	from("MPL-SOFTWARE-UTILIZED")
+    from("MPL-SOFTWARE-UTILIZED")
 }
