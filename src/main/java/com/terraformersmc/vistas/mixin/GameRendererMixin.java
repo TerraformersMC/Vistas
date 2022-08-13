@@ -11,6 +11,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,8 +35,6 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
@@ -69,7 +68,7 @@ public abstract class GameRendererMixin {
 				client.player.setYaw(PanoramicScreenshots.startingRotation.get().getSecond());
 			}
 			if (client.player != null) {
-				client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.broke"), false);
+				client.player.sendMessage(Text.translatable("vistas.panoramic_screenshot.broke"), false);
 			}
 			PanoramicScreenshots.onShot = -1;
 			PanoramicScreenshots.startingRotation = Optional.empty();
@@ -126,7 +125,7 @@ public abstract class GameRendererMixin {
 			framebuffer.delete();
 
 			if (client.player != null && VistasConfig.getInstance().screenshotIndividually) {
-				client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.taken", new LiteralText(String.valueOf(PanoramicScreenshots.onShot)), new LiteralText(file.getName()).formatted(Formatting.UNDERLINE).styled((style) -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())))), false);
+				client.player.sendMessage(Text.translatable("vistas.panoramic_screenshot.taken", Text.literal(String.valueOf(PanoramicScreenshots.onShot)), Text.literal(file.getName()).formatted(Formatting.UNDERLINE).styled((style) -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())))), false);
 			}
 
 			if (PanoramicScreenshots.onShot == 5) {
@@ -138,7 +137,7 @@ public abstract class GameRendererMixin {
 				PanoramicScreenshots.time = 0.0D;
 				PanoramicScreenshots.timeSinceLastKeyPress = 10.0D;
 				if (client.player != null) {
-					client.player.sendMessage(new TranslatableText("vistas.panoramic_screenshot.saved", new LiteralText(root.toAbsolutePath().toString()).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, root.toAbsolutePath().toString())).withUnderline(true))), false);
+					client.player.sendMessage(Text.translatable("vistas.panoramic_screenshot.saved", Text.literal(root.toAbsolutePath().toString()).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, root.toAbsolutePath().toString())).withUnderline(true))), false);
 				}
 			} else {
 				// push

@@ -20,7 +20,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.resource.ReloadableResourceManager;
+import net.minecraft.resource.ReloadableResourceManagerImpl;
 import net.minecraft.sound.MusicSound;
 
 @Environment(EnvType.CLIENT)
@@ -32,13 +32,13 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 
 	@Shadow
 	@Final
-	private ReloadableResourceManager resourceManager;
+	private ReloadableResourceManagerImpl resourceManager;
 
 	@Nullable
 	@Shadow
 	public ClientPlayerEntity player;
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ReloadableResourceManager;registerReloader(Lnet/minecraft/resource/ResourceReloader;)V", ordinal = 2, shift = Shift.AFTER))
+	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ReloadableResourceManagerImpl;registerReloader(Lnet/minecraft/resource/ResourceReloader;)V", ordinal = 2, shift = Shift.AFTER))
 	private void vistas$init$registerPanoramaReloader(RunArgs args, CallbackInfo ci) {
 		this.panoramaResourceReloader = new PanoramaResourceReloader();
 		this.resourceManager.registerReloader(panoramaResourceReloader);

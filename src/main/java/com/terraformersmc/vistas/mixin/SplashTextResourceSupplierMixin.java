@@ -1,5 +1,7 @@
 package com.terraformersmc.vistas.mixin;
 
+import com.terraformersmc.vistas.title.VistasTitle;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,7 +32,9 @@ public class SplashTextResourceSupplierMixin {
 	private void vistas$get(CallbackInfoReturnable<String> ci) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		PanoramaResourceReloader resourceReloader = ((MinecraftClientAccess) client).getPanoramaResourceReloader();
-		if (resourceReloader != null) {
+		Identifier panoramaId = VistasTitle.PANORAMAS_INVERT.get(VistasTitle.CURRENT.getValue());
+
+		if (resourceReloader != null && panoramaId != null) {
 			ci.setReturnValue(resourceReloader.get());
 		}
 	}

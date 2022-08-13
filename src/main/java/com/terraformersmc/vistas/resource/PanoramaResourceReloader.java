@@ -120,50 +120,35 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 		profiler.push(splashId.toString());
 		try {
 			profiler.push("parse");
-			Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(splashId);
+			Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(splashId).get();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
 			try {
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
-				try {
-					splashTexts = Lists.newArrayList(bufferedReader.lines().map(String::trim).map((splash) -> {
-						if (splash.startsWith("$vistas$import$")) {
-							try {
-								imports.add(new Identifier(splash.substring(15)));
-							} catch (InvalidIdentifierException badId) {
-								Vistas.LOGGER.error("Splash: '{}' imports invalid Identifier: '{}'", splashId, splash.substring(15));
-							}
+				splashTexts = Lists.newArrayList(bufferedReader.lines().map(String::trim).map((splash) -> {
+					if (splash.startsWith("$vistas$import$")) {
+						try {
+							imports.add(new Identifier(splash.substring(15)));
+						} catch (InvalidIdentifierException badId) {
+							Vistas.LOGGER.error("Splash: '{}' imports invalid Identifier: '{}'", splashId, splash.substring(15));
 						}
-						Session session = MinecraftClient.getInstance().getSession();
-						splash = splash.replace("$vistas$name$", session.getUsername().toLowerCase(Locale.ROOT));
-						splash = splash.replace("$vistas$Name$", session.getUsername());
-						splash = splash.replace("$vistas$NAME$", session.getUsername().toUpperCase(Locale.ROOT));
-						return splash;
-					}).filter((splash) -> splash.hashCode() != 125780783 && !splash.startsWith("$vistas$import$")).toList());
-				} catch (Throwable throwable) {
-					try {
-						bufferedReader.close();
-					} catch (Throwable closeable) {
-						throwable.addSuppressed(closeable);
 					}
-
-					throw throwable;
-				}
-
-				bufferedReader.close();
+					Session session = MinecraftClient.getInstance().getSession();
+					splash = splash.replace("$vistas$name$", session.getUsername().toLowerCase(Locale.ROOT));
+					splash = splash.replace("$vistas$Name$", session.getUsername());
+					splash = splash.replace("$vistas$NAME$", session.getUsername().toUpperCase(Locale.ROOT));
+					return splash;
+				}).filter((splash) -> splash.hashCode() != 125780783 && !splash.startsWith("$vistas$import$")).toList());
 			} catch (Throwable throwable) {
-				if (resource != null) {
-					try {
-						resource.close();
-					} catch (Throwable closeable) {
-						throwable.addSuppressed(closeable);
-					}
+				try {
+					bufferedReader.close();
+				} catch (Throwable closeable) {
+					throwable.addSuppressed(closeable);
 				}
 
 				throw throwable;
 			}
 
-			if (resource != null) {
-				resource.close();
-			}
+			bufferedReader.close();
+
 			profiler.pop();
 		} catch (IOException exception) {
 			Vistas.LOGGER.error("Splash: '{}' doesn't exist!", splashId);
