@@ -20,6 +20,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.JsonOps;
 import com.terraformersmc.vistas.Vistas;
+import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.panorama.Panorama;
 import com.terraformersmc.vistas.title.VistasTitle;
 
@@ -37,6 +38,12 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 	private final ConcurrentMap<Identifier, Pair<List<String>, List<Identifier>>> web = Maps.newConcurrentMap();
 	private final ConcurrentMap<Identifier, Pair<List<String>, List<Identifier>>> parsedSplashWeb = Maps.newConcurrentMap();
 	private final ConcurrentMap<Identifier, List<String>> splashTexts = Maps.newConcurrentMap();
+
+	private static boolean ready = false;
+
+	public static boolean isReady() {
+		return ready;
+	}
 
 	@Override
 	protected HashMap<Identifier, Pair<Panorama, List<String>>> prepare(ResourceManager manager, Profiler profiler) {
@@ -189,6 +196,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 	@Override
 	protected void apply(HashMap<Identifier, Pair<Panorama, List<String>>> prepared, ResourceManager manager, Profiler profiler) {
 		profiler.startTick();
+		ready = false;
 
 		profiler.push("clear");
 		VistasTitle.clear();
@@ -209,8 +217,16 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 
 		profiler.pop();
 
-		VistasTitle.choose(profiler);
+		if (VistasConfig.getInstance().randomPerScreen || VistasConfig.getInstance().forcePanorama) {
+			VistasTitle.choose(profiler);
+		} else {
+			// We need to set a random panorama once at start-up and this is a decent proxy for that.
+			profiler.push("initialize");
+			VistasTitle.CURRENT.setValue(VistasTitle.getRandom());
+			profiler.pop();
+		}
 
+		ready = true;
 		profiler.endTick();
 	}
 

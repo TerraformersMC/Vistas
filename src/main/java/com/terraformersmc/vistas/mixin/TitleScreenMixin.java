@@ -3,6 +3,7 @@ package com.terraformersmc.vistas.mixin;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
+import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -63,17 +64,19 @@ public abstract class TitleScreenMixin extends Screen {
 		super(title);
 	}
 
-	@Inject(method = "Lnet/minecraft/client/gui/screen/TitleScreen;<init>(Z)V", at = @At("TAIL"))
+	@Inject(method = "<init>(Z)V", at = @At("TAIL"))
 	private void vistas$init(boolean doBackgroundFade, CallbackInfo ci) {
 		this.backgroundRenderer = new BenignCubemapRenderer();
-		this.isVistas = new Random().nextDouble() < 1.0E-4D && VistasTitle.PANORAMAS_INVERT.get(VistasTitle.CURRENT.getValue()).equals(Vistas.DEFAULT);
+		this.isVistas = new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT));
 	}
 
 	@Inject(method = "init", at = @At("HEAD"))
 	private void vistas$init(CallbackInfo ci) {
-		VistasTitle.choose();
+		if (PanoramaResourceReloader.isReady()) {
+			VistasTitle.choose();
+		}
 		if (!VistasConfig.getInstance().forcePanorama && VistasConfig.getInstance().randomPerScreen) {
-			this.isVistas = new Random().nextDouble() < 1.0E-4D && VistasTitle.PANORAMAS_INVERT.get(VistasTitle.CURRENT.getValue()).equals(Vistas.DEFAULT);
+			this.isVistas = new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT));
 			this.splashText = null;
 		}
 	}
