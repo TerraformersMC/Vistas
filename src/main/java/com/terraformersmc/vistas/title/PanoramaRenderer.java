@@ -29,7 +29,7 @@ public class PanoramaRenderer {
 	public void render(float delta, float alpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
-		Matrix4f matrix4f = new Matrix4f().perspective((float)this.cubemap.getVisualControl().getFov(), (float) client.getWindow().getFramebufferWidth() / (float) client.getWindow().getFramebufferHeight(), 0.05F, 100.0F);
+		Matrix4f matrix4f = new Matrix4f().perspective((float) Math.toRadians(this.cubemap.getVisualControl().getFov()), (float) client.getWindow().getFramebufferWidth() / (float) client.getWindow().getFramebufferHeight(), 0.05F, 100.0F);
 		RenderSystem.backupProjectionMatrix();
 		RenderSystem.setProjectionMatrix(matrix4f);
 		MatrixStack matrixStack = RenderSystem.getModelViewStack();
