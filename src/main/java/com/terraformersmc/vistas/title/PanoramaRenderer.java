@@ -11,8 +11,8 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
+import org.joml.Matrix4f;
 
 public class PanoramaRenderer {
 
@@ -29,13 +29,13 @@ public class PanoramaRenderer {
 	public void render(float delta, float alpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
-		Matrix4f matrix4f = Matrix4f.viewboxMatrix(this.cubemap.getVisualControl().getFov(), (float) client.getWindow().getFramebufferWidth() / (float) client.getWindow().getFramebufferHeight(), 0.05F, 100.0F);
+		Matrix4f matrix4f = new Matrix4f().perspective((float)this.cubemap.getVisualControl().getFov(), (float) client.getWindow().getFramebufferWidth() / (float) client.getWindow().getFramebufferHeight(), 0.05F, 100.0F);
 		RenderSystem.backupProjectionMatrix();
 		RenderSystem.setProjectionMatrix(matrix4f);
 		MatrixStack matrixStack = RenderSystem.getModelViewStack();
 		matrixStack.push();
 		matrixStack.loadIdentity();
-		matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180.0F));
+		matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
 		RenderSystem.applyModelViewMatrix();
 		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -55,9 +55,9 @@ public class PanoramaRenderer {
 
 		matrixStack.push();
 		matrixStack.translate(this.cubemap.getVisualControl().getAddedX(), this.cubemap.getVisualControl().getAddedY(), this.cubemap.getVisualControl().getAddedZ());
-		matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((float) this.cubemap.getRotationControl().getPitch(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
-		matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) this.cubemap.getRotationControl().getYaw(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
-		matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) this.cubemap.getRotationControl().getRoll(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
+		matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) this.cubemap.getRotationControl().getPitch(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
+		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) this.cubemap.getRotationControl().getYaw(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
+		matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) this.cubemap.getRotationControl().getRoll(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
 		RenderSystem.applyModelViewMatrix();
 
 		for (int k = 0; k < 6; ++k) {

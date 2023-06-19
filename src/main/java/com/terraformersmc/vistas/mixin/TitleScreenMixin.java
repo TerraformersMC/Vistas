@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.function.BiConsumer;
 
 import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
+import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,7 +39,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 @Mixin(TitleScreen.class)
@@ -109,7 +109,7 @@ public abstract class TitleScreenMixin extends Screen {
 		matrices.translate(logo.getLogoX(), logo.getLogoY(), 0.0D);
 
 		matrices.translate((this.width / 2.0D), (y * 2.0D) - (y / 2.0D), 0.0D);
-		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) logo.getLogoRot()));
+		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
 		matrices.translate(-(this.width / 2.0D), -(y * 2.0D) + (y / 2.0D), 0.0D);
 
 		if (!logo.getLogoId().equals(new Identifier("textures/gui/title/minecraft.png")) || this.isVistas) {
@@ -146,7 +146,7 @@ public abstract class TitleScreenMixin extends Screen {
 		matrices.translate(logo.getLogoX(), logo.getLogoY(), 0.0D);
 
 		matrices.translate((this.width / 2.0D), 45, 0.0D);
-		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) logo.getLogoRot()));
+		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
 		matrices.translate(-(this.width / 2.0D), -45, 0.0D);
 
 		TitleScreen.drawTexture(matrices, x, y, u, v, width, height, textureWidth, textureHeight);
