@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "GameRendererMixin",
+    "LogoDrawerAccessor",
     "LogoDrawerMixin",
     "MinecraftClientMixin",
     "SplashTextResourceSupplierMixin",

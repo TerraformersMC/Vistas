@@ -23,8 +23,7 @@ import java.util.function.BiConsumer;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LogoDrawer.class)
-public abstract class LogoDrawerMixin {
-    // TODO: isVistas is a separate variable from the one in TitleScreenMixin
+public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
     @Unique
     private boolean isVistas = false;
 
@@ -80,5 +79,10 @@ public abstract class LogoDrawerMixin {
         TitleScreen.drawTexture(matrices, x, y, u, v, width, height, textureWidth, textureHeight);
 
         matrices.pop();
+    }
+
+    @Override
+    public void setIsVistas(boolean value) {
+        this.isVistas = value;
     }
 }
