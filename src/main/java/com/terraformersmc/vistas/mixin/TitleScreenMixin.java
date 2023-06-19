@@ -1,34 +1,15 @@
 package com.terraformersmc.vistas.mixin;
 
-import java.util.Random;
-import java.util.function.BiConsumer;
-
-import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
-import net.minecraft.util.math.RotationAxis;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.At.Shift;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.panorama.LogoControl;
 import com.terraformersmc.vistas.panorama.Panorama;
+import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
 import com.terraformersmc.vistas.title.BenignCubemapRenderer;
 import com.terraformersmc.vistas.title.PanoramaRenderer;
 import com.terraformersmc.vistas.title.VistasTitle;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
@@ -39,11 +20,20 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.Random;
 
 @Environment(EnvType.CLIENT)
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
-
 	@Unique
 	private boolean isVistas = false;
 
@@ -97,60 +87,6 @@ public abstract class TitleScreenMixin extends Screen {
 				drawTexture(matrices, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 			}
 		});
-	}
-
-	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;drawWithOutline(IILjava/util/function/BiConsumer;)V"))
-	private void vistas$render$drawOutline(TitleScreen titleScreen, int x, int y, BiConsumer<Integer, Integer> consumer, MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		Panorama panorama = VistasTitle.CURRENT.getValue();
-		LogoControl logo = panorama.getLogoControl();
-
-		matrices.push();
-		matrices.translate(logo.getLogoX(), logo.getLogoY(), 0.0D);
-
-		matrices.translate((this.width / 2.0D), (y * 2.0D) - (y / 2.0D), 0.0D);
-		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
-		matrices.translate(-(this.width / 2.0D), -(y * 2.0D) + (y / 2.0D), 0.0D);
-
-		if (!logo.getLogoId().equals(new Identifier("textures/gui/title/minecraft.png")) || this.isVistas) {
-			RenderSystem.setShaderTexture(0, this.isVistas ? Vistas.id("textures/vistas_logo.png") : logo.getLogoId());
-			int rx = (this.width / 2) - 256;
-			int ry = 52 - 256;
-			BiConsumer<Integer, Integer> render = (ix, iy) -> Screen.drawTexture(matrices, ix, iy, 0, 0, 0, 512, 512, 512, 512);
-			if (logo.isOutlined()) {
-				this.drawWithOutline(rx, ry, render);
-			} else {
-				render.accept(rx, ry);
-			}
-		} else {
-			if (logo.isOutlined()) {
-				titleScreen.drawWithOutline(x, y, consumer);
-			} else {
-				consumer.accept(x, y);
-			}
-		}
-
-		matrices.pop();
-	}
-
-	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIFFIIII)V"))
-	private void vistas$render(MatrixStack matrices, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
-		Panorama panorama = VistasTitle.CURRENT.getValue();
-		LogoControl logo = panorama.getLogoControl();
-
-		if (!logo.doesShowEdition()) {
-			return;
-		}
-
-		matrices.push();
-		matrices.translate(logo.getLogoX(), logo.getLogoY(), 0.0D);
-
-		matrices.translate((this.width / 2.0D), 45, 0.0D);
-		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
-		matrices.translate(-(this.width / 2.0D), -45, 0.0D);
-
-		TitleScreen.drawTexture(matrices, x, y, u, v, width, height, textureWidth, textureHeight);
-
-		matrices.pop();
 	}
 
 	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/RotationAxis;rotationDegrees(F)Lorg/joml/Quaternionf;"))
