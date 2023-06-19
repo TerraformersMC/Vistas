@@ -8,6 +8,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.client.sound.MusicType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -21,7 +24,7 @@ public class Panorama {
 			(instance) -> 
 			instance.group(
 					SoundEvent.CODEC.optionalFieldOf("sound")
-						.forGetter((sound) -> Optional.of(sound.getSound())),
+						.forGetter((sound) -> Optional.of(sound.getSound().value())),
 					Codec.INT.optionalFieldOf("min_delay")
 						.forGetter((sound) -> Optional.of(sound.getMinDelay())),
 					Codec.INT.optionalFieldOf("max_delay")
@@ -29,7 +32,7 @@ public class Panorama {
 					Codec.BOOL.optionalFieldOf("replace_current_music")
 						.forGetter((sound) -> Optional.of(sound.shouldReplaceCurrentMusic()))
 					)
-			.apply(instance, (sound, min, max, replace)-> new MusicSound(sound.orElse(SoundEvents.MUSIC_MENU), min.orElse(20), max.orElse(600), replace.orElse(true))));
+			.apply(instance, (sound, min, max, replace)-> new MusicSound(sound.map(Registries.SOUND_EVENT::getEntry).orElse(SoundEvents.MUSIC_MENU), min.orElse(20), max.orElse(600), replace.orElse(true))));
 
 	public static final Codec<Panorama> CODEC = RecordCodecBuilder.create(
 			(instance) -> 
