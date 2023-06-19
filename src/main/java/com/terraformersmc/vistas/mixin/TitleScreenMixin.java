@@ -89,7 +89,7 @@ public abstract class TitleScreenMixin extends Screen {
 			panoramaRenderer.render(delta, MathHelper.clamp(f, 0.0F, 1.0F));
 			Identifier overlayId = new Identifier(panoramaRenderer.getCubemap().getCubemapId() + "_overlay.png");
 			if (this.client.getResourceManager().getResource(overlayId).isPresent()) {
-				RenderSystem.setShader(GameRenderer::getPositionTexShader);
+				RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 				RenderSystem.setShaderTexture(0, overlayId);
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
@@ -116,7 +116,7 @@ public abstract class TitleScreenMixin extends Screen {
 			RenderSystem.setShaderTexture(0, this.isVistas ? Vistas.id("textures/vistas_logo.png") : logo.getLogoId());
 			int rx = (this.width / 2) - 256;
 			int ry = 52 - 256;
-			BiConsumer<Integer, Integer> render = (ix, iy) -> Screen.drawTexture(matrices, ix, iy, this.getZOffset(), 0, 0, 512, 512, 512, 512);
+			BiConsumer<Integer, Integer> render = (ix, iy) -> Screen.drawTexture(matrices, ix, iy, 0, 0, 0, 512, 512, 512, 512);
 			if (logo.isOutlined()) {
 				this.drawWithOutline(rx, ry, render);
 			} else {

@@ -37,7 +37,7 @@ public class PanoramaRenderer {
 		matrixStack.loadIdentity();
 		matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
 		RenderSystem.applyModelViewMatrix();
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.enableBlend();
 		RenderSystem.disableCull();
