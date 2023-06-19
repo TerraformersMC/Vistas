@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.panorama.LogoControl;
 import com.terraformersmc.vistas.panorama.Panorama;
+import com.terraformersmc.vistas.title.LogoDrawerAccessor;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

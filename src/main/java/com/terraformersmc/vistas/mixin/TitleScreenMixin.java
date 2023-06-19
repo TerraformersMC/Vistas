@@ -8,6 +8,7 @@ import com.terraformersmc.vistas.panorama.LogoControl;
 import com.terraformersmc.vistas.panorama.Panorama;
 import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
 import com.terraformersmc.vistas.title.BenignCubemapRenderer;
+import com.terraformersmc.vistas.title.LogoDrawerAccessor;
 import com.terraformersmc.vistas.title.PanoramaRenderer;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
