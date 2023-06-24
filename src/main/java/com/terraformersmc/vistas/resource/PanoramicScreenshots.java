@@ -30,6 +30,7 @@ import net.minecraft.util.math.RotationAxis;
 import org.joml.Quaternionf;
 
 //TODO: rewrite; i dont know what im doing!
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class PanoramicScreenshots {
 
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
@@ -60,16 +61,18 @@ public class PanoramicScreenshots {
 
 	public static void saveScreenshot(NativeImage screenshot, Path folder, int i) {
 		Util.getIoWorkerExecutor().execute(() -> {
-			try {
+			try (screenshot) {
 				int width = screenshot.getWidth();
 				int height = screenshot.getHeight();
 				int x = 0;
 				int y = 0;
 				if (width > height) {
 					x = (width - height) / 2;
+					//noinspection SuspiciousNameCombination
 					width = height;
 				} else {
 					y = (height - width) / 2;
+					//noinspection SuspiciousNameCombination
 					height = width;
 				}
 				NativeImage saved = new NativeImage(width, height, false);
@@ -77,8 +80,6 @@ public class PanoramicScreenshots {
 				saved.writeTo(folder.resolve("panorama_" + i + ".png"));
 			} catch (IOException exception) {
 				Vistas.LOGGER.warn("Couldn't save screenshot", exception);
-			} finally {
-				screenshot.close();
 			}
 		});
 	}
@@ -89,6 +90,7 @@ public class PanoramicScreenshots {
 		}
 		File rootFile = FabricLoader.getInstance().getGameDir().resolve("screenshots/panoramas/").toFile();
 		if (!rootFile.exists()) {
+			//noinspection ResultOfMethodCallIgnored
 			rootFile.mkdirs();
 		}
 		String string = DATE_FORMAT.format(new Date());
@@ -97,6 +99,7 @@ public class PanoramicScreenshots {
 		while (true) {
 			File file = new File(rootFile, string + (i == 1 ? "" : "_" + i));
 			if (!file.exists()) {
+				//noinspection ResultOfMethodCallIgnored
 				file.mkdir();
 				return file.toPath();
 			}

@@ -29,7 +29,6 @@ import com.terraformersmc.vistas.resource.PanoramicScreenshots;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
-import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
@@ -45,17 +44,14 @@ public abstract class GameRendererMixin {
 
 	@Shadow
 	@Final
-	private MinecraftClient client;
+	MinecraftClient client;
 
 	@Shadow
 	private boolean renderingPanorama;
 
-	@Shadow
-	@Final
-	private Camera camera;
-
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", shift = Shift.BEFORE))
 	public void vistas$render(float delta, long startTime, boolean tick, CallbackInfo ci) {
+		assert client.player != null;
 		if (PanoramicScreenshots.timeSinceLastKeyPress >= 0.0D) {
 			PanoramicScreenshots.timeSinceLastKeyPress -= delta;
 		}
@@ -63,7 +59,7 @@ public abstract class GameRendererMixin {
 			PanoramicScreenshots.time += delta;
 		}
 		if (PanoramicScreenshots.time > 375.0D) {
-			if (!PanoramicScreenshots.startingRotation.isEmpty()) {
+			if (PanoramicScreenshots.startingRotation.isPresent()) {
 				client.player.setPitch(PanoramicScreenshots.startingRotation.get().getFirst());
 				client.player.setYaw(PanoramicScreenshots.startingRotation.get().getSecond());
 			}
@@ -88,6 +84,7 @@ public abstract class GameRendererMixin {
 			}
 			File rootFile = root.toFile();
 			if (!rootFile.exists()) {
+				//noinspection ResultOfMethodCallIgnored
 				rootFile.mkdirs();
 			}
 

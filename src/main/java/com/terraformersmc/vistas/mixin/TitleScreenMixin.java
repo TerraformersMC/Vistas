@@ -77,6 +77,7 @@ public abstract class TitleScreenMixin extends Screen {
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V", shift = Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void vistas$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, float f) {
+		assert this.client != null;
 		PanoramaRenderer.time += delta;
 		VistasTitle.CURRENT.getValue().getCubemaps().forEach((cubemap) -> {
 			PanoramaRenderer panoramaRenderer = new PanoramaRenderer(cubemap);
