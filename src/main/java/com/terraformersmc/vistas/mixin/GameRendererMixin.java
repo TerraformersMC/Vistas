@@ -101,7 +101,7 @@ public abstract class GameRendererMixin {
 			client.chunkCullingEnabled = false;
 			renderingPanorama = true;
 			Framebuffer framebuffer = new SimpleFramebuffer(this.client.getWindow().getFramebufferWidth(), this.client.getWindow().getFramebufferHeight(), true, MinecraftClient.IS_SYSTEM_MAC);
-			client.worldRenderer.reloadTransparencyShader();
+			client.worldRenderer.reloadTransparencyPostProcessor();
 			this.setBlockOutlineEnabled(false);
 			this.setRenderHand(false);
 
@@ -121,7 +121,7 @@ public abstract class GameRendererMixin {
 			client.chunkCullingEnabled = culledBefore;
 			this.setBlockOutlineEnabled(true);
 			this.setRenderHand(true);
-			client.worldRenderer.reloadTransparencyShader();
+			client.worldRenderer.reloadTransparencyPostProcessor();
 			framebuffer.delete();
 
 			if (client.player != null && VistasConfig.getInstance().screenshotIndividually) {

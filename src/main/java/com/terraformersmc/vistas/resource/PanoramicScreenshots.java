@@ -26,15 +26,15 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
+import org.joml.Quaternionf;
 
 //TODO: rewrite; i dont know what im doing!
 public class PanoramicScreenshots {
 
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 
-	public static final List<Quaternion> ROTATIONS = ImmutableList.of(Vec3f.POSITIVE_Y.getDegreesQuaternion(0), Vec3f.POSITIVE_Y.getDegreesQuaternion(90), Vec3f.POSITIVE_Y.getDegreesQuaternion(180), Vec3f.POSITIVE_Y.getDegreesQuaternion(270), Vec3f.POSITIVE_X.getDegreesQuaternion(-90), Vec3f.POSITIVE_X.getDegreesQuaternion(90));
+	public static final List<Quaternionf> ROTATIONS = ImmutableList.of(RotationAxis.POSITIVE_Y.rotationDegrees(0), RotationAxis.POSITIVE_Y.rotationDegrees(90), RotationAxis.POSITIVE_Y.rotationDegrees(180), RotationAxis.POSITIVE_Y.rotationDegrees(270), RotationAxis.POSITIVE_X.rotationDegrees(-90), RotationAxis.POSITIVE_X.rotationDegrees(90));
 
 	public static final List<Float> PITCHES = ImmutableList.of(0.0F, 0.0F, 0.0F, 0.0F, 90.0F, -90.0F);
 	public static final List<Float> YAWS = ImmutableList.of(0.0F, 90.0F, 180.0F, -90.0F, 0.0F, 0.0F);
