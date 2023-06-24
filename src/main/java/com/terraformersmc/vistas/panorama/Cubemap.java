@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.util.Identifier;
 
+@SuppressWarnings("unused")
 public class Cubemap {
 
 	public static final Cubemap DEFAULT = new Cubemap();
@@ -39,6 +40,7 @@ public class Cubemap {
 		this.visualControl = visualControl;
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public Cubemap(Optional<Identifier> cubemapId, Optional<RotationControl> rotationControl, Optional<VisualControl> visualControl) {
 		this.cubemapId = cubemapId.orElse(new Identifier("textures/gui/title/background/panorama"));
 		this.rotationControl = rotationControl.orElse(RotationControl.DEFAULT);

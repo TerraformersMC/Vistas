@@ -18,13 +18,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.profiler.Profiler;
 
+@SuppressWarnings("unused")
 public class VistasTitle {
 
 	public static final ConcurrentMap<Identifier, Panorama> BUILTIN_PANORAMAS = Maps.newConcurrentMap();
 	public static final ConcurrentMap<Identifier, Panorama> PANORAMAS = Maps.newConcurrentMap();
 	public static final ConcurrentMap<Panorama, Identifier> PANORAMAS_INVERT = Maps.newConcurrentMap();
 	public static final List<Panorama> DISTRIBUTION = Lists.newArrayList();
-	public static final MutableObject<Panorama> CURRENT = new MutableObject<Panorama>(Panorama.DEFAULT);
+	public static final MutableObject<Panorama> CURRENT = new MutableObject<>(Panorama.DEFAULT);
 
 	public static void choose() {
 		choose(MinecraftClient.getInstance().getProfiler());

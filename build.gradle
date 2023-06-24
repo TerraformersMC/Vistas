@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
+	id 'fabric-loom' version '1.1.+'
 }
 
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/ferry.gradle'
@@ -12,9 +12,10 @@ dependencies {
 	mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
 
 	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
+	mod "fabric-api", "net.fabricmc.fabric-api:fabric-api:$project.fabric_version"
+
 	mod "modmenu", "com.terraformersmc:modmenu:$project.modmenu_version"
-	includeMod "fabric-api", "net.fabricmc.fabric-api:fabric-api:$project.fabric_version"
-	includeMod "cloth-config-2", "me.shedaniel.cloth:cloth-config-fabric:$project.clothconfig_version"
+	includeMod "cloth-config", "me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}"
 }
 
 repositories {

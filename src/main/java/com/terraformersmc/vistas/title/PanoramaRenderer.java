@@ -26,6 +26,7 @@ public class PanoramaRenderer {
 		this.client = MinecraftClient.getInstance();
 	}
 
+	@SuppressWarnings("unused")
 	public void render(float delta, float alpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
