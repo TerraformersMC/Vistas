@@ -17,6 +17,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.SplashTextRenderer;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -51,7 +52,7 @@ public abstract class TitleScreenMixin extends Screen {
 
 	@Nullable
 	@Shadow
-	private String splashText;
+	private SplashTextRenderer splashText;
 
 	@Shadow @Final private LogoDrawer logoDrawer;
 
@@ -96,18 +97,18 @@ public abstract class TitleScreenMixin extends Screen {
 		});
 	}
 
-	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/RotationAxis;rotationDegrees(F)Lorg/joml/Quaternionf;"))
-	private float vistas$render$changeAngle(float in) {
-		return (float) VistasTitle.CURRENT.getValue().getLogoControl().getSplashRot();
-	}
-
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lorg/joml/Quaternionf;)V", shift = Shift.BEFORE))
-	private void vistas$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-
-		Panorama panorama = VistasTitle.CURRENT.getValue();
-		LogoControl logo = panorama.getLogoControl();
-
-		matrices.translate(logo.getSplashX(), logo.getSplashY(), 0.0D);
-	}
+//	@ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/RotationAxis;rotationDegrees(F)Lorg/joml/Quaternionf;"))
+//	private float vistas$render$changeAngle(float in) {
+//		return (float) VistasTitle.CURRENT.getValue().getLogoControl().getSplashRot();
+//	}
+//
+//	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lorg/joml/Quaternionf;)V", shift = Shift.BEFORE))
+//	private void vistas$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+//
+//		Panorama panorama = VistasTitle.CURRENT.getValue();
+//		LogoControl logo = panorama.getLogoControl();
+//
+//		matrices.translate(logo.getSplashX(), logo.getSplashY(), 0.0D);
+//	}
 
 }
