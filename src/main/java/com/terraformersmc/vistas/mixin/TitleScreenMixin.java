@@ -4,8 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.config.VistasConfig;
-import com.terraformersmc.vistas.panorama.LogoControl;
-import com.terraformersmc.vistas.panorama.Panorama;
 import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
 import com.terraformersmc.vistas.title.BenignCubemapRenderer;
 import com.terraformersmc.vistas.title.LogoDrawerAccessor;
@@ -19,8 +17,6 @@ import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SplashTextRenderer;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -32,7 +28,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -63,7 +58,7 @@ public abstract class TitleScreenMixin extends Screen {
 	@Inject(method = "<init>(Z)V", at = @At("TAIL"))
 	private void vistas$init(boolean doBackgroundFade, CallbackInfo ci) {
 		this.backgroundRenderer = new BenignCubemapRenderer();
-		((LogoDrawerAccessor)this.logoDrawer).setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
+		((LogoDrawerAccessor)this.logoDrawer).vistas$setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
 	}
 
 	@Inject(method = "init", at = @At("HEAD"))
@@ -72,7 +67,7 @@ public abstract class TitleScreenMixin extends Screen {
 			VistasTitle.choose();
 		}
 		if (!VistasConfig.getInstance().forcePanorama && VistasConfig.getInstance().randomPerScreen) {
-			((LogoDrawerAccessor)this.logoDrawer).setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
+			((LogoDrawerAccessor)this.logoDrawer).vistas$setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
 			this.splashText = null;
 		}
 	}

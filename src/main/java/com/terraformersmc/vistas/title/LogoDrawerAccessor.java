@@ -5,5 +5,5 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public interface LogoDrawerAccessor {
-    void setIsVistas(boolean value);
+    void vistas$setIsVistas(boolean value);
 }
