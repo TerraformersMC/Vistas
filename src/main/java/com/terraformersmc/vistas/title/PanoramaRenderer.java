@@ -1,6 +1,7 @@
 package com.terraformersmc.vistas.title;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.systems.VertexSorter;
 import com.terraformersmc.vistas.panorama.Cubemap;
 
 import net.minecraft.client.MinecraftClient;
@@ -32,7 +33,7 @@ public class PanoramaRenderer {
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
 		Matrix4f matrix4f = new Matrix4f().perspective((float) Math.toRadians(this.cubemap.getVisualControl().getFov()), (float) client.getWindow().getFramebufferWidth() / (float) client.getWindow().getFramebufferHeight(), 0.05F, 100.0F);
 		RenderSystem.backupProjectionMatrix();
-		RenderSystem.setProjectionMatrix(matrix4f);
+		RenderSystem.setProjectionMatrix(matrix4f, VertexSorter.BY_DISTANCE);
 		MatrixStack matrixStack = RenderSystem.getModelViewStack();
 		matrixStack.push();
 		matrixStack.loadIdentity();

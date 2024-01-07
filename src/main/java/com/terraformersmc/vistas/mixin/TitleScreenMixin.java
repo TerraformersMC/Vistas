@@ -13,6 +13,7 @@ import com.terraformersmc.vistas.title.PanoramaRenderer;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -76,7 +77,7 @@ public abstract class TitleScreenMixin extends Screen {
 	}
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V", shift = Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void vistas$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, float f) {
+	private void vistas$render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f) {
 		assert this.client != null;
 		PanoramaRenderer.time += delta;
 		VistasTitle.CURRENT.getValue().getCubemaps().forEach((cubemap) -> {
@@ -84,12 +85,13 @@ public abstract class TitleScreenMixin extends Screen {
 			panoramaRenderer.render(delta, MathHelper.clamp(f, 0.0F, 1.0F));
 			Identifier overlayId = new Identifier(panoramaRenderer.getCubemap().getCubemapId() + "_overlay.png");
 			if (this.client.getResourceManager().getResource(overlayId).isPresent()) {
-				RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-				RenderSystem.setShaderTexture(0, overlayId);
+				// TODO: Some of these functions may be redundant.
+//				RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+//				RenderSystem.setShaderTexture(0, overlayId);
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.doBackgroundFade ? (float) MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);
-				drawTexture(matrices, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
+				context.drawTexture(overlayId, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 			}
 		});
 	}
