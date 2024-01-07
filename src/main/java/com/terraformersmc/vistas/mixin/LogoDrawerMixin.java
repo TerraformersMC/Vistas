@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
     @Shadow @Final public static Identifier LOGO_TEXTURE;
     @Unique
-    private boolean isVistas = false;
+    private boolean isVistas = true;
 
     @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0))
     private void vistas$render$drawOutline(DrawContext context, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, DrawContext _context, int screenWidth) {
@@ -39,7 +39,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
         matrices.translate(-(screenWidth / 2.0D), -(y * 2.0D) + (y / 2.0D), 0.0D);
 
-        // TODO: Vistas logo is squished
+        // TODO: Outline rendering no longer works
         if (!logo.getLogoId().equals(LOGO_TEXTURE) || this.isVistas) {
             //RenderSystem.setShaderTexture(0, this.isVistas ? Vistas.id("textures/vistas_logo.png") : logo.getLogoId());
             int rx = (screenWidth / 2) - 256;
@@ -59,7 +59,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
 //                renderAction.accept(x, y);
 //            }
 
-            context.drawTexture( Vistas.id("textures/vistas_logo.png"), x, y, u, v, width, height, textureWidth, textureHeight);
+            context.drawTexture(logo.getLogoId(), x, y, u, v, width, height, textureWidth, textureHeight);
         }
 
 

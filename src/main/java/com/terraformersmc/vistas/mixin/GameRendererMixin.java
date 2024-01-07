@@ -7,11 +7,22 @@
  */
 package com.terraformersmc.vistas.mixin;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.Optional;
-
+import com.mojang.datafixers.util.Pair;
+import com.terraformersmc.vistas.Vistas;
+import com.terraformersmc.vistas.config.VistasConfig;
+import com.terraformersmc.vistas.resource.PanoramicScreenshots;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.SimpleFramebuffer;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.util.ScreenshotRecorder;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,22 +32,9 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.datafixers.util.Pair;
-import com.terraformersmc.vistas.Vistas;
-import com.terraformersmc.vistas.config.VistasConfig;
-import com.terraformersmc.vistas.resource.PanoramicScreenshots;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.gl.SimpleFramebuffer;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.util.ScreenshotRecorder;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.Direction;
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Optional;
 
 // TODO: rewrite; i dont know what im doing!
 @Mixin(GameRenderer.class)

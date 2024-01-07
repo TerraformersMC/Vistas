@@ -1,5 +1,15 @@
 package com.terraformersmc.vistas.mixin;
 
+import com.terraformersmc.vistas.access.MinecraftClientAccess;
+import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
+import com.terraformersmc.vistas.title.VistasTitle;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.RunArgs;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.resource.ReloadableResourceManagerImpl;
+import net.minecraft.sound.MusicSound;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,18 +20,6 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import com.terraformersmc.vistas.access.MinecraftClientAccess;
-import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
-import com.terraformersmc.vistas.title.VistasTitle;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.resource.ReloadableResourceManagerImpl;
-import net.minecraft.sound.MusicSound;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
