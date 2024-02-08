@@ -25,7 +25,7 @@ import com.terraformersmc.vistas.panorama.Panorama;
 import com.terraformersmc.vistas.title.VistasTitle;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Session;
+import net.minecraft.client.session.Session;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
