@@ -13,7 +13,7 @@
 			"logoX": 0.0,
 			"logoY": 0.0,
 			"logoRot": 0.0,
-			"outlined": true,
+			"outlined": false,
 			"splashX": 0.0,
 			"splashY": 0.0,
 			"splashRot": -20.0,

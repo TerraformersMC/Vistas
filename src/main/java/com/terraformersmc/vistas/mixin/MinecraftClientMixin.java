@@ -35,7 +35,15 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 	@Shadow
 	public ClientPlayerEntity player;
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ReloadableResourceManagerImpl;registerReloader(Lnet/minecraft/resource/ResourceReloader;)V", ordinal = 2, shift = Shift.AFTER))
+	@Inject(
+			method = "<init>",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/resource/ReloadableResourceManagerImpl;registerReloader(Lnet/minecraft/resource/ResourceReloader;)V",
+					ordinal = 2,
+					shift = Shift.AFTER
+			)
+	)
 	private void vistas$init$registerPanoramaReloader(RunArgs args, CallbackInfo ci) {
 		this.panoramaResourceReloader = new PanoramaResourceReloader();
 		this.resourceManager.registerReloader(panoramaResourceReloader);

@@ -165,5 +165,4 @@ public abstract class GameRendererMixin {
 
 	@Shadow
 	public abstract void setRenderHand(boolean renderHand);
-
 }

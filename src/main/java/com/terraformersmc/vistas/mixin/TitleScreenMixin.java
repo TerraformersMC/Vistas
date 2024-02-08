@@ -1,5 +1,7 @@
 package com.terraformersmc.vistas.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.vistas.Vistas;
@@ -26,10 +28,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Random;
 
@@ -74,31 +74,29 @@ public abstract class TitleScreenMixin extends Screen {
 		}
 	}
 
-	@Inject(
+	@WrapOperation(
 			method = "render",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V",
-					shift = Shift.BEFORE
-			),
-			locals = LocalCapture.CAPTURE_FAILHARD
+					target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V"
+			)
 	)
-	private void vistas$render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f) {
+	@SuppressWarnings("unused")
+	private void vistas$render(RotatingCubeMapRenderer instance, float delta, float fade, Operation<Void> operation, DrawContext context) {
 		assert this.client != null;
 		PanoramaRenderer.time += delta;
 		VistasTitle.CURRENT.getValue().getCubemaps().forEach((cubemap) -> {
 			PanoramaRenderer panoramaRenderer = new PanoramaRenderer(cubemap);
-			panoramaRenderer.render(delta, MathHelper.clamp(f, 0.0F, 1.0F));
+			panoramaRenderer.render(delta, fade);
 			Identifier overlayId = new Identifier(panoramaRenderer.getCubemap().getCubemapId() + "_overlay.png");
 			if (this.client.getResourceManager().getResource(overlayId).isPresent()) {
-				// TODO: Some of these functions may be redundant.
-//				RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-//				RenderSystem.setShaderTexture(0, overlayId);
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.doBackgroundFade ? (float) MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.doBackgroundFade ? (float) MathHelper.ceil(fade) : 1.0F);
 				context.drawTexture(overlayId, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 			}
 		});
+
+		operation.call(instance, delta, fade);
 	}
 }

@@ -1,5 +1,9 @@
 package com.terraformersmc.vistas.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.panorama.LogoControl;
 import com.terraformersmc.vistas.panorama.Panorama;
@@ -17,7 +21,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.util.function.BiConsumer;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LogoDrawer.class)
@@ -29,7 +34,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
     @Unique
     private boolean isVistas = false;
 
-    @Redirect(
+    @WrapOperation(
             method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(
                     value = "INVOKE",
@@ -37,7 +42,8 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
                     ordinal = 0
             )
     )
-    private void vistas$render$drawOutline(DrawContext context, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, DrawContext _context, int screenWidth) {
+    @SuppressWarnings("unused")
+    private void vistas$render$drawOutline(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, Operation<Void> operation, DrawContext context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.getValue();
         LogoControl logo = panorama.getLogoControl();
         MatrixStack matrices = context.getMatrices();
@@ -50,35 +56,36 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
         matrices.translate(-(screenWidth / 2.0D), -(y * 2.0D) + (y / 2.0D), 0.0D);
 
-        // TODO: Outline rendering no longer works
         if (!logo.getLogoId().equals(LOGO_TEXTURE) || this.isVistas) {
             Identifier logoTexture = this.isVistas ? Vistas.id("textures/vistas_logo.png") : logo.getLogoId();
             int rx = (screenWidth / 2) - 256;
             int ry = 52 - 256;
 
-//            BiConsumer<Integer, Integer> render = (ix, iy) -> Screen.drawTexture(matrices, ix, iy, 0, 0, 0, 512, 512, 512, 512);
-//            if (logo.isOutlined()) {
-//                DrawableHelper.drawWithOutline(rx, ry, render);
-//            } else {
-//                render.accept(rx, ry);
-//            }
+            BiConsumer<Integer, Integer> render = (ix, iy) -> context.drawTexture(logoTexture, ix, iy, 0, 0, 0, 512, 512, 512, 512);
 
-             context.drawTexture(logoTexture, rx, ry, 0, 0, 512, 512, 512, 512, 512);
+            if (logo.isOutlined()) {
+                vistas$drawWithOutline(rx, ry, render);
+            } else {
+                render.accept(rx, ry);
+            }
+
+            operation.call(instance, logoTexture, rx, ry, 0, 0, 512, 512, 512, 512, 512);
         } else {
-//            if (logo.isOutlined()) {
-//                DrawableHelper.drawWithOutline(x, y, renderAction);
-//            } else {
-//                renderAction.accept(x, y);
-//            }
+            BiConsumer<Integer, Integer> render = (ix, iy) -> context.drawTexture(logo.getLogoId(), ix, iy, u, v, width, height, textureWidth, textureHeight);
 
-            // TODO: This mixin would be better as a WrapOperation
-            context.drawTexture(logo.getLogoId(), x, y, u, v, width, height, textureWidth, textureHeight);
+            if (logo.isOutlined()) {
+                vistas$drawWithOutline(x, y, render);
+            } else {
+                render.accept(x, y);
+            }
+
+            operation.call(instance, logo.getLogoId(), x, y, u, v, width, height, textureWidth, textureHeight);
         }
 
         matrices.pop();
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(
                     value = "INVOKE",
@@ -86,7 +93,8 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
                     ordinal = 1
             )
     )
-    private void vistas$render(DrawContext context, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, DrawContext _context, int screenWidth) {
+    @SuppressWarnings("unused")
+    private void vistas$render(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, Operation<Void> operation, DrawContext context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.getValue();
         LogoControl logo = panorama.getLogoControl();
         MatrixStack matrices = context.getMatrices();
@@ -103,7 +111,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
         matrices.translate(-(screenWidth / 2.0D), -45, 0.0D);
 
-        context.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
+        operation.call(instance, texture, x, y, u, v, width, height, textureWidth, textureHeight);
 
         matrices.pop();
     }
@@ -111,5 +119,16 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
     @Override
     public void vistas$setIsVistas(boolean value) {
         this.isVistas = value;
+    }
+
+    @Unique
+    private static void vistas$drawWithOutline(int x, int y, BiConsumer<Integer, Integer> renderAction) {
+        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+        renderAction.accept(x + 1, y);
+        renderAction.accept(x - 1, y);
+        renderAction.accept(x, y + 1);
+        renderAction.accept(x, y - 1);
+        RenderSystem.defaultBlendFunc();
+        renderAction.accept(x, y);
     }
 }
