@@ -1,15 +1,12 @@
 package com.terraformersmc.vistas.panorama;
 
-import java.util.Optional;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import net.minecraft.util.Identifier;
 
-@SuppressWarnings("unused")
-public class Cubemap {
+import java.util.Optional;
 
+public class Cubemap {
 	public static final Cubemap DEFAULT = new Cubemap();
 
 	public static final Codec<Cubemap> CODEC = RecordCodecBuilder.create(
@@ -34,6 +31,7 @@ public class Cubemap {
 		this.visualControl = VisualControl.DEFAULT;
 	}
 
+	@SuppressWarnings("unused")
 	public Cubemap(Identifier cubemapId, RotationControl rotationControl, VisualControl visualControl) {
 		this.cubemapId = cubemapId;
 		this.rotationControl = rotationControl;
@@ -66,5 +64,4 @@ public class Cubemap {
 		}
 		return super.equals(obj);
 	}
-
 }

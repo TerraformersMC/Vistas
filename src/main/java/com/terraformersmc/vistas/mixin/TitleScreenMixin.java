@@ -49,7 +49,9 @@ public abstract class TitleScreenMixin extends Screen {
 	@Shadow
 	private SplashTextRenderer splashText;
 
-	@Shadow @Final private LogoDrawer logoDrawer;
+	@Shadow
+	@Final
+	private LogoDrawer logoDrawer;
 
 	protected TitleScreenMixin(Text title) {
 		super(title);
@@ -72,7 +74,15 @@ public abstract class TitleScreenMixin extends Screen {
 		}
 	}
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V", shift = Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
+	@Inject(
+			method = "render",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V",
+					shift = Shift.BEFORE
+			),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
 	private void vistas$render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f) {
 		assert this.client != null;
 		PanoramaRenderer.time += delta;

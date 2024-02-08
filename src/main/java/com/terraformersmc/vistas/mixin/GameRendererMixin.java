@@ -39,7 +39,6 @@ import java.util.Optional;
 // TODO: rewrite; i dont know what im doing!
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
-
 	@Shadow
 	@Final
 	MinecraftClient client;

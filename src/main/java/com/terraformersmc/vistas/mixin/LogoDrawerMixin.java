@@ -22,17 +22,28 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Environment(EnvType.CLIENT)
 @Mixin(LogoDrawer.class)
 public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
-    @Shadow @Final public static Identifier LOGO_TEXTURE;
-    @Unique
-    private boolean isVistas = true;
+    @Shadow
+    @Final
+    public static Identifier LOGO_TEXTURE;
 
-    @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0))
+    @Unique
+    private boolean isVistas = false;
+
+    @Redirect(
+            method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V",
+                    ordinal = 0
+            )
+    )
     private void vistas$render$drawOutline(DrawContext context, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, DrawContext _context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.getValue();
         LogoControl logo = panorama.getLogoControl();
         MatrixStack matrices = context.getMatrices();
 
         matrices.push();
+
         matrices.translate(logo.getLogoX(), logo.getLogoY(), 0.0D);
 
         matrices.translate((screenWidth / 2.0D), (y * 2.0D) - (y / 2.0D), 0.0D);
@@ -41,16 +52,17 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
 
         // TODO: Outline rendering no longer works
         if (!logo.getLogoId().equals(LOGO_TEXTURE) || this.isVistas) {
-            //RenderSystem.setShaderTexture(0, this.isVistas ? Vistas.id("textures/vistas_logo.png") : logo.getLogoId());
+            Identifier logoTexture = this.isVistas ? Vistas.id("textures/vistas_logo.png") : logo.getLogoId();
             int rx = (screenWidth / 2) - 256;
             int ry = 52 - 256;
+
 //            BiConsumer<Integer, Integer> render = (ix, iy) -> Screen.drawTexture(matrices, ix, iy, 0, 0, 0, 512, 512, 512, 512);
 //            if (logo.isOutlined()) {
 //                DrawableHelper.drawWithOutline(rx, ry, render);
 //            } else {
 //                render.accept(rx, ry);
 //            }
-             Identifier logoTexture = this.isVistas ? Vistas.id("textures/vistas_logo.png") : logo.getLogoId();
+
              context.drawTexture(logoTexture, rx, ry, 0, 0, 512, 512, 512, 512, 512);
         } else {
 //            if (logo.isOutlined()) {
@@ -59,26 +71,32 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
 //                renderAction.accept(x, y);
 //            }
 
+            // TODO: This mixin would be better as a WrapOperation
             context.drawTexture(logo.getLogoId(), x, y, u, v, width, height, textureWidth, textureHeight);
         }
-
-
 
         matrices.pop();
     }
 
-    @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1))
+    @Redirect(
+            method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V",
+                    ordinal = 1
+            )
+    )
     private void vistas$render(DrawContext context, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, DrawContext _context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.getValue();
         LogoControl logo = panorama.getLogoControl();
+        MatrixStack matrices = context.getMatrices();
 
         if (!logo.doesShowEdition()) {
             return;
         }
 
-        MatrixStack matrices = context.getMatrices();
-
         matrices.push();
+
         matrices.translate(logo.getLogoX(), logo.getLogoY(), 0.0D);
 
         matrices.translate((screenWidth / 2.0D), 45, 0.0D);

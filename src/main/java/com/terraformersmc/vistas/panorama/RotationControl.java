@@ -1,12 +1,11 @@
 package com.terraformersmc.vistas.panorama;
 
-import java.util.Optional;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public class RotationControl {
+import java.util.Optional;
 
+public class RotationControl {
 	public static final RotationControl DEFAULT = new RotationControl();
 
 	public static final Codec<RotationControl> CODEC = RecordCodecBuilder.create(
@@ -43,6 +42,7 @@ public class RotationControl {
 		this.speedMultiplier = 1.0D;
 	}
 
+	@SuppressWarnings("unused")
 	public RotationControl(boolean frozen, boolean woozy, double addedPitch, double addedYaw, double addedRoll, double speedMultiplier) {
 		this.frozen = frozen;
 		this.woozy = woozy;
@@ -52,6 +52,7 @@ public class RotationControl {
 		this.speedMultiplier = speedMultiplier;
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public RotationControl(Optional<Boolean> frozen, Optional<Boolean> woozy, Optional<Double> addedPitch, Optional<Double> addedYaw, Optional<Double> addedRoll, Optional<Double> speedMultiplier) {
 		this.frozen = frozen.orElse(false);
 		this.woozy = woozy.orElse(false);
@@ -104,5 +105,4 @@ public class RotationControl {
 		}
 		return super.equals(obj);
 	}
-
 }

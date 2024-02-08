@@ -1,12 +1,11 @@
 package com.terraformersmc.vistas.panorama;
 
-import java.util.Optional;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public class VisualControl {
+import java.util.Optional;
 
+public class VisualControl {
 	public static final VisualControl DEFAULT = new VisualControl();
 
 	public static final Codec<VisualControl> CODEC = RecordCodecBuilder.create(
@@ -66,6 +65,7 @@ public class VisualControl {
 		this.colorA = 255.0D;
 	}
 
+	@SuppressWarnings("unused")
 	public VisualControl(double fov, double width, double height, double depth, double addedX, double addedY, double addedZ, double colorR, double colorG, double colorB, double colorA) {
 		this.fov = fov;
 		this.width = width;
@@ -80,6 +80,7 @@ public class VisualControl {
 		this.colorA = colorA;
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public VisualControl(Optional<Double> fov, Optional<Double> width, Optional<Double> height, Optional<Double> depth, Optional<Double> addedX, Optional<Double> addedY, Optional<Double> addedZ, Optional<Double> colorR, Optional<Double> colorG, Optional<Double> colorB, Optional<Double> colorA) {
 		this.fov = fov.orElse(85.0D);
 		this.width = width.orElse(2.0D);
@@ -145,5 +146,4 @@ public class VisualControl {
 		}
 		return super.equals(obj);
 	}
-
 }

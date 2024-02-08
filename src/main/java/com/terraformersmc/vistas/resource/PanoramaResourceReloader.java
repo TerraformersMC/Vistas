@@ -1,17 +1,5 @@
 package com.terraformersmc.vistas.resource;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Random;
-import java.util.concurrent.ConcurrentMap;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
@@ -23,9 +11,8 @@ import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.panorama.Panorama;
 import com.terraformersmc.vistas.title.VistasTitle;
-
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.session.Session;
+import net.minecraft.client.util.Session;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
@@ -33,8 +20,15 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.profiler.Profiler;
 
-public class PanoramaResourceReloader extends SinglePreparationResourceReloader<HashMap<Identifier, Pair<Panorama, List<String>>>> {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
+public class PanoramaResourceReloader extends SinglePreparationResourceReloader<HashMap<Identifier, Pair<Panorama, List<String>>>> {
 	private final ConcurrentMap<Identifier, Pair<List<String>, List<Identifier>>> web = Maps.newConcurrentMap();
 	private final ConcurrentMap<Identifier, Pair<List<String>, List<Identifier>>> parsedSplashWeb = Maps.newConcurrentMap();
 	private final ConcurrentMap<Identifier, List<String>> splashTexts = Maps.newConcurrentMap();
@@ -97,9 +91,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 							}
 							throw throwable;
 						}
-						if (inputStream != null) {
-							inputStream.close();
-						}
+						inputStream.close();
 					} catch (RuntimeException runtimeBreak) {
 						Vistas.LOGGER.warn("Invalid panoramas.json in resourcepack: '{}'", resource.getResourcePackName(), runtimeBreak);
 					}
@@ -117,6 +109,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 		return panoramaMap;
 	}
 
+	@SuppressWarnings("unused")
 	protected Pair<List<String>, List<Identifier>> prepare(Identifier splashId, ResourceManager manager, Profiler profiler) {
 		if (this.parsedSplashWeb.containsKey(splashId)) {
 			return this.parsedSplashWeb.get(splashId);
@@ -127,7 +120,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 		profiler.push(splashId.toString());
 		try {
 			profiler.push("parse");
-			Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(splashId).get();
+			Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(splashId).orElseThrow();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
 			try {
 				splashTexts = Lists.newArrayList(bufferedReader.lines().map(String::trim).map((splash) -> {
@@ -165,6 +158,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 		return Pair.of(splashTexts, imports);
 	}
 
+	@SuppressWarnings("unused")
 	protected void prepareSplash(ResourceManager manager, Profiler profiler) {
 		profiler.push("splash");
 
@@ -244,7 +238,6 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 	}
 
 	public static <R> R get(Decoder<R> decoder, JsonElement jsonElement) throws NullPointerException {
-		return Optional.of(decoder.parse(JsonOps.INSTANCE, jsonElement)).get().result().get();
+		return decoder.parse(JsonOps.INSTANCE, jsonElement).result().orElseThrow();
 	}
-
 }

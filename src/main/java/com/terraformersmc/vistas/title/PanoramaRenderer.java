@@ -3,20 +3,14 @@ package com.terraformersmc.vistas.title;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.VertexSorter;
 import com.terraformersmc.vistas.panorama.Cubemap;
-
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
 public class PanoramaRenderer {
-
 	public static double time = 0.0D;
 
 	private final MinecraftClient client;
@@ -125,5 +119,4 @@ public class PanoramaRenderer {
 	public Cubemap getCubemap() {
 		return cubemap;
 	}
-
 }

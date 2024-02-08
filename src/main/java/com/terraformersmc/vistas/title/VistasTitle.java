@@ -1,26 +1,22 @@
 package com.terraformersmc.vistas.title;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ConcurrentMap;
-
-import org.apache.commons.lang3.mutable.MutableObject;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.panorama.Panorama;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.profiler.Profiler;
+import org.apache.commons.lang3.mutable.MutableObject;
 
-@SuppressWarnings("unused")
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ConcurrentMap;
+
 public class VistasTitle {
-
 	public static final ConcurrentMap<Identifier, Panorama> BUILTIN_PANORAMAS = Maps.newConcurrentMap();
 	public static final ConcurrentMap<Identifier, Panorama> PANORAMAS = Maps.newConcurrentMap();
 	public static final ConcurrentMap<Panorama, Identifier> PANORAMAS_INVERT = Maps.newConcurrentMap();
@@ -94,6 +90,7 @@ public class VistasTitle {
 		DISTRIBUTION.add(panorama);
 	}
 
+	@SuppressWarnings("unused")
 	public static void deRegister(Identifier id) {
 		Panorama panorama = PANORAMAS.get(id);
 		PANORAMAS.remove(id);
@@ -106,5 +103,4 @@ public class VistasTitle {
 		PANORAMAS_INVERT.clear();
 		DISTRIBUTION.clear();
 	}
-
 }

@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin implements MinecraftClientAccess {
-
 	@Unique
 	private PanoramaResourceReloader panoramaResourceReloader;
 
@@ -53,5 +52,4 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 	public PanoramaResourceReloader getPanoramaResourceReloader() {
 		return panoramaResourceReloader;
 	}
-
 }

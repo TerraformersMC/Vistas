@@ -7,7 +7,6 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
 @Config(name = "vistas")
 public class VistasConfig implements ConfigData {
-
 	public String panorama = "vistas:default";
 	public boolean forcePanorama = false;
 	public boolean randomPerScreen = false;
@@ -22,5 +21,4 @@ public class VistasConfig implements ConfigData {
 	public static VistasConfig getInstance() {
 		return AutoConfig.getConfigHolder(VistasConfig.class).getConfig();
 	}
-
 }

@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(SplashTextResourceSupplier.class)
 public class SplashTextResourceSupplierMixin {
-
 	@Inject(method = "get", at = @At(value = "RETURN", ordinal = 4), cancellable = true)
 	private void vistas$get$4(CallbackInfoReturnable<SplashTextRenderer> ci) {
 		vistas$get(ci);
@@ -37,5 +36,4 @@ public class SplashTextResourceSupplierMixin {
 			ci.setReturnValue(new SplashTextRenderer(resourceReloader.get()));
 		}
 	}
-
 }

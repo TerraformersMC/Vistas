@@ -1,14 +1,12 @@
 package com.terraformersmc.vistas.panorama;
 
-import java.util.Optional;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import net.minecraft.util.Identifier;
 
-public class LogoControl {
+import java.util.Optional;
 
+public class LogoControl {
 	public static final LogoControl DEFAULT = new LogoControl();
 
 	public static final Codec<LogoControl> CODEC = RecordCodecBuilder.create(
@@ -61,6 +59,7 @@ public class LogoControl {
 		this.showEdition = true;
 	}
 
+	@SuppressWarnings("unused")
 	public LogoControl(Identifier logoId, double logoX, double logoY, double logoRot, boolean outlined, double splashX, double splashY, double splashRot, boolean showEdition) {
 		this.logoId = logoId;
 		this.logoX = logoX;
@@ -73,6 +72,7 @@ public class LogoControl {
 		this.showEdition = showEdition;
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public LogoControl(Optional<Identifier> logoId, Optional<Double> logoX, Optional<Double> logoY, Optional<Double> logoRot, Optional<Boolean> outlined, Optional<Double> splashX, Optional<Double> splashY, Optional<Double> splashRot, Optional<Boolean> showEdition) {
 		this.logoId = logoId.orElse(new Identifier("textures/gui/title/minecraft.png"));
 		this.logoX = logoX.orElse(0.0D);
@@ -128,5 +128,4 @@ public class LogoControl {
 		}
 		return super.equals(obj);
 	}
-
 }

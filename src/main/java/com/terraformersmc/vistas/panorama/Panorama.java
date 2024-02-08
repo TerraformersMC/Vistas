@@ -1,23 +1,19 @@
 package com.terraformersmc.vistas.panorama;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.MusicSound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
-public class Panorama {
+import java.util.List;
+import java.util.Optional;
 
+public class Panorama {
 	public static final Panorama DEFAULT = new Panorama();
 
 	public static final Codec<MusicSound> OPTIONAL_MUSIC_SOUND_CODEC = RecordCodecBuilder.create(
@@ -64,6 +60,7 @@ public class Panorama {
 		this.cubemaps = Lists.newArrayList(Cubemap.DEFAULT);
 	}
 
+	@SuppressWarnings("unused")
 	public Panorama(int weight, MusicSound musicSound, Identifier splashText, LogoControl logoControl, List<Cubemap> cubemaps) {
 		this.weight = weight;
 		this.musicSound = musicSound;
@@ -72,6 +69,7 @@ public class Panorama {
 		this.cubemaps = cubemaps;
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public Panorama(Optional<Integer> weight, Optional<MusicSound> musicSound, Optional<Identifier> splashText, Optional<LogoControl> logoControl, Optional<List<Cubemap>> cubemaps) {
 		this.weight = weight.orElse(1);
 		this.musicSound = musicSound.orElse(MusicType.MENU);
@@ -107,5 +105,4 @@ public class Panorama {
 		}
 		return super.equals(obj);
 	}
-
 }
