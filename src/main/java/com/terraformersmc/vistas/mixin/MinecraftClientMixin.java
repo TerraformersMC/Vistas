@@ -7,8 +7,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.sound.MusicSound;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
-public abstract class MinecraftClientMixin implements MinecraftClientAccess {
+public class MinecraftClientMixin implements MinecraftClientAccess {
 	@Unique
 	private PanoramaResourceReloader panoramaResourceReloader;
 
@@ -32,8 +32,8 @@ public abstract class MinecraftClientMixin implements MinecraftClientAccess {
 	private ReloadableResourceManagerImpl resourceManager;
 
 	@Shadow
-    @Nullable
-    private IntegratedServer server;
+	@Nullable
+	public ClientPlayerEntity player;
 
 	@Inject(
 			method = "<init>",
@@ -51,7 +51,7 @@ public abstract class MinecraftClientMixin implements MinecraftClientAccess {
 
 	@Inject(method = "getMusicType", at = @At("HEAD"), cancellable = true)
 	private void vistas$getMusicType(CallbackInfoReturnable<MusicSound> ci) {
-		if (this.server == null) {
+		if (this.player == null) {
 			ci.setReturnValue(VistasTitle.CURRENT.getValue().getMusicSound());
 		}
 	}

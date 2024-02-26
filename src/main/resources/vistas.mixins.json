@@ -4,9 +4,9 @@
   "package": "com.terraformersmc.vistas.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "GameRendererMixin",
     "LogoDrawerMixin",
     "MinecraftClientMixin",
+    "ScreenshotRecorderMixin",
     "SplashTextRendererMixin",
     "SplashTextResourceSupplierMixin",
     "TitleScreenMixin"
