@@ -7,6 +7,7 @@ import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 
@@ -36,5 +37,13 @@ public class VistasRotatingCubemapRenderer extends RotatingCubeMapRenderer {
 				context.drawTexture(RenderLayer::getGuiTextured, overlayId, 0, 0, 0.0f, 0.0f, width, height, 16, 128, 16, 128, ColorHelper.getWhite(alpha));
 			}
 		});
+	}
+
+	public static void registerTextures(TextureManager textureManager) {
+		VistasTitle.PANORAMAS.values().forEach(panorama ->
+			panorama.getCubemaps().forEach(cubemap ->
+				new VistasCubemapRenderer(cubemap).registerTextures(textureManager)
+			)
+		);
 	}
 }

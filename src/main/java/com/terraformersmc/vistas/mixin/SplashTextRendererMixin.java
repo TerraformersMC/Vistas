@@ -10,7 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.SplashTextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
-import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -21,11 +21,11 @@ public abstract class SplashTextRendererMixin {
 			method = "render",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lorg/joml/Quaternionf;)V"
+					target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lorg/joml/Quaternionfc;)V"
 			)
 	)
 	@SuppressWarnings("unused")
-	private void vistas$render(MatrixStack instance, Quaternionf quaternion, Operation<Void> operation) {
+	private void vistas$render(MatrixStack instance, Quaternionfc quaternion, Operation<Void> operation) {
 		Panorama panorama = VistasTitle.CURRENT.getValue();
 		LogoControl logo = panorama.getLogoControl();
 
