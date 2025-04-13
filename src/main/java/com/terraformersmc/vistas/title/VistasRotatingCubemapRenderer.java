@@ -1,5 +1,6 @@
 package com.terraformersmc.vistas.title;
 
+import com.terraformersmc.vistas.Vistas;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -7,9 +8,14 @@ import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.texture.AbstractTexture;
+import net.minecraft.client.texture.ReloadableTexture;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
+
+import java.io.IOException;
 
 @Environment(EnvType.CLIENT)
 public class VistasRotatingCubemapRenderer extends RotatingCubeMapRenderer {
@@ -39,11 +45,22 @@ public class VistasRotatingCubemapRenderer extends RotatingCubeMapRenderer {
 		});
 	}
 
-	public static void registerTextures(TextureManager textureManager) {
+	public static void registerTextures(TextureManager textureManager, ResourceManager resourceManager) {
 		VistasTitle.PANORAMAS.values().forEach(panorama ->
-			panorama.getCubemaps().forEach(cubemap ->
-				new VistasCubemapRenderer(cubemap).registerTextures(textureManager)
-			)
+			panorama.getCubemaps().forEach(cubemap -> {
+				new VistasCubemapRenderer(cubemap).registerTextures(textureManager, resourceManager);
+
+				Identifier identifier = panorama.getLogoControl().getLogoId();
+				textureManager.registerTexture(identifier);
+				AbstractTexture texture = textureManager.getTexture(identifier);
+				if (texture instanceof ReloadableTexture reloadableTexture) {
+					try {
+						reloadableTexture.reload(reloadableTexture.loadContents(resourceManager));
+					} catch (IOException e) {
+						Vistas.LOGGER.warn("Failed to load texture: {}", identifier);
+					}
+				}
+			})
 		);
 	}
 }

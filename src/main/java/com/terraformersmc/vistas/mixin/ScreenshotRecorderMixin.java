@@ -11,8 +11,8 @@ import java.io.File;
 
 @Mixin(ScreenshotRecorder.class)
 public class ScreenshotRecorderMixin {
-    @WrapOperation(method = "saveScreenshotInner",
-            at = @At(value = "NEW", target = "java/io/File", ordinal = 0)
+    @WrapOperation(method = "method_68157",
+            at = @At(value = "NEW", args = "class=java/io/File", ordinal = 0)
     )
     @SuppressWarnings("unused")
     private static File vistas$panoramaPathOverride(File path, String file, Operation<File> original) {

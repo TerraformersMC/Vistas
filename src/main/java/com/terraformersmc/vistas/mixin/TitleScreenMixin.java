@@ -4,7 +4,6 @@ import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
 import com.terraformersmc.vistas.title.LogoDrawerAccessor;
-import com.terraformersmc.vistas.title.VistasRotatingCubemapRenderer;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +11,6 @@ import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SplashTextRenderer;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -53,10 +51,5 @@ public abstract class TitleScreenMixin extends Screen {
 			((LogoDrawerAccessor)this.logoDrawer).vistas$setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
 			this.splashText = null;
 		}
-	}
-
-	@Inject(method = "registerTextures", at = @At("TAIL"))
-	private static void vistas$registerTextures(TextureManager textureManager, CallbackInfo ci) {
-		VistasRotatingCubemapRenderer.registerTextures(textureManager);
 	}
 }

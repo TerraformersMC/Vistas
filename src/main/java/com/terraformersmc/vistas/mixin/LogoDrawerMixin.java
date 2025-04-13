@@ -2,7 +2,8 @@ package com.terraformersmc.vistas.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.opengl.GlConst;
+import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.panorama.LogoControl;
@@ -125,12 +126,12 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
 
     @Unique
     private static void vistas$drawWithOutline(int x, int y, BiConsumer<Integer, Integer> renderAction) {
-        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager._blendFuncSeparate(GlConst.GL_ZERO, GlConst.GL_ONE_MINUS_SRC_ALPHA, GlConst.GL_SRC_ALPHA, GlConst.GL_ONE_MINUS_SRC_ALPHA);
         renderAction.accept(x + 1, y);
         renderAction.accept(x - 1, y);
         renderAction.accept(x, y + 1);
         renderAction.accept(x, y - 1);
-        RenderSystem.defaultBlendFunc();
+        GlStateManager._disableBlend();
         renderAction.accept(x, y);
     }
 }

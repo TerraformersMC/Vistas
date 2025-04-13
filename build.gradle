@@ -1,11 +1,15 @@
 plugins {
-	id 'fabric-loom' version '1.9.+'
+	id 'fabric-loom' version '1.10.+'
 }
 
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.7/ferry.gradle'
 
 sourceCompatibility = JavaVersion.VERSION_21
 targetCompatibility = JavaVersion.VERSION_21
+
+loom {
+	accessWidenerPath = file("src/main/resources/vistas.accesswidener")
+}
 
 dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"

@@ -2,6 +2,7 @@ package com.terraformersmc.vistas.mixin;
 
 import com.terraformersmc.vistas.access.MinecraftClientAccess;
 import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
+import com.terraformersmc.vistas.title.VistasRotatingCubemapRenderer;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.MusicInstance;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -35,6 +37,10 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 	@Nullable
 	public ClientPlayerEntity player;
 
+	@Shadow
+	@Final
+	private TextureManager textureManager;
+
 	@Inject(
 			method = "<init>",
 			at = @At(
@@ -54,6 +60,11 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 		if (this.player == null) {
 			ci.setReturnValue(new MusicInstance(VistasTitle.CURRENT.getValue().getMusicSound()));
 		}
+	}
+
+	@Inject(method = "onFinishedLoading", at = @At("HEAD"))
+	private void vistas$registerTextures(@Nullable MinecraftClient.LoadingContext loadingContext, CallbackInfo ci) {
+		VistasRotatingCubemapRenderer.registerTextures(textureManager, resourceManager);
 	}
 
 	@Override
