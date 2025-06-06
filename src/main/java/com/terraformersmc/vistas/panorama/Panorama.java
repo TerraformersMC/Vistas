@@ -19,13 +19,13 @@ public class Panorama {
 			(instance) -> 
 			instance.group(
 					Identifier.CODEC.fieldOf("sound")
-						.forGetter((sound) -> sound.getSound().getKey().orElseThrow().getValue()),
+						.forGetter((sound) -> sound.sound().getKey().orElseThrow().getValue()),
 					Codec.INT.optionalFieldOf("min_delay")
-						.forGetter((sound) -> Optional.of(sound.getMinDelay())),
+						.forGetter((sound) -> Optional.of(sound.minDelay())),
 					Codec.INT.optionalFieldOf("max_delay")
-						.forGetter((sound) -> Optional.of(sound.getMaxDelay())),
+						.forGetter((sound) -> Optional.of(sound.maxDelay())),
 					Codec.BOOL.optionalFieldOf("replace_current_music")
-						.forGetter((sound) -> Optional.of(sound.shouldReplaceCurrentMusic()))
+						.forGetter((sound) -> Optional.of(sound.replaceCurrentMusic()))
 					)
 			.apply(instance, (sound, min, max, replace) -> new MusicSound(RegistryEntry.of(SoundEvent.of(sound)), min.orElse(20), max.orElse(600), replace.orElse(true))));
 

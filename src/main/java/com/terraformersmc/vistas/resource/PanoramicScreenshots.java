@@ -38,10 +38,7 @@ public class PanoramicScreenshots {
 			if (client.currentScreen == null && screenshotKey.isPressed()) {
 				cooldown = 100;
 
-				// Capture the largest square view.
-				int size = Math.min(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight());
-
-				Text result = client.takePanorama(getPanoramicScreenshotFolder().toFile(), size, size);
+				Text result = client.takePanorama(getPanoramicScreenshotFolder().toFile());
 				Vistas.LOGGER.info("Panorama capture with result: {}", result.getString());
 				client.getMessageHandler().onGameMessage(result, false);
 			}

@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.opengl.GlConst;
 import com.mojang.blaze3d.opengl.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.panorama.LogoControl;
 import com.terraformersmc.vistas.panorama.Panorama;
@@ -14,10 +14,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +23,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LogoDrawer.class)
@@ -41,30 +38,30 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
             method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIIII)V",
+                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/util/Identifier;IIFFIIIII)V",
                     ordinal = 0
             )
     )
     @SuppressWarnings("unused")
-    private void vistas$render$drawOutline(DrawContext instance, Function<Identifier, RenderLayer> renderLayers, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, DrawContext context, int screenWidth) {
+    private void vistas$render$drawOutline(DrawContext instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, DrawContext context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.getValue();
         LogoControl logo = panorama.getLogoControl();
-        MatrixStack matrices = context.getMatrices();
+        Matrix3x2fStack matrices = instance.getMatrices();
 
-        matrices.push();
+        matrices.pushMatrix();
 
-        matrices.translate(logo.getLogoX(), logo.getLogoY(), 0.0D);
+        matrices.translate((float) logo.getLogoX(), (float) logo.getLogoY());
 
-        matrices.translate((screenWidth / 2.0D), (y * 2.0D) - (y / 2.0D), 0.0D);
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
-        matrices.translate(-(screenWidth / 2.0D), -(y * 2.0D) + (y / 2.0D), 0.0D);
+        matrices.translate((float) (screenWidth / 2.0D), (float) ((y * 2.0D) - (y / 2.0D)));
+        matrices.rotate((float) Math.toRadians(logo.getLogoRot()));
+        matrices.translate((float) -(screenWidth / 2.0D), (float) (-(y * 2.0D) + (y / 2.0D)));
 
         if (!logo.getLogoId().equals(LOGO_TEXTURE) || this.isVistas) {
             Identifier logoTexture = this.isVistas ? Vistas.id("textures/vistas_logo.png") : logo.getLogoId();
             int rx = (screenWidth / 2) - 256;
             int ry = 52 - 256;
 
-            BiConsumer<Integer, Integer> render = (ix, iy) -> context.drawTexture(renderLayers, logoTexture, ix, iy, 0, 0, 0, 512, 512, 512, 512);
+            BiConsumer<Integer, Integer> render = (ix, iy) -> instance.drawTexture(renderPipeline, logoTexture, ix, iy, 0, 0, 0, 512, 512, 512, 512);
 
             if (logo.isOutlined()) {
                 vistas$drawWithOutline(rx, ry, render);
@@ -72,9 +69,9 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
                 render.accept(rx, ry);
             }
 
-            operation.call(instance, renderLayers, logoTexture, rx, ry, 0, 0, 512, 512, 512, 512, 512, color);
+            operation.call(instance, renderPipeline, logoTexture, rx, ry, 0, 0, 512, 512, 512, 512, 512, color);
         } else {
-            BiConsumer<Integer, Integer> render = (ix, iy) -> context.drawTexture(renderLayers, logo.getLogoId(), ix, iy, u, v, width, height, textureWidth, textureHeight);
+            BiConsumer<Integer, Integer> render = (ix, iy) -> instance.drawTexture(renderPipeline, logo.getLogoId(), ix, iy, u, v, width, height, textureWidth, textureHeight);
 
             if (logo.isOutlined()) {
                 vistas$drawWithOutline(x, y, render);
@@ -82,41 +79,41 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
                 render.accept(x, y);
             }
 
-            operation.call(instance, renderLayers, logo.getLogoId(), x, y, u, v, width, height, textureWidth, textureHeight, color);
+            operation.call(instance, renderPipeline, logo.getLogoId(), x, y, u, v, width, height, textureWidth, textureHeight, color);
         }
 
-        matrices.pop();
+        matrices.popMatrix();
     }
 
     @WrapOperation(
             method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIIII)V",
+                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/util/Identifier;IIFFIIIII)V",
                     ordinal = 1
             )
     )
     @SuppressWarnings("unused")
-    private void vistas$render(DrawContext instance, Function<Identifier, RenderLayer> renderLayers, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, DrawContext context, int screenWidth) {
+    private void vistas$render(DrawContext instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, DrawContext context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.getValue();
         LogoControl logo = panorama.getLogoControl();
-        MatrixStack matrices = context.getMatrices();
+        Matrix3x2fStack matrices = instance.getMatrices();
 
         if (!logo.doesShowEdition()) {
             return;
         }
 
-        matrices.push();
+        matrices.pushMatrix();
 
-        matrices.translate(logo.getLogoX(), logo.getLogoY(), 0.0D);
+        matrices.translate((float) logo.getLogoX(), (float) logo.getLogoY());
 
-        matrices.translate((screenWidth / 2.0D), 45, 0.0D);
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
-        matrices.translate(-(screenWidth / 2.0D), -45, 0.0D);
+        matrices.translate((float) (screenWidth / 2.0D), 45F);
+        matrices.rotate((float) Math.toRadians(logo.getLogoRot()));
+        matrices.translate((float) -(screenWidth / 2.0D), -45F);
 
-        operation.call(instance, renderLayers, texture, x, y, u, v, width, height, textureWidth, textureHeight, color);
+        operation.call(instance, renderPipeline, texture, x, y, u, v, width, height, textureWidth, textureHeight, color);
 
-        matrices.pop();
+        matrices.popMatrix();
     }
 
     @Override

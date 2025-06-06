@@ -64,7 +64,9 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 
 	@Inject(method = "onFinishedLoading", at = @At("HEAD"))
 	private void vistas$registerTextures(@Nullable MinecraftClient.LoadingContext loadingContext, CallbackInfo ci) {
-		VistasRotatingCubemapRenderer.registerTextures(textureManager, resourceManager);
+		if (MinecraftClient.getInstance().gameRenderer.getRotatingPanoramaRenderer() instanceof VistasRotatingCubemapRenderer renderer) {
+			renderer.registerTextures(textureManager);
+		}
 	}
 
 	@Override
