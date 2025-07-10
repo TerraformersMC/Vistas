@@ -29,6 +29,9 @@
 		"vistas.mixins.json"
 	],
 	"accessWidener" : "vistas.accesswidener",
+	"breaks": {
+		"rrls": "*"
+	},
 	"depends": {
 		"fabricloader": ">=0.15.3",
 		"fabric-api": "*",
