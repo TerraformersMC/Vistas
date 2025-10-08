@@ -27,7 +27,7 @@ public class PanoramicScreenshots {
 	public static int cooldown = 0;
 
 	public static void registerKeyBinding() {
-		KeyBinding screenshotKey = new KeyBinding("key.vistas.panoramic_screenshot", 'H', "key.categories.misc");
+		KeyBinding screenshotKey = new KeyBinding("key.vistas.panoramic_screenshot", 'H', KeyBinding.Category.MISC);
 		KeyBindingHelper.registerKeyBinding(screenshotKey);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
 			if (cooldown > 0) {

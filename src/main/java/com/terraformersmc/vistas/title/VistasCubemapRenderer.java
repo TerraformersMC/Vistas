@@ -94,7 +94,7 @@ public class VistasCubemapRenderer implements AutoCloseable {
 		float h = (float) this.cubemap.getVisualControl().getHeight() / 2.0f;
 		float d = (float) this.cubemap.getVisualControl().getDepth() / 2.0f;
 
-		try (BufferAllocator bufferAllocator = BufferAllocator.method_72201(VertexFormats.POSITION.getVertexSize() * 4 * 6)) {
+		try (BufferAllocator bufferAllocator = BufferAllocator.fixedSized(VertexFormats.POSITION.getVertexSize() * 4 * 6)) {
 			BufferBuilder bufferBuilder = new BufferBuilder(bufferAllocator, VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
 
 			// face 0
