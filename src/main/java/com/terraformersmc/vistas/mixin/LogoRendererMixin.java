@@ -12,7 +12,7 @@ import com.terraformersmc.vistas.title.LogoRendererAccessor;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.LogoRenderer;
 import net.minecraft.resources.Identifier;
 import org.joml.Matrix3x2fStack;
@@ -35,15 +35,15 @@ public abstract class LogoRendererMixin implements LogoRendererAccessor {
     private boolean isVistas = false;
 
     @WrapOperation(
-            method = "renderLogo(Lnet/minecraft/client/gui/GuiGraphics;IFI)V",
+            method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IFI)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIII)V",
+                    target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIII)V",
                     ordinal = 0
             )
     )
     @SuppressWarnings("unused")
-    private void vistas$render$drawOutline(GuiGraphics instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, GuiGraphics context, int screenWidth) {
+    private void vistas$render$drawOutline(GuiGraphicsExtractor instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, GuiGraphicsExtractor context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.get();
         LogoControl logo = panorama.getLogoControl();
         Matrix3x2fStack matrices = instance.pose();
@@ -86,15 +86,15 @@ public abstract class LogoRendererMixin implements LogoRendererAccessor {
     }
 
     @WrapOperation(
-            method = "renderLogo(Lnet/minecraft/client/gui/GuiGraphics;IFI)V",
+            method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IFI)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIII)V",
+                    target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIFFIIIII)V",
                     ordinal = 1
             )
     )
     @SuppressWarnings("unused")
-    private void vistas$render(GuiGraphics instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, GuiGraphics context, int screenWidth) {
+    private void vistas$render(GuiGraphicsExtractor instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, GuiGraphicsExtractor context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.get();
         LogoControl logo = panorama.getLogoControl();
         Matrix3x2fStack matrices = instance.pose();

@@ -11,7 +11,7 @@ import java.io.File;
 
 @Mixin(Screenshot.class)
 public class ScreenshotMixin {
-    @WrapOperation(method = "method_68157",
+    @WrapOperation(method = "lambda$grab$0",
             at = @At(value = "NEW", args = "class=java/io/File", ordinal = 0)
     )
     @SuppressWarnings("unused")

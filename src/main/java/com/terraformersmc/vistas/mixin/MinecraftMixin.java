@@ -2,7 +2,7 @@ package com.terraformersmc.vistas.mixin;
 
 import com.terraformersmc.vistas.access.MinecraftAccess;
 import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
-import com.terraformersmc.vistas.title.VistasPanoramaRenderer;
+import com.terraformersmc.vistas.title.VistasPanorama;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -64,7 +64,7 @@ public class MinecraftMixin implements MinecraftAccess {
 
 	@Inject(method = "onResourceLoadFinished", at = @At("HEAD"))
 	private void vistas$registerTextures(@Nullable Minecraft.GameLoadCookie loadingContext, CallbackInfo ci) {
-		if (Minecraft.getInstance().gameRenderer.getPanorama() instanceof VistasPanoramaRenderer renderer) {
+		if (Minecraft.getInstance().gameRenderer.getPanorama() instanceof VistasPanorama renderer) {
 			renderer.registerTextures(textureManager);
 		}
 	}

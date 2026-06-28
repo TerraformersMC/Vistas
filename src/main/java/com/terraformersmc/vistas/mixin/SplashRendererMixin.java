@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SplashRenderer.class)
 public abstract class SplashRendererMixin {
 	@WrapOperation(
-			method = "render",
+			method = "extractRenderState",
 			at = @At(
 					value = "INVOKE",
 					target = "Lorg/joml/Matrix3x2f;rotate(F)Lorg/joml/Matrix3x2f;"

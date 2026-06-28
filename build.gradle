@@ -1,11 +1,8 @@
 plugins {
-	id 'fabric-loom' version '1.13.3'
+	id 'net.fabricmc.fabric-loom' version '1.17.9'
 }
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.7/ferry.gradle'
-
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
+apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/3.2/ferry.gradle'
 
 loom {
 	accessWidenerPath = file("src/main/resources/vistas.accesswidener")
@@ -13,13 +10,12 @@ loom {
 
 dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"
-	mappings loom.officialMojangMappings()
 
-	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
-	mod "fabric-api", "net.fabricmc.fabric-api:fabric-api:$project.fabric_version"
+	implementation("net.fabricmc:fabric-loader:$project.loader_version")
+	implementation("net.fabricmc.fabric-api:fabric-api:$project.fabric_version")
 
-	mod "modmenu", "com.terraformersmc:modmenu:$project.modmenu_version"
-	includeMod "cloth-config", "me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}"
+	implementation("com.terraformersmc:modmenu:$project.modmenu_version")
+	include(implementation("me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}"))
 }
 
 repositories {

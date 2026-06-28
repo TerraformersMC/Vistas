@@ -6,10 +6,10 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.CubeMap;
-import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.Panorama;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.state.gui.PanoramaRenderState;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ReloadableTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -17,19 +17,28 @@ import net.minecraft.resources.Identifier;
 import java.io.IOException;
 
 @Environment(EnvType.CLIENT)
-public class VistasPanoramaRenderer extends PanoramaRenderer implements AutoCloseable {
+public class VistasPanorama extends Panorama implements AutoCloseable {
 	private final Minecraft client;
 
 	private final Object2ObjectOpenHashMap<Cubemap, VistasCubemapRenderer> renderers = new Object2ObjectOpenHashMap<>();
 
-	public VistasPanoramaRenderer(CubeMap defaultRenderer) {
-		super(defaultRenderer);
-
+	public VistasPanorama() {
+		super();
 		this.client = Minecraft.getInstance();
 	}
 
+	public void renderCubemaps() {
+		VistasTitle.CURRENT.get().getCubemaps().forEach(cubemap -> {
+			VistasCubemapRenderer renderer = renderers.get(cubemap);
+			renderer.draw(this.client, 1.0F);
+		});
+	}
+
 	@Override
-	public void render(GuiGraphics context, int width, int height, boolean rotate) {
+	public void extractRenderState(GuiGraphicsExtractor context, int width, int height, boolean rotate) {
+		client.gameRenderer.getGameRenderState().guiRenderState.panoramaRenderState =
+				new PanoramaRenderState(0.0F);
+
 		VistasCubemapRenderer.time += this.client.getDeltaTracker().getRealtimeDeltaTicks();
 
 		VistasTitle.CURRENT.get().getCubemaps().forEach(cubemap -> {
@@ -44,7 +53,7 @@ public class VistasPanoramaRenderer extends PanoramaRenderer implements AutoClos
 		});
 	}
 
-	@Override
+
 	public void registerTextures(TextureManager textureManager) {
 		VistasTitle.PANORAMAS.values().forEach(panorama ->
 			panorama.getCubemaps().forEach(cubemap -> {

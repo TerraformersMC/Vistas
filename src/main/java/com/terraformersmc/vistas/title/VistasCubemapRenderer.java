@@ -18,8 +18,11 @@ import com.terraformersmc.vistas.panorama.Cubemap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.CachedPerspectiveProjectionMatrixBuffer;
+import net.minecraft.client.renderer.Projection;
+import net.minecraft.client.renderer.ProjectionMatrixBuffer;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.state.WindowRenderState;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.CubeMapTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.jetbrains.annotations.Nullable;
@@ -37,12 +40,14 @@ public class VistasCubemapRenderer implements AutoCloseable {
 
 	@Nullable
 	private GpuBuffer buffer = null;
-	private final CachedPerspectiveProjectionMatrixBuffer projectionMatrix;
+	private final Projection projection;
+	private final ProjectionMatrixBuffer projectionMatrix;
 
 	private final Cubemap cubemap;
 
 	public VistasCubemapRenderer(Cubemap cubemap) {
-		this.projectionMatrix = new CachedPerspectiveProjectionMatrixBuffer("cubemap", 0.05f, 10.0f);
+		this.projection = new Projection();
+		this.projectionMatrix = new ProjectionMatrixBuffer("cubemap");
 
 		this.cubemap = cubemap;
 	}
@@ -52,9 +57,10 @@ public class VistasCubemapRenderer implements AutoCloseable {
 			this.upload(alpha);
 		}
 
-		RenderSystem.setProjectionMatrix(this.projectionMatrix.getBuffer(
-				client.getWindow().getWidth(), client.getWindow().getHeight(),
-				(float) this.cubemap.getVisualControl().getFov()), ProjectionType.PERSPECTIVE);
+		WindowRenderState windowState = client.gameRenderer.getGameRenderState().windowRenderState;
+		this.projection.setupPerspective(0.05F, 10.0F, 85.0F, windowState.width, windowState.height);
+
+		RenderSystem.setProjectionMatrix(this.projectionMatrix.getBuffer(this.projection), ProjectionType.PERSPECTIVE);
 
 		RenderPipeline renderPipeline = RenderPipelines.PANORAMA;
 		RenderTarget framebuffer = Minecraft.getInstance().getMainRenderTarget();
@@ -79,7 +85,8 @@ public class VistasCubemapRenderer implements AutoCloseable {
 			renderPass.setVertexBuffer(0, this.buffer);
 			renderPass.setIndexBuffer(gpuBuffer, shapeIndexBuffer.type());
 			renderPass.setUniform("DynamicTransforms", gpuBufferSlice);
-			renderPass.bindTexture("Sampler0", client.getTextureManager().getTexture(this.cubemap.getCubemapId()).getTextureView(), client.getTextureManager().getTexture(this.cubemap.getCubemapId()).getSampler());
+			AbstractTexture texture = client.getTextureManager().getTexture(this.cubemap.getCubemapId());
+			renderPass.bindTexture("Sampler0", texture.getTextureView(), texture.getSampler());
 			renderPass.drawIndexed(0, 0, 36, 1);
 		}
 	}

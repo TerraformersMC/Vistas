@@ -1,11 +1,10 @@
 package com.terraformersmc.vistas.mixin;
 
-import com.terraformersmc.vistas.mixin.accessor.PanoramaRendererAccessor;
-import com.terraformersmc.vistas.title.VistasPanoramaRenderer;
+import com.terraformersmc.vistas.title.VistasPanorama;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.client.renderer.Panorama;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -20,18 +19,16 @@ public class GameRendererMixin {
     @Shadow
     @Mutable
     @Final
-    protected PanoramaRenderer panorama;
+    protected Panorama panorama;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void vistas$useOurRenderer(CallbackInfo ci) {
-        panorama = new VistasPanoramaRenderer(
-                ((PanoramaRendererAccessor)panorama).vistas$getCubeMap()
-        );
+        panorama = new VistasPanorama();
     }
 
     @Inject(method = "close", at = @At("TAIL"))
     private void vistas$closeOurRenderer(CallbackInfo ci) {
-        if (panorama instanceof VistasPanoramaRenderer renderer) {
+        if (panorama instanceof VistasPanorama renderer) {
             renderer.close();
         }
     }
