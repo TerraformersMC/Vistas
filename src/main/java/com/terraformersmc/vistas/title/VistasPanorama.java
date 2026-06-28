@@ -35,8 +35,8 @@ public class VistasPanorama extends Panorama implements AutoCloseable {
 	}
 
 	@Override
-	public void extractRenderState(GuiGraphicsExtractor context, int width, int height, boolean rotate) {
-		client.gameRenderer.getGameRenderState().guiRenderState.panoramaRenderState =
+	public void extractRenderState(GuiGraphicsExtractor context, int width, int height) {
+		client.gameRenderer.gameRenderState().guiRenderState.panoramaRenderState =
 				new PanoramaRenderState(0.0F);
 
 		VistasCubemapRenderer.time += this.client.getDeltaTracker().getRealtimeDeltaTicks();

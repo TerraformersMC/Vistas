@@ -28,7 +28,7 @@ public abstract class GuiRendererMixin {
             float rotYInDegrees,
             Operation<Void> original
     ) {
-        if (Minecraft.getInstance().gameRenderer.getPanorama() instanceof VistasPanorama panorama) {
+        if (Minecraft.getInstance().gameRenderer.panorama() instanceof VistasPanorama panorama) {
             panorama.renderCubemaps();
         }
     }

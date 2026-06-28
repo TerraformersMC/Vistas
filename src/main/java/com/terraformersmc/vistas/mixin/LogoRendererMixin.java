@@ -128,7 +128,7 @@ public abstract class LogoRendererMixin implements LogoRendererAccessor {
         renderAction.accept(x - 1, y);
         renderAction.accept(x, y + 1);
         renderAction.accept(x, y - 1);
-        GlStateManager._disableBlend();
+        GlStateManager._disableBlend(0);
         renderAction.accept(x, y);
     }
 }

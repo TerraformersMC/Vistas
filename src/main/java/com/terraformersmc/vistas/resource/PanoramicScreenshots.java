@@ -34,12 +34,12 @@ public class PanoramicScreenshots {
 				--cooldown;
 				return;
 			}
-			if (client.screen == null && screenshotKey.isDown()) {
+			if (client.gui.screen() == null && screenshotKey.isDown()) {
 				cooldown = 100;
 
 				Component result = client.grabPanoramixScreenshot(getPanoramicScreenshotFolder().toFile());
 				Vistas.LOGGER.info("Panorama capture with result: {}", result.getString());
-				client.getChatListener().handleSystemMessage(result, false);
+				client.gui.chatListener().handleSystemMessage(result, false);
 			}
 		});
 	}

@@ -1,5 +1,6 @@
 package com.terraformersmc.vistas.title;
 
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
@@ -12,7 +13,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.MeshData;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import com.terraformersmc.vistas.panorama.Cubemap;
 import net.fabricmc.api.EnvType;
@@ -31,8 +31,8 @@ import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 @Environment(EnvType.CLIENT)
 public class VistasCubemapRenderer implements AutoCloseable {
@@ -57,16 +57,16 @@ public class VistasCubemapRenderer implements AutoCloseable {
 			this.upload(alpha);
 		}
 
-		WindowRenderState windowState = client.gameRenderer.getGameRenderState().windowRenderState;
-		this.projection.setupPerspective(0.05F, 10.0F, 85.0F, windowState.width, windowState.height);
+		WindowRenderState windowState = client.gameRenderer.gameRenderState().windowRenderState;
+		this.projection.setupPerspective(0.05F, 10.0F, 85.0F, (float)windowState.width, (float)windowState.height);
 
 		RenderSystem.setProjectionMatrix(this.projectionMatrix.getBuffer(this.projection), ProjectionType.PERSPECTIVE);
 
 		RenderPipeline renderPipeline = RenderPipelines.PANORAMA;
-		RenderTarget framebuffer = Minecraft.getInstance().getMainRenderTarget();
+		RenderTarget framebuffer = Minecraft.getInstance().gameRenderer.mainRenderTarget();
 		GpuTextureView gpuTextureColor = framebuffer.getColorTextureView();
 		GpuTextureView gpuTextureDepth = framebuffer.getDepthTextureView();
-		RenderSystem.AutoStorageIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+		RenderSystem.AutoStorageIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
 		GpuBuffer gpuBuffer = shapeIndexBuffer.getBuffer(36);
 
 		Matrix4fStack matrixStack = RenderSystem.getModelViewStack();
@@ -79,15 +79,15 @@ public class VistasCubemapRenderer implements AutoCloseable {
 		GpuBufferSlice gpuBufferSlice = RenderSystem.getDynamicUniforms().writeTransform(new Matrix4f(matrixStack), new Vector4f(1.0f, 1.0f, 1.0f, alpha), new Vector3f(), new Matrix4f());
 		matrixStack.popMatrix();
 
-		try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Cubemap", gpuTextureColor, OptionalInt.empty(), gpuTextureDepth, OptionalDouble.empty())) {
+		try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Cubemap", gpuTextureColor, Optional.empty(), gpuTextureDepth, OptionalDouble.empty())) {
 			renderPass.setPipeline(renderPipeline);
 			RenderSystem.bindDefaultUniforms(renderPass);
-			renderPass.setVertexBuffer(0, this.buffer);
+			renderPass.setVertexBuffer(0, this.buffer.slice());
 			renderPass.setIndexBuffer(gpuBuffer, shapeIndexBuffer.type());
 			renderPass.setUniform("DynamicTransforms", gpuBufferSlice);
 			AbstractTexture texture = client.getTextureManager().getTexture(this.cubemap.getCubemapId());
 			renderPass.bindTexture("Sampler0", texture.getTextureView(), texture.getSampler());
-			renderPass.drawIndexed(0, 0, 36, 1);
+			renderPass.drawIndexed(36, 1, 0, 0, 0);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class VistasCubemapRenderer implements AutoCloseable {
 		float d = (float) this.cubemap.getVisualControl().getDepth() / 2.0f;
 
 		try (ByteBufferBuilder bufferAllocator = ByteBufferBuilder.exactlySized(DefaultVertexFormat.POSITION.getVertexSize() * 4 * 6)) {
-			BufferBuilder bufferBuilder = new BufferBuilder(bufferAllocator, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+			BufferBuilder bufferBuilder = new BufferBuilder(bufferAllocator, PrimitiveTopology.QUADS, DefaultVertexFormat.POSITION);
 
 			// face 0
 			bufferBuilder.addVertex(-w, -h, d).setUv(0.0F, 0.0F).setColor(r, g, b, a);
