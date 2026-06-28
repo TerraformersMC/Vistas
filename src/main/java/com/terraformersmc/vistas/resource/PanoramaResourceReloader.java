@@ -25,7 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.ConcurrentMap;
 
 public class PanoramaResourceReloader extends SinglePreparationResourceReloader<HashMap<Identifier, Pair<Panorama, List<String>>>> {
@@ -225,7 +228,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 	}
 
 	public String get() {
-		Identifier panoramaId = VistasTitle.PANORAMAS_INVERT.get(VistasTitle.CURRENT.getValue());
+		Identifier panoramaId = VistasTitle.PANORAMAS_INVERT.get(VistasTitle.CURRENT.get());
 
 		if (panoramaId != null) {
 			List<String> list = this.splashTexts.get(panoramaId);

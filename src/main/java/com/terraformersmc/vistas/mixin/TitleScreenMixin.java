@@ -39,7 +39,7 @@ public abstract class TitleScreenMixin extends Screen {
 
 	@Inject(method = "<init>(Z)V", at = @At("TAIL"))
 	private void vistas$init(boolean doBackgroundFade, CallbackInfo ci) {
-		((LogoDrawerAccessor)this.logoDrawer).vistas$setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
+		((LogoDrawerAccessor)this.logoDrawer).vistas$setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.get().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
 	}
 
 	@Inject(method = "init", at = @At("HEAD"))
@@ -48,7 +48,7 @@ public abstract class TitleScreenMixin extends Screen {
 			VistasTitle.choose();
 		}
 		if (!VistasConfig.getInstance().forcePanorama && VistasConfig.getInstance().randomPerScreen) {
-			((LogoDrawerAccessor)this.logoDrawer).vistas$setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.getValue().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
+			((LogoDrawerAccessor)this.logoDrawer).vistas$setIsVistas(new Random().nextDouble() < 1.0E-4D && VistasTitle.CURRENT.get().equals(VistasTitle.PANORAMAS.get(Vistas.DEFAULT)));
 			this.splashText = null;
 		}
 	}

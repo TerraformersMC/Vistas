@@ -9,9 +9,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.sound.MusicInstance;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
+import net.minecraft.sound.MusicSound;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -56,9 +56,9 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 	}
 
 	@Inject(method = "getMusicInstance", at = @At("HEAD"), cancellable = true)
-	private void vistas$getMusicInstance(CallbackInfoReturnable<MusicInstance> ci) {
+	private void vistas$getMusicInstance(CallbackInfoReturnable<MusicSound> ci) {
 		if (this.player == null) {
-			ci.setReturnValue(new MusicInstance(VistasTitle.CURRENT.getValue().getMusicSound()));
+			ci.setReturnValue(VistasTitle.CURRENT.get().getMusicSound());
 		}
 	}
 

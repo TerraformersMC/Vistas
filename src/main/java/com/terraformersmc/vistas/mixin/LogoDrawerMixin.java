@@ -44,7 +44,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
     )
     @SuppressWarnings("unused")
     private void vistas$render$drawOutline(DrawContext instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, DrawContext context, int screenWidth) {
-        Panorama panorama = VistasTitle.CURRENT.getValue();
+        Panorama panorama = VistasTitle.CURRENT.get();
         LogoControl logo = panorama.getLogoControl();
         Matrix3x2fStack matrices = instance.getMatrices();
 
@@ -95,7 +95,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
     )
     @SuppressWarnings("unused")
     private void vistas$render(DrawContext instance, RenderPipeline renderPipeline, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, DrawContext context, int screenWidth) {
-        Panorama panorama = VistasTitle.CURRENT.getValue();
+        Panorama panorama = VistasTitle.CURRENT.get();
         LogoControl logo = panorama.getLogoControl();
         Matrix3x2fStack matrices = instance.getMatrices();
 
