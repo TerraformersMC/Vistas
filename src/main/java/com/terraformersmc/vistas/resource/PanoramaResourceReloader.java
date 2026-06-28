@@ -11,15 +11,14 @@ import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.panorama.Panorama;
 import com.terraformersmc.vistas.title.VistasTitle;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.session.Session;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.SinglePreparationResourceReloader;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
-import net.minecraft.util.profiler.Profiler;
-
+import net.minecraft.IdentifierException;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.User;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +30,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ConcurrentMap;
 
-public class PanoramaResourceReloader extends SinglePreparationResourceReloader<HashMap<Identifier, Pair<Panorama, List<String>>>> {
+public class PanoramaResourceReloader extends SimplePreparableReloadListener<HashMap<Identifier, Pair<Panorama, List<String>>>> {
 	private final ConcurrentMap<Identifier, Pair<List<String>, List<Identifier>>> web = Maps.newConcurrentMap();
 	private final ConcurrentMap<Identifier, Pair<List<String>, List<Identifier>>> parsedSplashWeb = Maps.newConcurrentMap();
 	private final ConcurrentMap<Identifier, List<String>> splashTexts = Maps.newConcurrentMap();
@@ -43,16 +42,16 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 	}
 
 	@Override
-	protected HashMap<Identifier, Pair<Panorama, List<String>>> prepare(ResourceManager manager, Profiler profiler) {
+	protected HashMap<Identifier, Pair<Panorama, List<String>>> prepare(ResourceManager manager, ProfilerFiller profiler) {
 		profiler.startTick();
 		HashMap<Identifier, Panorama> panoramas = Maps.newHashMap();
-		for (String namespace : manager.getAllNamespaces()) {
+		for (String namespace : manager.getNamespaces()) {
 			profiler.push(namespace);
 			try {
-				for (Resource resource : manager.getAllResources(Identifier.of(namespace, "panoramas.json"))) {
-					profiler.push(resource.getPackId());
+				for (Resource resource : manager.getResourceStack(Identifier.fromNamespaceAndPath(namespace, "panoramas.json"))) {
+					profiler.push(resource.sourcePackId());
 					try {
-						InputStream inputStream = resource.getInputStream();
+						InputStream inputStream = resource.open();
 						try {
 							InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 							try {
@@ -60,7 +59,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 
 								JsonElement jsonElement = JsonParser.parseReader(reader);
 								jsonElement.getAsJsonObject().entrySet().forEach((pair) -> {
-									Identifier panoramaId = Identifier.of(namespace, pair.getKey());
+									Identifier panoramaId = Identifier.fromNamespaceAndPath(namespace, pair.getKey());
 									Panorama panorama = get(Panorama.CODEC, pair.getValue());
 									if (panorama != null) {
 										panoramas.put(panoramaId, panorama);
@@ -96,7 +95,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 						}
 						inputStream.close();
 					} catch (RuntimeException runtimeBreak) {
-						Vistas.LOGGER.warn("Invalid panoramas.json in resourcepack: '{}'", resource.getPackId(), runtimeBreak);
+						Vistas.LOGGER.warn("Invalid panoramas.json in resourcepack: '{}'", resource.sourcePackId(), runtimeBreak);
 					}
 					profiler.pop();
 				}
@@ -113,7 +112,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 	}
 
 	@SuppressWarnings("unused")
-	protected Pair<List<String>, List<Identifier>> prepare(Identifier splashId, ResourceManager manager, Profiler profiler) {
+	protected Pair<List<String>, List<Identifier>> prepare(Identifier splashId, ResourceManager manager, ProfilerFiller profiler) {
 		if (this.parsedSplashWeb.containsKey(splashId)) {
 			return this.parsedSplashWeb.get(splashId);
 		}
@@ -123,21 +122,21 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 		profiler.push(splashId.toString());
 		try {
 			profiler.push("parse");
-			Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(splashId).orElseThrow();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
+			Resource resource = Minecraft.getInstance().getResourceManager().getResource(splashId).orElseThrow();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resource.open(), StandardCharsets.UTF_8));
 			try {
 				splashTexts = Lists.newArrayList(bufferedReader.lines().map(String::trim).map((splash) -> {
 					if (splash.startsWith("$vistas$import$")) {
 						try {
-							imports.add(Identifier.of(splash.substring(15)));
-						} catch (InvalidIdentifierException badId) {
+							imports.add(Identifier.parse(splash.substring(15)));
+						} catch (IdentifierException badId) {
 							Vistas.LOGGER.error("Splash: '{}' imports invalid Identifier: '{}'", splashId, splash.substring(15));
 						}
 					}
-					Session session = MinecraftClient.getInstance().getSession();
-					splash = splash.replace("$vistas$name$", session.getUsername().toLowerCase(Locale.ROOT));
-					splash = splash.replace("$vistas$Name$", session.getUsername());
-					splash = splash.replace("$vistas$NAME$", session.getUsername().toUpperCase(Locale.ROOT));
+					User session = Minecraft.getInstance().getUser();
+					splash = splash.replace("$vistas$name$", session.getName().toLowerCase(Locale.ROOT));
+					splash = splash.replace("$vistas$Name$", session.getName());
+					splash = splash.replace("$vistas$NAME$", session.getName().toUpperCase(Locale.ROOT));
 					return splash;
 				}).filter((splash) -> splash.hashCode() != 125780783 && !splash.startsWith("$vistas$import$")).toList());
 			} catch (Throwable throwable) {
@@ -162,7 +161,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 	}
 
 	@SuppressWarnings("unused")
-	protected void prepareSplash(ResourceManager manager, Profiler profiler) {
+	protected void prepareSplash(ResourceManager manager, ProfilerFiller profiler) {
 		profiler.push("splash");
 
 		this.web.forEach((panoramaId, pair) -> {
@@ -191,7 +190,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 	}
 
 	@Override
-	protected void apply(HashMap<Identifier, Pair<Panorama, List<String>>> prepared, ResourceManager manager, Profiler profiler) {
+	protected void apply(HashMap<Identifier, Pair<Panorama, List<String>>> prepared, ResourceManager manager, ProfilerFiller profiler) {
 		profiler.startTick();
 		ready = false;
 

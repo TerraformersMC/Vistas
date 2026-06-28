@@ -7,14 +7,14 @@ import com.terraformersmc.vistas.panorama.Panorama;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.SplashTextRenderer;
+import net.minecraft.client.gui.components.SplashRenderer;
 import org.joml.Matrix3x2f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Environment(EnvType.CLIENT)
-@Mixin(SplashTextRenderer.class)
-public abstract class SplashTextRendererMixin {
+@Mixin(SplashRenderer.class)
+public abstract class SplashRendererMixin {
 	@WrapOperation(
 			method = "render",
 			at = @At(

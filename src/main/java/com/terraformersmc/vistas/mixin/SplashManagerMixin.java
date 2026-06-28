@@ -1,31 +1,31 @@
 package com.terraformersmc.vistas.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.terraformersmc.vistas.access.MinecraftClientAccess;
+import com.terraformersmc.vistas.access.MinecraftAccess;
 import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.SplashTextRenderer;
-import net.minecraft.client.resource.SplashTextResourceSupplier;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.SplashRenderer;
+import net.minecraft.client.resources.SplashManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Environment(EnvType.CLIENT)
-@Mixin(SplashTextResourceSupplier.class)
-public class SplashTextResourceSupplierMixin {
+@Mixin(SplashManager.class)
+public class SplashManagerMixin {
 	@Shadow
-	private static Text create(String string) {
+	private static Component literalSplash(String string) {
 		throw new UnsupportedOperationException("Implemented via mixin");
 	}
 
 	@ModifyReturnValue(
-			method = "get",
+			method = "getSplash",
 			at = @At(value = "RETURN"),
 			slice = @Slice(
 					from = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"),
@@ -33,13 +33,13 @@ public class SplashTextResourceSupplierMixin {
 			)
 	)
 	@SuppressWarnings("unused")
-	private SplashTextRenderer vistas$getRenderer(SplashTextRenderer original) {
-		MinecraftClient client = MinecraftClient.getInstance();
-		PanoramaResourceReloader resourceReloader = ((MinecraftClientAccess) client).getPanoramaResourceReloader();
+	private SplashRenderer vistas$getRenderer(SplashRenderer original) {
+		Minecraft client = Minecraft.getInstance();
+		PanoramaResourceReloader resourceReloader = ((MinecraftAccess) client).getPanoramaResourceReloader();
 		Identifier panoramaId = VistasTitle.PANORAMAS_INVERT.get(VistasTitle.CURRENT.get());
 
 		if (resourceReloader != null && panoramaId != null) {
-			return new SplashTextRenderer(create(resourceReloader.get()));
+			return new SplashRenderer(literalSplash(resourceReloader.get()));
 		}
 
 		return original;

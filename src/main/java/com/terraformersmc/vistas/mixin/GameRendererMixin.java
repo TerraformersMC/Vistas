@@ -1,11 +1,11 @@
 package com.terraformersmc.vistas.mixin;
 
-import com.terraformersmc.vistas.mixin.accessor.RotatingCubeMapRendererAccessor;
-import com.terraformersmc.vistas.title.VistasRotatingCubemapRenderer;
+import com.terraformersmc.vistas.mixin.accessor.PanoramaRendererAccessor;
+import com.terraformersmc.vistas.title.VistasPanoramaRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.RotatingCubeMapRenderer;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.PanoramaRenderer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -20,18 +20,18 @@ public class GameRendererMixin {
     @Shadow
     @Mutable
     @Final
-    protected RotatingCubeMapRenderer rotatingPanoramaRenderer;
+    protected PanoramaRenderer panorama;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void vistas$useOurRenderer(CallbackInfo ci) {
-        rotatingPanoramaRenderer = new VistasRotatingCubemapRenderer(
-                ((RotatingCubeMapRendererAccessor)rotatingPanoramaRenderer).vistas$getCubeMap()
+        panorama = new VistasPanoramaRenderer(
+                ((PanoramaRendererAccessor)panorama).vistas$getCubeMap()
         );
     }
 
     @Inject(method = "close", at = @At("TAIL"))
     private void vistas$closeOurRenderer(CallbackInfo ci) {
-        if (rotatingPanoramaRenderer instanceof VistasRotatingCubemapRenderer renderer) {
+        if (panorama instanceof VistasPanoramaRenderer renderer) {
             renderer.close();
         }
     }

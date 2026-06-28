@@ -1,17 +1,17 @@
 package com.terraformersmc.vistas.mixin;
 
-import com.terraformersmc.vistas.access.MinecraftClientAccess;
+import com.terraformersmc.vistas.access.MinecraftAccess;
 import com.terraformersmc.vistas.resource.PanoramaResourceReloader;
-import com.terraformersmc.vistas.title.VistasRotatingCubemapRenderer;
+import com.terraformersmc.vistas.title.VistasPanoramaRenderer;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.resource.ReloadableResourceManagerImpl;
-import net.minecraft.sound.MusicSound;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.main.GameConfig;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.sounds.Music;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,18 +24,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
-@Mixin(MinecraftClient.class)
-public class MinecraftClientMixin implements MinecraftClientAccess {
+@Mixin(Minecraft.class)
+public class MinecraftMixin implements MinecraftAccess {
 	@Unique
 	private PanoramaResourceReloader panoramaResourceReloader;
 
 	@Shadow
 	@Final
-	private ReloadableResourceManagerImpl resourceManager;
+	private ReloadableResourceManager resourceManager;
 
 	@Shadow
 	@Nullable
-	public ClientPlayerEntity player;
+	public LocalPlayer player;
 
 	@Shadow
 	@Final
@@ -45,26 +45,26 @@ public class MinecraftClientMixin implements MinecraftClientAccess {
 			method = "<init>",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/resource/ReloadableResourceManagerImpl;registerReloader(Lnet/minecraft/resource/ResourceReloader;)V",
+					target = "Lnet/minecraft/server/packs/resources/ReloadableResourceManager;registerReloadListener(Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V",
 					ordinal = 2,
 					shift = Shift.AFTER
 			)
 	)
-	private void vistas$init$registerPanoramaReloader(RunArgs args, CallbackInfo ci) {
+	private void vistas$init$registerPanoramaReloader(GameConfig args, CallbackInfo ci) {
 		this.panoramaResourceReloader = new PanoramaResourceReloader();
-		this.resourceManager.registerReloader(panoramaResourceReloader);
+		this.resourceManager.registerReloadListener(panoramaResourceReloader);
 	}
 
-	@Inject(method = "getMusicInstance", at = @At("HEAD"), cancellable = true)
-	private void vistas$getMusicInstance(CallbackInfoReturnable<MusicSound> ci) {
+	@Inject(method = "getSituationalMusic", at = @At("HEAD"), cancellable = true)
+	private void vistas$getMusicInstance(CallbackInfoReturnable<Music> ci) {
 		if (this.player == null) {
 			ci.setReturnValue(VistasTitle.CURRENT.get().getMusicSound());
 		}
 	}
 
-	@Inject(method = "onFinishedLoading", at = @At("HEAD"))
-	private void vistas$registerTextures(@Nullable MinecraftClient.LoadingContext loadingContext, CallbackInfo ci) {
-		if (MinecraftClient.getInstance().gameRenderer.getRotatingPanoramaRenderer() instanceof VistasRotatingCubemapRenderer renderer) {
+	@Inject(method = "onResourceLoadFinished", at = @At("HEAD"))
+	private void vistas$registerTextures(@Nullable Minecraft.GameLoadCookie loadingContext, CallbackInfo ci) {
+		if (Minecraft.getInstance().gameRenderer.getPanorama() instanceof VistasPanoramaRenderer renderer) {
 			renderer.registerTextures(textureManager);
 		}
 	}

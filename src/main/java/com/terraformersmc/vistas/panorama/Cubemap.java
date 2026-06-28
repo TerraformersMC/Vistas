@@ -2,7 +2,7 @@ package com.terraformersmc.vistas.panorama;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 
@@ -10,7 +10,7 @@ public class Cubemap {
 	public static final Cubemap DEFAULT = new Cubemap();
 
 	public static final Codec<Cubemap> CODEC = RecordCodecBuilder.create(
-			(instance) -> 
+			(instance) ->
 			instance.group(
 					Identifier.CODEC.optionalFieldOf("cubemapId")
 						.forGetter((cubemap) -> Optional.of(cubemap.cubemapId)),
@@ -26,7 +26,7 @@ public class Cubemap {
 	private final VisualControl visualControl;
 
 	public Cubemap() {
-		this.cubemapId = Identifier.ofVanilla("textures/gui/title/background/panorama");
+		this.cubemapId = Identifier.withDefaultNamespace("textures/gui/title/background/panorama");
 		this.rotationControl = RotationControl.DEFAULT;
 		this.visualControl = VisualControl.DEFAULT;
 	}
@@ -40,7 +40,7 @@ public class Cubemap {
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public Cubemap(Optional<Identifier> cubemapId, Optional<RotationControl> rotationControl, Optional<VisualControl> visualControl) {
-		this.cubemapId = cubemapId.orElse(Identifier.ofVanilla("textures/gui/title/background/panorama"));
+		this.cubemapId = cubemapId.orElse(Identifier.withDefaultNamespace("textures/gui/title/background/panorama"));
 		this.rotationControl = rotationControl.orElse(RotationControl.DEFAULT);
 		this.visualControl = visualControl.orElse(VisualControl.DEFAULT);
 	}
