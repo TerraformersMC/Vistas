@@ -69,7 +69,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
                 render.accept(rx, ry);
             }
 
-            operation.call(instance, renderPipeline, logoTexture, rx, ry, 0, 0, 512, 512, 512, 512, 512, color);
+            operation.call(instance, renderPipeline, logoTexture, rx, ry, 0.0F, 0.0F, 512, 512, 512, 512, color);
         } else {
             BiConsumer<Integer, Integer> render = (ix, iy) -> instance.drawTexture(renderPipeline, logo.getLogoId(), ix, iy, u, v, width, height, textureWidth, textureHeight);
 
