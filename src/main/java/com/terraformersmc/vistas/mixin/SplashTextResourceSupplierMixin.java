@@ -9,14 +9,21 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.SplashTextRenderer;
 import net.minecraft.client.resource.SplashTextResourceSupplier;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Environment(EnvType.CLIENT)
 @Mixin(SplashTextResourceSupplier.class)
 public class SplashTextResourceSupplierMixin {
+	@Shadow
+	private static Text create(String string) {
+		throw new UnsupportedOperationException("Implemented via mixin");
+	}
+
 	@ModifyReturnValue(
 			method = "get",
 			at = @At(value = "RETURN"),
@@ -29,10 +36,10 @@ public class SplashTextResourceSupplierMixin {
 	private SplashTextRenderer vistas$getRenderer(SplashTextRenderer original) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		PanoramaResourceReloader resourceReloader = ((MinecraftClientAccess) client).getPanoramaResourceReloader();
-		Identifier panoramaId = VistasTitle.PANORAMAS_INVERT.get(VistasTitle.CURRENT.getValue());
+		Identifier panoramaId = VistasTitle.PANORAMAS_INVERT.get(VistasTitle.CURRENT.get());
 
 		if (resourceReloader != null && panoramaId != null) {
-			return new SplashTextRenderer(resourceReloader.get());
+			return new SplashTextRenderer(create(resourceReloader.get()));
 		}
 
 		return original;

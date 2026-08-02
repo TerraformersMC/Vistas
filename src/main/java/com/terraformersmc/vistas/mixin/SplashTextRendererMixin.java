@@ -9,7 +9,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.SplashTextRenderer;
 import org.joml.Matrix3x2f;
-import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -20,15 +19,15 @@ public abstract class SplashTextRendererMixin {
 			method = "render",
 			at = @At(
 					value = "INVOKE",
-					target = "Lorg/joml/Matrix3x2fStack;rotate(F)Lorg/joml/Matrix3x2f;"
+					target = "Lorg/joml/Matrix3x2f;rotate(F)Lorg/joml/Matrix3x2f;"
 			)
 	)
 	@SuppressWarnings("unused")
-	private Matrix3x2f vistas$render(Matrix3x2fStack instance, float rotation, Operation<Matrix3x2f> operation) {
-		Panorama panorama = VistasTitle.CURRENT.getValue();
+	private Matrix3x2f vistas$render(Matrix3x2f instance, float rotation, Operation<Matrix3x2f> operation) {
+		Panorama panorama = VistasTitle.CURRENT.get();
 		LogoControl logo = panorama.getLogoControl();
 
-		rotation = (float) VistasTitle.CURRENT.getValue().getLogoControl().getSplashRot();
+		rotation = (float) VistasTitle.CURRENT.get().getLogoControl().getSplashRot();
 
 		instance.translate((float) logo.getSplashX(), (float) logo.getSplashY());
 

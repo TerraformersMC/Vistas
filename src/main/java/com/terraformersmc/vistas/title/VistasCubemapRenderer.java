@@ -70,7 +70,7 @@ public class VistasCubemapRenderer implements AutoCloseable {
 		matrixStack.rotate(RotationAxis.POSITIVE_X.rotationDegrees((float) this.cubemap.getRotationControl().getPitch(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
 		matrixStack.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) this.cubemap.getRotationControl().getYaw(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
 		matrixStack.rotate(RotationAxis.POSITIVE_Z.rotationDegrees((float) this.cubemap.getRotationControl().getRoll(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
-		GpuBufferSlice gpuBufferSlice = RenderSystem.getDynamicUniforms().write(new Matrix4f(matrixStack), new Vector4f(1.0f, 1.0f, 1.0f, alpha), new Vector3f(), new Matrix4f(), 0.0f);
+		GpuBufferSlice gpuBufferSlice = RenderSystem.getDynamicUniforms().write(new Matrix4f(matrixStack), new Vector4f(1.0f, 1.0f, 1.0f, alpha), new Vector3f(), new Matrix4f());
 		matrixStack.popMatrix();
 
 		try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Cubemap", gpuTextureColor, OptionalInt.empty(), gpuTextureDepth, OptionalDouble.empty())) {
@@ -79,7 +79,7 @@ public class VistasCubemapRenderer implements AutoCloseable {
 			renderPass.setVertexBuffer(0, this.buffer);
 			renderPass.setIndexBuffer(gpuBuffer, shapeIndexBuffer.getIndexType());
 			renderPass.setUniform("DynamicTransforms", gpuBufferSlice);
-			renderPass.bindSampler("Sampler0", client.getTextureManager().getTexture(this.cubemap.getCubemapId()).getGlTextureView());
+			renderPass.bindTexture("Sampler0", client.getTextureManager().getTexture(this.cubemap.getCubemapId()).getGlTextureView(), client.getTextureManager().getTexture(this.cubemap.getCubemapId()).getSampler());
 			renderPass.drawIndexed(0, 0, 36, 1);
 		}
 	}
@@ -94,7 +94,7 @@ public class VistasCubemapRenderer implements AutoCloseable {
 		float h = (float) this.cubemap.getVisualControl().getHeight() / 2.0f;
 		float d = (float) this.cubemap.getVisualControl().getDepth() / 2.0f;
 
-		try (BufferAllocator bufferAllocator = BufferAllocator.method_72201(VertexFormats.POSITION.getVertexSize() * 4 * 6)) {
+		try (BufferAllocator bufferAllocator = BufferAllocator.fixedSized(VertexFormats.POSITION.getVertexSize() * 4 * 6)) {
 			BufferBuilder bufferBuilder = new BufferBuilder(bufferAllocator, VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
 
 			// face 0
