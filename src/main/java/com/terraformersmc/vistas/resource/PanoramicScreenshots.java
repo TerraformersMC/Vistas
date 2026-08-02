@@ -13,7 +13,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -27,7 +26,7 @@ public class PanoramicScreenshots {
 	public static int cooldown = 0;
 
 	public static void registerKeyBinding() {
-		KeyBinding screenshotKey = new KeyBinding("key.vistas.panoramic_screenshot", 'H', "key.categories.misc");
+		KeyBinding screenshotKey = new KeyBinding("key.vistas.panoramic_screenshot", 'H', KeyBinding.Category.MISC);
 		KeyBindingHelper.registerKeyBinding(screenshotKey);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
 			if (cooldown > 0) {
