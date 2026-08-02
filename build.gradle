@@ -1,5 +1,5 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version '1.17.9'
+	id 'net.fabricmc.fabric-loom' version '1.17.+'
 }
 
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/3.2/ferry.gradle'
@@ -20,13 +20,13 @@ dependencies {
 
 repositories {
 	maven {
-		url = "https://jitpack.io"
+		url = 'https://jitpack.io'
 	}
 	maven {
 		url = 'https://maven.terraformersmc.com/'
 	}
 	maven {
-		url "https://maven.shedaniel.me/"
+		url = 'https://maven.shedaniel.me/'
 	}
 }
 
