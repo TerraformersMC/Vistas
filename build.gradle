@@ -1,11 +1,8 @@
 plugins {
-	id 'fabric-loom' version '1.13.3'
+	id 'fabric-loom' version '1.13.+'
 }
 
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.7/ferry.gradle'
-
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
 
 loom {
 	accessWidenerPath = file("src/main/resources/vistas.accesswidener")
@@ -24,13 +21,13 @@ dependencies {
 
 repositories {
 	maven {
-		url = "https://jitpack.io"
+		url = 'https://jitpack.io'
 	}
 	maven {
 		url = 'https://maven.terraformersmc.com/'
 	}
 	maven {
-		url "https://maven.shedaniel.me/"
+		url = 'https://maven.shedaniel.me/'
 	}
 }
 
