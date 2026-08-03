@@ -9,11 +9,10 @@ package com.terraformersmc.vistas.resource;
 
 import com.terraformersmc.vistas.Vistas;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
-
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -27,20 +26,20 @@ public class PanoramicScreenshots {
 	public static int cooldown = 0;
 
 	public static void registerKeyBinding() {
-		KeyBinding screenshotKey = new KeyBinding("key.vistas.panoramic_screenshot", 'H', "key.categories.misc");
-		KeyBindingHelper.registerKeyBinding(screenshotKey);
+		KeyMapping screenshotKey = new KeyMapping("key.vistas.panoramic_screenshot", 'H', KeyMapping.Category.MISC);
+		KeyMappingHelper.registerKeyMapping(screenshotKey);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
 			if (cooldown > 0) {
 				// 100 client tick cooldown between panoramas.
 				--cooldown;
 				return;
 			}
-			if (client.currentScreen == null && screenshotKey.isPressed()) {
+			if (client.screen == null && screenshotKey.isDown()) {
 				cooldown = 100;
 
-				Text result = client.takePanorama(getPanoramicScreenshotFolder().toFile());
+				Component result = client.grabPanoramixScreenshot(getPanoramicScreenshotFolder().toFile());
 				Vistas.LOGGER.info("Panorama capture with result: {}", result.getString());
-				client.getMessageHandler().onGameMessage(result, false);
+				client.getChatListener().handleSystemMessage(result, false);
 			}
 		});
 	}

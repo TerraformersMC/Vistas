@@ -7,10 +7,10 @@ import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.panorama.Panorama;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
-import net.minecraft.util.profiler.Profiler;
-import net.minecraft.util.profiler.Profilers;
+import net.minecraft.IdentifierException;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.Collections;
@@ -27,21 +27,21 @@ public class VistasTitle {
 	public static final MutableObject<Panorama> CURRENT = new MutableObject<>(Panorama.DEFAULT);
 
 	public static void choose() {
-		choose(Profilers.get());
+		choose(Profiler.get());
 	}
 
-	public static void choose(Profiler profiler) {
+	public static void choose(ProfilerFiller profiler) {
 		profiler.startTick();
 		profiler.push("set");
 		if (VistasConfig.getInstance().forcePanorama) {
 			profiler.push("force");
 			try {
-				Panorama panorama = VistasTitle.PANORAMAS.get(Identifier.of(VistasConfig.getInstance().panorama));
+				Panorama panorama = VistasTitle.PANORAMAS.get(Identifier.parse(VistasConfig.getInstance().panorama));
 				if (panorama == null) {
 					throw new NullPointerException();
 				}
 				VistasTitle.CURRENT.setValue(panorama);
-			} catch (InvalidIdentifierException badId) {
+			} catch (IdentifierException badId) {
 				Vistas.LOGGER.warn("String: '{}' is an invalid Identifier in config; resetting...", VistasConfig.getInstance().panorama);
 				VistasConfig.getInstance().panorama = Vistas.DEFAULT.toString();
 				VistasTitle.CURRENT.setValue(Panorama.DEFAULT);
