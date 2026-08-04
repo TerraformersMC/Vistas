@@ -3,15 +3,15 @@ package com.terraformersmc.vistas.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.terraformersmc.vistas.resource.PanoramicScreenshots;
-import net.minecraft.client.util.ScreenshotRecorder;
+import net.minecraft.client.Screenshot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.io.File;
 
-@Mixin(ScreenshotRecorder.class)
-public class ScreenshotRecorderMixin {
-    @WrapOperation(method = "method_68157",
+@Mixin(Screenshot.class)
+public class ScreenshotMixin {
+    @WrapOperation(method = "lambda$grab$2",
             at = @At(value = "NEW", args = "class=java/io/File", ordinal = 0)
     )
     @SuppressWarnings("unused")

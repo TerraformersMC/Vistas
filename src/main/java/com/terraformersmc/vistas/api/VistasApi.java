@@ -1,7 +1,7 @@
 package com.terraformersmc.vistas.api;
 
 import com.terraformersmc.vistas.panorama.Panorama;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 

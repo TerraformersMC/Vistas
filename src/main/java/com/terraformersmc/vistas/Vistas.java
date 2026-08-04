@@ -6,7 +6,7 @@ import com.terraformersmc.vistas.resource.PanoramicScreenshots;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +25,6 @@ public class Vistas implements ClientModInitializer {
 	}
 
 	public static Identifier id(String id) {
-		return Identifier.of(NAMESPACE, id);
+		return Identifier.fromNamespaceAndPath(NAMESPACE, id);
 	}
 }
