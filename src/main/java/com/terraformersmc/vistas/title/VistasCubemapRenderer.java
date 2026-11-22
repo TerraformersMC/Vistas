@@ -1,14 +1,14 @@
 package com.terraformersmc.vistas.title;
 
-import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.ProjectionType;
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTextureView;
+import com.mojang.renderpearl.api.buffers.GpuBuffer;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.renderpearl.api.textures.GpuTextureView;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -80,13 +80,13 @@ public class VistasCubemapRenderer implements AutoCloseable {
 		matrixStack.popMatrix();
 
 		try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Cubemap", gpuTextureColor, Optional.empty(), gpuTextureDepth, OptionalDouble.empty())) {
-			renderPass.setPipeline(renderPipeline);
+			renderPass.setPipeline(RenderSystem.getCompiledPipeline(renderPipeline));
 			RenderSystem.bindDefaultUniforms(renderPass);
 			renderPass.setVertexBuffer(0, this.buffer.slice());
 			renderPass.setIndexBuffer(gpuBuffer, shapeIndexBuffer.type());
 			renderPass.setUniform("DynamicTransforms", gpuBufferSlice);
 			AbstractTexture texture = client.getTextureManager().getTexture(this.cubemap.getCubemapId());
-			renderPass.bindTexture("Sampler0", texture.getTextureView(), texture.getSampler());
+			renderPass.setUniform("Sampler0", texture.getTextureView(), texture.getSampler());
 			renderPass.drawIndexed(36, 1, 0, 0, 0);
 		}
 	}
